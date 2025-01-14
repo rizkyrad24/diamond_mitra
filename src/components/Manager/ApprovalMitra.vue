@@ -1,4 +1,11 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <h1 class="w-[51px] h-[22px] font-sans text-[#7F7F80] text-[14px] font-semibold ml-6 mt-4 mb-4">Approval</h1>
@@ -87,7 +94,7 @@
       <div class="ApprovalSelesai">
         <div class="flex">
           <div
-            class="flex w-full h-[480px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
+            class="flex w-full rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
             <table class="table-auto w-full text-left border-collapse border border-[#E5E7E9]">
               <thead>
                 <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
@@ -178,18 +185,18 @@
               <tbody>
                 <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.judul}`"
                   class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
-                  <td class="p-2 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.judul }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.nomor }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.tipe }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.pelaksana }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.judul }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.nomor }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.tipe }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pelaksana }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span
                       class="w-[55px] h-[24px] px-4 py-1 rounded-full font-sans text-[12px] text-[#0EA976] bg-[#E2FCF3] border-[1px] border-[#8ADFC3]">
                       {{ item.status }}
                     </span>
                   </td>
-                  <td class="p-2 border border-[#E5E7E9] relative">
+                  <td class="p-2 py-4 border border-[#E5E7E9] relative">
                     <button @click.stop="toggleActionDropdown(index)"
                       class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
                       <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -206,7 +213,7 @@
                           d="M8.00051 1.66667C5.20279 1.66667 2.82714 3.48116 1.98946 5.99938C1.98897 6.00085 1.98897 6.00266 1.98946 6.00413C2.82818 8.52053 5.20293 10.3333 7.99934 10.3333C10.7971 10.3333 13.1727 8.51884 14.0104 6.00062C14.0109 5.99915 14.0109 5.99734 14.0104 5.99587C13.1717 3.47947 10.7969 1.66667 8.00051 1.66667ZM0.72429 5.57853C1.73777 2.53181 4.61153 0.333334 8.00051 0.333334C11.3879 0.333334 14.2606 2.52976 15.2753 5.57427C15.3669 5.84915 15.367 6.14654 15.2756 6.42148C14.2621 9.4682 11.3883 11.6667 7.99934 11.6667C4.61194 11.6667 1.73927 9.47024 0.72454 6.42573C0.632921 6.15085 0.632834 5.85346 0.72429 5.57853ZM7.99997 4.66667C7.26359 4.66667 6.66663 5.26362 6.66663 6C6.66663 6.73638 7.26359 7.33333 7.99997 7.33333C8.73635 7.33333 9.3333 6.73638 9.3333 6C9.3333 5.26362 8.73635 4.66667 7.99997 4.66667ZM5.3333 6C5.3333 4.52724 6.52721 3.33333 7.99997 3.33333C9.47273 3.33333 10.6666 4.52724 10.6666 6C10.6666 7.47276 9.47273 8.66667 7.99997 8.66667C6.52721 8.66667 5.3333 7.47276 5.3333 6Z"
                           fill="#2671D9" />
                       </svg>
-                      <button @click="navigateToDetail(item.tipe, item.id)"
+                      <button @click="navigateToDetail(item.tipe, item.did)"
                         class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
                     </div>
                   </td>
@@ -241,8 +248,14 @@
 <script>
 import { fetchGet } from '@/api/apiFunction';
 import { parseStatusAproval } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 
 export default {
+  components: {
+    Loading,
+    ModalFailed
+  },
   data() {
     return {
       showDropdown: false,
@@ -255,34 +268,40 @@ export default {
       displayOptions: [8, 16, 25],
       actionDropdownIndex: null,
       searchQuery: "",
-
-      tableData: [
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      tableData: [],
+      // tableData: [
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -326,6 +345,13 @@ export default {
     },
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -430,6 +456,7 @@ export default {
     },
     // api
 		async getDataApi() {
+      this.isLoading = true;
 			let boxResult = new Array;
       const positionLevel = localStorage.getItem("position");
       let url = null;
@@ -446,22 +473,32 @@ export default {
         url = "mitra/direksi/mounda/approval";
       }
       if (!url) {
-        return alert("Posisi anda tidak dapat mengakses halaman ini");
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
       }
 			const res = await fetchGet(url, params, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.mouNdaNumber,
+					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
-					pelaksana: item.user,
+					pelaksana: item.partnershipCandidate,
 					status: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				console.log(res.data)
 				boxResult = boxResult.concat(cleanData)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
       let url2 = null;
       if (positionLevel == "PartnershipManager") {
@@ -476,25 +513,36 @@ export default {
         url2 = "mitra/direksi/pks/approval";
       }
       if (!url2) {
-        return alert("Posisi anda tidak dapat mengakses halaman ini");
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
       }
 			const res2 = await fetchGet(url2, params, this.$router);
 			if (res2.status == 200) {
 				const cleanData2 = res2.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.budgetNumber,
+					nomor: item.submissionNumber,
 					tipe: "PKS",
-					pelaksana: item.user,
+					pelaksana: item.partnershipCandidate,
 					status: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				boxResult = boxResult.concat(cleanData2)
 				boxResult = boxResult.map((item, index) => ({ id: index + 1, ...item }))
 				console.log(res2.data)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
-			this.tableData = boxResult
+			this.tableData = boxResult;
+      this.isLoading = false;
 		}
   },
   mounted() {

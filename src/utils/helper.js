@@ -101,3 +101,22 @@ export function mapperKeterangan(positionLevel, status) {
   }
   return ''
 }
+
+export const dateParsing = (input) => {
+  if (input.includes("-")) {
+    const [year, month, date] = input.split("-")
+    return `${date}-${month}-${year}`
+  }
+  return input
+}
+
+export const dueDateParsing = (input) => {
+  if (input.includes("-")) {
+    const targetDate = new Date('2025-01-20');
+    const today = new Date();
+    const differenceInMillis = targetDate - today;
+    const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
+    return differenceInDays
+  }
+  return input
+}

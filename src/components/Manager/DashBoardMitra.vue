@@ -1,4 +1,11 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse"></div>
   </div>
@@ -38,7 +45,7 @@
         <div class="w-[338px] h-[88px] border-[1px] rounded-lg border-[#0EA976] bg-[#0EA976] mt-6 ml-4 flex items-center justify-between px-4">
           <div>
             <h1 class="text-[16px] font-sans font-normal text-[#FFFFFF]">Pengajuan H+7 Due Date</h1>
-            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">10</span>
+            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">{{ summaryData?.totalHplus7 }}</span>
           </div>
           <svg width="39" height="40" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="19.5176" cy="20.0001" rx="19.4824" ry="19.6417" fill="white" />
@@ -50,7 +57,7 @@
         <div class="w-[338px] h-[88px] border-[1px] rounded-lg border-[#FFA229] bg-[#FFA229] mt-6 ml-4 flex items-center justify-between px-4">
           <div>
             <h1 class="text-[16px] font-sans font-normal text-[#FFFFFF]">Pengajuan H-7 Due Date</h1>
-            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">4</span>
+            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">{{ summaryData?.totalHmin7 }}</span>
           </div>
           <svg width="39" height="40" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="19.5176" cy="20.0001" rx="19.4824" ry="19.6417" fill="white" />
@@ -69,7 +76,7 @@
         <div class="w-[338px] h-[88px] border-[1px] rounded-lg border-[#FF5656] bg-[#FF5656] mt-6 ml-4 flex items-center justify-between px-4">
           <div>
             <h1 class="text-[16px] font-sans font-normal text-[#FFFFFF]">Pengajuan Melewati Due Date</h1>
-            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">2</span>
+            <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">{{ summaryData?.totalDueDate }}</span>
           </div>
           <svg width="39" height="40" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="19.5176" cy="20.0001" rx="19.4824" ry="19.6417" fill="white" />
@@ -118,7 +125,7 @@
             </div>
             <div class="items-center w-[124px] h-[60px] ml-6 mt-2 border-dashed rounded-lg bg-[#E7F1FD] border-[1px] border-[#91BEF7]">
               <h1 class="text-[12px] font-sans font-light text-[#9CA2AD] ml-[22px] mr-4 mt-2">Total Pengajuan</h1>
-              <span id="totalData" class="text-[16px] font-sans font-bold text-[#071631] w-[92px] h-[24px] ml-[50px] mr-4 mt-7 mb-2">{{ totalData }}</span>
+              <span id="totalData" class="text-[16px] font-sans font-bold text-[#071631] w-[92px] h-[24px] ml-[50px] mr-4 mt-7 mb-2">{{ totalDataPengajuan }}</span>
             </div>
             <div>
               <svg class="ml-6 mr-6 mt-4" width="628" height="1" viewBox="0 0 628 1" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -140,21 +147,21 @@
               <div class="chart-item mb-6">
                 <div>
                   <p class="font-sans text-[16px] text-[#7F7F80] font-medium">Total NDA</p>
-                  <h2 id="totalNDA" class="font-sans text-[24px] text-[#333333] font-bold">10</h2>
+                  <h2 id="totalNDA" class="font-sans text-[24px] text-[#333333] font-bold">{{ summaryData?.totalNda }}</h2>
                 </div>
                 <div id="ndaDisplay"></div>
               </div>
               <div class="chart-item mb-6">
                 <div>
                   <p class="font-sans text-[16px] text-[#7F7F80] font-medium">Total MoU</p>
-                  <h2 id="totalMoU" class="font-sans text-[24px] text-[#333333] font-bold">24</h2>
+                  <h2 id="totalMoU" class="font-sans text-[24px] text-[#333333] font-bold">{{ summaryData?.totalMou }}</h2>
                 </div>
                 <div id="mouDisplay"></div>
               </div>
               <div class="chart-item">
                 <div>
                   <p class="font-sans text-[16px] text-[#7F7F80] font-medium">Total PKS</p>
-                  <h2 id="totalPKS" class="font-sans text-[24px] text-[#333333] font-bold">30</h2>
+                  <h2 id="totalPKS" class="font-sans text-[24px] text-[#333333] font-bold">{{ summaryData?.totalPks }}</h2>
                 </div>
                 <div id="pksDisplay"></div>
               </div>
@@ -226,7 +233,7 @@
         </div>
       </div>
       <div class="flex">
-        <div class="flex w-[1046px] h-[480px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
+        <div class="flex w-[1046px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
           <table class="table-auto w-full text-left border-collapse border border-[#E5E7E9]">
             <thead>
               <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
@@ -336,12 +343,12 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.pic}`" class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
-                <td class="p-2 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
-                <td class="p-2 border border-[#E5E7E9]">{{ item.pic }}</td>
-                <td class="p-2 border border-[#E5E7E9]">{{ item.jumlahPengajuan }}</td>
-                <td class="p-2 border border-[#E5E7E9]">{{ item.totalSelesai }}</td>
-                <td class="p-2 border border-[#E5E7E9]">{{ item.totalDiproses }}</td>
-                <td class="p-2 border border-[#E5E7E9]">{{ item.totalStopClock }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pic }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.jumlahPengajuan }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalSelesai }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalDiproses }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalStopClock }}</td>
               </tr>
             </tbody>
           </table>
@@ -370,189 +377,20 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
 import { Chart, DoughnutController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { fetchGet } from '@/api/apiFunction';
+// import { parseStatusAproval } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 
 Chart.register(DoughnutController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ChartDataLabels);
 
 export default {
   name: "DashBoardMitra",
-  setup() {
-    onMounted(() => {
-      // Data for the bar chart
-      const barChartData = [20, 15, 9, 20, 5];
-      // Calculate the total data
-      const totalData = barChartData.reduce((acc, value) => acc + value, 0);
-      document.getElementById("totalData").innerText = totalData;
-
-      const createCircleChart = (elementId, value, color, label) => {
-        const container = document.getElementById(elementId);
-        const percentage = (value / totalData) * 100;
-        const radius = 40;
-        const strokeWidth = 15;
-        const normalizedRadius = radius - strokeWidth / 2;
-        const circumference = normalizedRadius * 2 * Math.PI;
-        const initialDashoffset = circumference;
-        const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-        container.innerHTML = `
-      <div class="chart-circle" style="position: relative;">
-        <svg viewBox="0 0 100 100" class="chart-svg">
-          <circle class="circle-bg"
-            stroke="#E5E5E5"
-            stroke-width="${strokeWidth}"
-            fill="transparent"
-            r="${normalizedRadius}"
-            cx="50"
-            cy="50"
-          />
-          <circle class="progress-circle"
-            stroke="${color}"
-            stroke-width="${strokeWidth}"
-            stroke-dasharray="${circumference} ${circumference}"
-            stroke-dashoffset="${initialDashoffset}"
-            fill="transparent"
-            r="${normalizedRadius}"
-            cx="50"
-            cy="50"
-          />
-        </svg>
-        <div class="chart-text">
-          <span class="value">${value}</span>
-          <span class="total">/${totalData}</span>
-        </div>
-        <div class="chart-tooltip" style="display: none; position: absolute; padding: 5px; background: rgba(0, 0, 0, 0.85); color: #fff; border-radius: 5px; font-size: 10px; white-space: nowrap;">
-          <div style="font-weight: bold;">${label}</div>
-          <div style="display: flex; align-items: center; margin-top: 5px;">
-            <span style="display: inline-block; width: 10px; height: 10px; background-color: ${color}; margin-right: 5px;"></span>
-            <span>Jumlah: ${value}</span>
-          </div>
-        </div>
-      </div>
-    `;
-
-        const progressCircle = container.querySelector(".progress-circle");
-        const tooltip = container.querySelector(".chart-tooltip");
-        const chartSvg = container.querySelector(".chart-svg");
-
-        setTimeout(() => {
-          progressCircle.style.transition = "stroke-dashoffset 1s ease-out";
-          progressCircle.setAttribute("stroke-dashoffset", strokeDashoffset);
-        }, 0);
-        chartSvg.addEventListener("mousemove", (e) => {
-          const rect = container.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          tooltip.style.display = "block";
-          tooltip.style.left = `${x + 10}px`;
-          tooltip.style.top = `${y - 40}px`;
-        });
-        chartSvg.addEventListener("mouseleave", () => {
-          tooltip.style.display = "none";
-          progressCircle.style.transform = "scale(1)";
-        });
-        chartSvg.addEventListener("mouseenter", () => {
-          tooltip.style.display = "block";
-          progressCircle.style.transform = "scale(1.1)";
-          progressCircle.style.transition = "transform 0.5s ease";
-        });
-      };
-      createCircleChart("ndaDisplay", parseInt(document.getElementById("totalNDA").innerText, 10), "#0EA976", "NDA");
-      createCircleChart("mouDisplay", parseInt(document.getElementById("totalMoU").innerText, 10), "#FFA229", "MoU");
-      createCircleChart("pksDisplay", parseInt(document.getElementById("totalPKS").innerText, 10), "#FF51AF", "PKS");
-
-      // Bar Chart
-      let delayed;
-      const ctx = document.getElementById("myBarChart").getContext("2d");
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: ["Total Diproses", "Total Direvisi", "Total Ditolak", "Total Selesai", "Total Stop Clock"],
-          datasets: [
-            {
-              label: "Jumlah",
-              data: barChartData,
-              backgroundColor: ["#7367F0", "#FFA229", "#FF5656", "#0EA976", "#4E79B6"],
-              borderColor: "#FFFFFF",
-              borderWidth: 1,
-              borderRadius: 5,
-              barThickness: 60, // Width batang chart
-            },
-          ],
-        },
-        options: {
-          animation: {
-            onComplete: () => {
-              delayed = true;
-            },
-            delay: (context) => {
-              let delay = 0;
-              if (context.type === "data" && context.mode === "default" && !delayed) {
-                delay = context.dataIndex * 300 + context.datasetIndex * 100;
-              }
-              return delay;
-            },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 50,
-              ticks: {
-                stepSize: 10,
-                color: "#000000",
-                font: {
-                  size: 14,
-                },
-              },
-              grid: {
-                color: "#BDBDBD",
-                borderDash: [5, 5],
-              },
-              stacked: true,
-            },
-            x: {
-              ticks: {
-                color: "#000000",
-                font: {
-                  size: 10,
-                  weight: "semibold",
-                },
-              },
-              grid: {
-                display: true,
-                color: "#BDBDBD",
-                borderDash: [5, 5],
-              },
-              stacked: true,
-            },
-          },
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              enabled: true,
-            },
-            datalabels: {
-              color: "#FFFFFF",
-              anchor: "center",
-              align: "center",
-              offset: 0,
-              font: {
-                weight: "bold",
-                size: 12,
-              },
-              formatter: function (value) {
-                return value;
-              },
-            },
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-        },
-      });
-    });
+  components: {
+    Loading,
+    ModalFailed
   },
   data() {
     return {
@@ -574,33 +412,43 @@ export default {
       displayOptions: [8, 16, 25],
       actionDropdownIndex: null,
       searchQuery: "",
-      tableData: [
-        { pic: "Achmad Marzuki Yahya", jumlahPengajuan: 15, totalSelesai: 5, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Erna Ade Surya Ponti", jumlahPengajuan: 12, totalSelesai: 4, totalDiproses: 4, totalStopClock: 4 },
-        { pic: "Annisa Inda Fitriani", jumlahPengajuan: 10, totalSelesai: 3, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Wulan Purnamasari", jumlahPengajuan: 8, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Tiffany Maliati Khumairo", jumlahPengajuan: 7, totalSelesai: 2, totalDiproses: 2, totalStopClock: 2 },
-        { pic: "Manisya Eka Prasetia", jumlahPengajuan: 6, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "M. Risky Riadi", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 1 },
-        { pic: "Andi Muhammad Fathur", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 1 },
-        { pic: "Fauzan Agung", jumlahPengajuan: 9, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Rina Sari", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 1, totalStopClock: 3 },
-        { pic: "Siti Aminah", jumlahPengajuan: 4, totalSelesai: 1, totalDiproses: 2, totalStopClock: 3 },
-        { pic: "Budi Santoso", jumlahPengajuan: 11, totalSelesai: 5, totalDiproses: 4, totalStopClock: 3 },
-        { pic: "Dewi Lestari", jumlahPengajuan: 8, totalSelesai: 3, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Aulia Rahma", jumlahPengajuan: 7, totalSelesai: 3, totalDiproses: 2, totalStopClock: 3 },
-        { pic: "Gina Suci", jumlahPengajuan: 10, totalSelesai: 4, totalDiproses: 2, totalStopClock: 3 },
-        { pic: "Rizky Fauzi", jumlahPengajuan: 6, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Nadia Sari", jumlahPengajuan: 9, totalSelesai: 3, totalDiproses: 5, totalStopClock: 3 },
-        { pic: "Vina Putri", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 2, totalStopClock: 3 },
-        { pic: "Ilham Naufal", jumlahPengajuan: 12, totalSelesai: 6, totalDiproses: 4, totalStopClock: 3 },
-        { pic: "Rama Pradana", jumlahPengajuan: 14, totalSelesai: 7, totalDiproses: 5, totalStopClock: 3 },
-        { pic: "Maya Setiawan", jumlahPengajuan: 2, totalSelesai: 1, totalDiproses: 1, totalStopClock: 3 },
-        { pic: "Hendri Syah", jumlahPengajuan: 1, totalSelesai: 0, totalDiproses: 0, totalStopClock: 3 },
-        { pic: "Nina Andini", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 3 },
-        { pic: "Agung Ramadhan", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
-        { pic: "Putri Andini", jumlahPengajuan: 7, totalSelesai: 3, totalDiproses: 2, totalStopClock: 3 },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      summaryData: null,
+      totalDataPengajuan: 0,
+      
+      tableData: [],
+      // tableData: [
+      //   { pic: "Achmad Marzuki Yahya", jumlahPengajuan: 15, totalSelesai: 5, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Erna Ade Surya Ponti", jumlahPengajuan: 12, totalSelesai: 4, totalDiproses: 4, totalStopClock: 4 },
+      //   { pic: "Annisa Inda Fitriani", jumlahPengajuan: 10, totalSelesai: 3, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Wulan Purnamasari", jumlahPengajuan: 8, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Tiffany Maliati Khumairo", jumlahPengajuan: 7, totalSelesai: 2, totalDiproses: 2, totalStopClock: 2 },
+      //   { pic: "Manisya Eka Prasetia", jumlahPengajuan: 6, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "M. Risky Riadi", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 1 },
+      //   { pic: "Andi Muhammad Fathur", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 1 },
+      //   { pic: "Fauzan Agung", jumlahPengajuan: 9, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Rina Sari", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 1, totalStopClock: 3 },
+      //   { pic: "Siti Aminah", jumlahPengajuan: 4, totalSelesai: 1, totalDiproses: 2, totalStopClock: 3 },
+      //   { pic: "Budi Santoso", jumlahPengajuan: 11, totalSelesai: 5, totalDiproses: 4, totalStopClock: 3 },
+      //   { pic: "Dewi Lestari", jumlahPengajuan: 8, totalSelesai: 3, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Aulia Rahma", jumlahPengajuan: 7, totalSelesai: 3, totalDiproses: 2, totalStopClock: 3 },
+      //   { pic: "Gina Suci", jumlahPengajuan: 10, totalSelesai: 4, totalDiproses: 2, totalStopClock: 3 },
+      //   { pic: "Rizky Fauzi", jumlahPengajuan: 6, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Nadia Sari", jumlahPengajuan: 9, totalSelesai: 3, totalDiproses: 5, totalStopClock: 3 },
+      //   { pic: "Vina Putri", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 2, totalStopClock: 3 },
+      //   { pic: "Ilham Naufal", jumlahPengajuan: 12, totalSelesai: 6, totalDiproses: 4, totalStopClock: 3 },
+      //   { pic: "Rama Pradana", jumlahPengajuan: 14, totalSelesai: 7, totalDiproses: 5, totalStopClock: 3 },
+      //   { pic: "Maya Setiawan", jumlahPengajuan: 2, totalSelesai: 1, totalDiproses: 1, totalStopClock: 3 },
+      //   { pic: "Hendri Syah", jumlahPengajuan: 1, totalSelesai: 0, totalDiproses: 0, totalStopClock: 3 },
+      //   { pic: "Nina Andini", jumlahPengajuan: 3, totalSelesai: 1, totalDiproses: 1, totalStopClock: 3 },
+      //   { pic: "Agung Ramadhan", jumlahPengajuan: 5, totalSelesai: 2, totalDiproses: 3, totalStopClock: 3 },
+      //   { pic: "Putri Andini", jumlahPengajuan: 7, totalSelesai: 3, totalDiproses: 2, totalStopClock: 3 },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -677,6 +525,13 @@ export default {
     },
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -769,6 +624,241 @@ export default {
         document.removeEventListener("click", this.handleClickOutside);
       }
     },
+    createChart(barChartData, totalNda, totalMou, totalPks, max, step) {
+      // Data for the bar chart
+      // const barChartData = [20, 15, 9, 20, 5];
+      // Calculate the total data
+      // const totalData = barChartData.reduce((acc, value) => acc + value, 0);
+      const totalData = totalNda + totalMou + totalPks;
+      document.getElementById("totalData").innerText = totalData;
+
+      const createCircleChart = (elementId, value, color, label) => {
+        const container = document.getElementById(elementId);
+        const percentage = (value / totalData) * 100;
+        const radius = 40;
+        const strokeWidth = 15;
+        const normalizedRadius = radius - strokeWidth / 2;
+        const circumference = normalizedRadius * 2 * Math.PI;
+        const initialDashoffset = circumference;
+        const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+        container.innerHTML = `
+          <div class="chart-circle" style="position: relative;">
+            <svg viewBox="0 0 100 100" class="chart-svg">
+              <circle class="circle-bg"
+                stroke="#E5E5E5"
+                stroke-width="${strokeWidth}"
+                fill="transparent"
+                r="${normalizedRadius}"
+                cx="50"
+                cy="50"
+              />
+              <circle class="progress-circle"
+                stroke="${color}"
+                stroke-width="${strokeWidth}"
+                stroke-dasharray="${circumference} ${circumference}"
+                stroke-dashoffset="${initialDashoffset}"
+                fill="transparent"
+                r="${normalizedRadius}"
+                cx="50"
+                cy="50"
+              />
+            </svg>
+            <div class="chart-text">
+              <span class="value">${value}</span>
+              <span class="total">/${totalData}</span>
+            </div>
+            <div class="chart-tooltip" style="display: none; position: absolute; padding: 5px; background: rgba(0, 0, 0, 0.85); color: #fff; border-radius: 5px; font-size: 10px; white-space: nowrap;">
+              <div style="font-weight: bold;">${label}</div>
+              <div style="display: flex; align-items: center; margin-top: 5px;">
+                <span style="display: inline-block; width: 10px; height: 10px; background-color: ${color}; margin-right: 5px;"></span>
+                <span>Jumlah: ${value}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const progressCircle = container.querySelector(".progress-circle");
+        const tooltip = container.querySelector(".chart-tooltip");
+        const chartSvg = container.querySelector(".chart-svg");
+
+        setTimeout(() => {
+          progressCircle.style.transition = "stroke-dashoffset 1s ease-out";
+          progressCircle.setAttribute("stroke-dashoffset", strokeDashoffset);
+        }, 0);
+        chartSvg.addEventListener("mousemove", (e) => {
+          const rect = container.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          tooltip.style.display = "block";
+          tooltip.style.left = `${x + 10}px`;
+          tooltip.style.top = `${y - 40}px`;
+        });
+        chartSvg.addEventListener("mouseleave", () => {
+          tooltip.style.display = "none";
+          progressCircle.style.transform = "scale(1)";
+        });
+        chartSvg.addEventListener("mouseenter", () => {
+          tooltip.style.display = "block";
+          progressCircle.style.transform = "scale(1.1)";
+          progressCircle.style.transition = "transform 0.5s ease";
+        });
+      };
+      createCircleChart("ndaDisplay", totalNda, "#0EA976", "NDA");
+      createCircleChart("mouDisplay", totalMou, "#FFA229", "MoU");
+      createCircleChart("pksDisplay", totalPks, "#FF51AF", "PKS");
+
+      // Bar Chart
+      let delayed;
+      const ctx = document.getElementById("myBarChart").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Total Diproses", "Total Direvisi", "Total Ditolak", "Total Selesai", "Total Stop Clock"],
+          datasets: [
+            {
+              label: "Jumlah",
+              data: barChartData,
+              backgroundColor: ["#7367F0", "#FFA229", "#FF5656", "#0EA976", "#4E79B6"],
+              borderColor: "#FFFFFF",
+              borderWidth: 1,
+              borderRadius: 5,
+              barThickness: 60, // Width batang chart
+            },
+          ],
+        },
+        options: {
+          animation: {
+            onComplete: () => {
+              delayed = true;
+            },
+            delay: (context) => {
+              let delay = 0;
+              if (context.type === "data" && context.mode === "default" && !delayed) {
+                delay = context.dataIndex * 300 + context.datasetIndex * 100;
+              }
+              return delay;
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: max,
+              ticks: {
+                stepSize: step,
+                color: "#000000",
+                font: {
+                  size: 14,
+                },
+              },
+              grid: {
+                color: "#BDBDBD",
+                borderDash: [5, 5],
+              },
+              stacked: true,
+            },
+            x: {
+              ticks: {
+                color: "#000000",
+                font: {
+                  size: 10,
+                  weight: "semibold",
+                },
+              },
+              grid: {
+                display: true,
+                color: "#BDBDBD",
+                borderDash: [5, 5],
+              },
+              stacked: true,
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              enabled: true,
+            },
+            datalabels: {
+              color: "#FFFFFF",
+              anchor: "center",
+              align: "center",
+              offset: 0,
+              font: {
+                weight: "bold",
+                size: 12,
+              },
+              formatter: function (value) {
+                return value;
+              },
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    },
+    // api
+		async getDataApi() {
+      this.isLoading = true;
+			let boxResult = new Array;
+      let url = 'mitra/';
+      let params = null;
+			const res = await fetchGet(url, params, this.$router);
+			if (res.status == 200) {
+        console.log(res.data)
+				const cleanData1 = res.data.listMounda.map((item) => ({
+					pic: item.disposedStaff,
+					jumlahPengajuan: item.jmlPengajuan,
+					totalSelesai: item.proses,
+					totalDiproses: item.selesai,
+					totalStopClock: item.stopclock
+				}))
+				boxResult = boxResult.concat(cleanData1)
+        const cleanData2 = res.data.listPks.map((item) => ({
+					pic: item.disposedStaff,
+					jumlahPengajuan: item.jmlPengajuan,
+					totalSelesai: item.proses,
+					totalDiproses: item.selesai,
+					totalStopClock: item.stopclock
+				}))
+				boxResult = boxResult.concat(cleanData2)
+        const aggregated = Object.values(
+          boxResult.reduce((acc, curr) => {
+            // Jika kategori belum ada, inisialisasi dengan nilai awal
+            if (!acc[curr.pic]) {
+              acc[curr.pic] = { pic: curr.pic, jumlahPengajuan: 0, totalSelesai: 0, totalDiproses: 0, totalStopClock: 0, };
+            }
+            // Tambahkan nilai jumlahPengajuan dan totalSelesai ke kategori yang sesuai
+            acc[curr.pic].jumlahPengajuan += curr.jumlahPengajuan;
+            acc[curr.pic].totalSelesai += curr.totalSelesai;
+            acc[curr.pic].totalDiproses += curr.totalDiproses;
+            acc[curr.pic].totalStopClock += curr.totalStopClock;
+            return acc;
+          }, {})
+        );
+        this.tableData = aggregated;
+        const original = {...res.data}
+        delete original.listMounda;
+        delete original.listPks;
+        this.summaryData = original;
+        this.totalDataPengajuan = res.data.totalNda + res.data.totalMou + res.data.totalPks
+
+        const barChartData = [res.data.totalProcessed, res.data.totalRevision, res.data.totalRejected, res.data.totalFinished, res.data.totalStopClock]
+        const max = Math.max.apply(null, barChartData)
+        this.createChart(barChartData, res.data.totalNda, res.data.totalMou, res.data.totalPks, max, Math.ceil(max/4));
+
+        this.isLoading = false;
+			} else {
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
+			}
+		}
   },
   watch: {
     selectedValue() {
@@ -787,6 +877,7 @@ export default {
     window.addEventListener("beforeunload", () => {
       document.removeEventListener("click", this.handleClickOutside);
     });
+    this.getDataApi();
   },
   beforeUnmount() {
     document.removeEventListener("click", this.handleClickOutside);

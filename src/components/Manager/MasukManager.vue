@@ -1,4 +1,11 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <h1 class="w-[51px] h-[22px] font-sans text-[#7F7F80] text-[14px] font-semibold ml-6 mt-4 mb-4">Masuk</h1>
@@ -219,7 +226,7 @@
                           fill="#2671D9"
                         />
                       </svg>
-                      <button @click="() => navigateToDetail(item.tipe, item.id)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
+                      <button @click="() => navigateToDetail(item.tipe, item.did)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
                     </div>
                   </td>
                 </tr>
@@ -254,8 +261,14 @@
 <script>
 import { fetchGet } from '@/api/apiFunction';
 import { parseStatusAproval } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 
 export default {
+  components: {
+    Loading,
+    ModalFailed
+  },
   data() {
     return {
       showDropdown: false,
@@ -270,34 +283,40 @@ export default {
       displayOptions: [8, 16, 25],
       actionDropdownIndex: null,
       searchQuery: "",
-
-      tableData: [
-        { judul: "MoU Rencana Kerja Sama Pengem...", nomor: 201423, tipe: "MoU", user: "Sales", status: "Masuk" },
-        { judul: "NDA FTTH Project Collaboration Pl...", nomor: 300423, tipe: "PKS", user: "Sales", status: "Masuk" },
-        { judul: "MoU Rencana Kerja Sama Sistem I...", nomor: 201623, tipe: "MoU", user: "Produk", status: "Masuk" },
-        { judul: "Rencana Kerja Sama Penyediaan C...", nomor: 102223, tipe: "PKS", user: "Sales", status: "Masuk" },
-        { judul: "MoU Rencana Kerja Sama Sistem I...", nomor: 201723, tipe: "MoU", user: "Produk", status: "Masuk" },
-        { judul: "Kerja Sama Joint Operation Penge...", nomor: 101923, tipe: "MoU", user: "Produk", status: "Masuk" },
-        { judul: "MoU Rencana Kerja Sama Pemanfa...", nomor: 201823, tipe: "MoU", user: "Sales", status: "Masuk" },
-        { judul: "MoU Rencana Kerja Sama Penyedi...", nomor: 202023, tipe: "MoU", user: "Sales", status: "Masuk" },
-        { judul: "Perjanjian Kerja Sama Pengembangan Aplikasi", nomor: 301423, tipe: "MoU", user: "Marketing", status: "Masuk" },
-        { judul: "Kerja Sama Penyediaan Infrastruktur Jaringan", nomor: 302423, tipe: "PKS", user: "IT", status: "Masuk" },
-        { judul: "Perjanjian Kerja Sama Penelitian Teknologi", nomor: 301623, tipe: "MoU", user: "R&D", status: "Masuk" },
-        { judul: "Kontrak Kerja Sama Penyediaan Layanan", nomor: 302223, tipe: "PKS", user: "Finance", status: "Masuk" },
-        { judul: "Kerja Sama Pengembangan Produk Baru", nomor: 301723, tipe: "MoU", user: "Produk", status: "Masuk" },
-        { judul: "Kesepakatan Kerja Sama Pemasaran Digital", nomor: 301923, tipe: "MoU", user: "Sales", status: "Masuk" },
-        { judul: "Perjanjian Kerja Sama Pelatihan SDM", nomor: 302823, tipe: "MoU", user: "HR", status: "Masuk" },
-        { judul: "MoU Kerja Sama Penelitian dan Pengembangan", nomor: 302023, tipe: "MoU", user: "R&D", status: "Masuk" },
-        { judul: "NDA Kerja Sama Keamanan Data", nomor: 301823, tipe: "NDA", user: "Legal", status: "Masuk" },
-        { judul: "Kesepakatan Kerja Sama Konservasi Energi", nomor: 302123, tipe: "PKS", user: "CSR", status: "Masuk" },
-        { judul: "Kerja Sama Pengembangan Aplikasi Mobile", nomor: 302523, tipe: "MoU", user: "IT", status: "Masuk" },
-        { judul: "NDA Proyek Penelitian AI", nomor: 302623, tipe: "NDA", user: "R&D", status: "Masuk" },
-        { judul: "Perjanjian Kerja Sama Supply Chain", nomor: 302723, tipe: "PKS", user: "Operations", status: "Masuk" },
-        { judul: "MoU Pelatihan Keterampilan Digital", nomor: 302823, tipe: "MoU", user: "HR", status: "Masuk" },
-        { judul: "Kesepakatan Kerja Sama Logistik", nomor: 302923, tipe: "PKS", user: "Logistics", status: "Masuk" },
-        { judul: "MoU Kerja Sama Riset Pasar", nomor: 303023, tipe: "MoU", user: "Marketing", status: "Masuk" },
-        { judul: "Perjanjian Kerja Sama Penyediaan Software", nomor: 303123, tipe: "PKS", user: "IT", status: "Masuk" },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      tableData: [],
+      // tableData: [
+      //   { judul: "MoU Rencana Kerja Sama Pengem...", nomor: 201423, tipe: "MoU", user: "Sales", status: "Masuk" },
+      //   { judul: "NDA FTTH Project Collaboration Pl...", nomor: 300423, tipe: "PKS", user: "Sales", status: "Masuk" },
+      //   { judul: "MoU Rencana Kerja Sama Sistem I...", nomor: 201623, tipe: "MoU", user: "Produk", status: "Masuk" },
+      //   { judul: "Rencana Kerja Sama Penyediaan C...", nomor: 102223, tipe: "PKS", user: "Sales", status: "Masuk" },
+      //   { judul: "MoU Rencana Kerja Sama Sistem I...", nomor: 201723, tipe: "MoU", user: "Produk", status: "Masuk" },
+      //   { judul: "Kerja Sama Joint Operation Penge...", nomor: 101923, tipe: "MoU", user: "Produk", status: "Masuk" },
+      //   { judul: "MoU Rencana Kerja Sama Pemanfa...", nomor: 201823, tipe: "MoU", user: "Sales", status: "Masuk" },
+      //   { judul: "MoU Rencana Kerja Sama Penyedi...", nomor: 202023, tipe: "MoU", user: "Sales", status: "Masuk" },
+      //   { judul: "Perjanjian Kerja Sama Pengembangan Aplikasi", nomor: 301423, tipe: "MoU", user: "Marketing", status: "Masuk" },
+      //   { judul: "Kerja Sama Penyediaan Infrastruktur Jaringan", nomor: 302423, tipe: "PKS", user: "IT", status: "Masuk" },
+      //   { judul: "Perjanjian Kerja Sama Penelitian Teknologi", nomor: 301623, tipe: "MoU", user: "R&D", status: "Masuk" },
+      //   { judul: "Kontrak Kerja Sama Penyediaan Layanan", nomor: 302223, tipe: "PKS", user: "Finance", status: "Masuk" },
+      //   { judul: "Kerja Sama Pengembangan Produk Baru", nomor: 301723, tipe: "MoU", user: "Produk", status: "Masuk" },
+      //   { judul: "Kesepakatan Kerja Sama Pemasaran Digital", nomor: 301923, tipe: "MoU", user: "Sales", status: "Masuk" },
+      //   { judul: "Perjanjian Kerja Sama Pelatihan SDM", nomor: 302823, tipe: "MoU", user: "HR", status: "Masuk" },
+      //   { judul: "MoU Kerja Sama Penelitian dan Pengembangan", nomor: 302023, tipe: "MoU", user: "R&D", status: "Masuk" },
+      //   { judul: "NDA Kerja Sama Keamanan Data", nomor: 301823, tipe: "NDA", user: "Legal", status: "Masuk" },
+      //   { judul: "Kesepakatan Kerja Sama Konservasi Energi", nomor: 302123, tipe: "PKS", user: "CSR", status: "Masuk" },
+      //   { judul: "Kerja Sama Pengembangan Aplikasi Mobile", nomor: 302523, tipe: "MoU", user: "IT", status: "Masuk" },
+      //   { judul: "NDA Proyek Penelitian AI", nomor: 302623, tipe: "NDA", user: "R&D", status: "Masuk" },
+      //   { judul: "Perjanjian Kerja Sama Supply Chain", nomor: 302723, tipe: "PKS", user: "Operations", status: "Masuk" },
+      //   { judul: "MoU Pelatihan Keterampilan Digital", nomor: 302823, tipe: "MoU", user: "HR", status: "Masuk" },
+      //   { judul: "Kesepakatan Kerja Sama Logistik", nomor: 302923, tipe: "PKS", user: "Logistics", status: "Masuk" },
+      //   { judul: "MoU Kerja Sama Riset Pasar", nomor: 303023, tipe: "MoU", user: "Marketing", status: "Masuk" },
+      //   { judul: "Perjanjian Kerja Sama Penyediaan Software", nomor: 303123, tipe: "PKS", user: "IT", status: "Masuk" },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -341,6 +360,13 @@ export default {
     },
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -439,39 +465,51 @@ export default {
     },
     // api
 		async getDataApi() {
+      this.isLoading = true;
 			let boxResult = new Array;
 			const res = await fetchGet("mitra/manager/mounda/incoming-data/", null, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.mouNdaNumber,
+					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
 					user: item.user,
 					status: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				console.log(res.data)
 				boxResult = boxResult.concat(cleanData)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
 			const res2 = await fetchGet("mitra/manager/pks/incoming-data", null, this.$router);
 			if (res2.status == 200) {
 				const cleanData2 = res2.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.budgetNumber,
+					nomor: item.submissionNumber,
 					tipe: "PKS",
 					user: item.user,
 					status: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				boxResult = boxResult.concat(cleanData2)
 				boxResult = boxResult.map((item, index) => ({ id: index + 1, ...item }))
 				console.log(res2.data)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
-			this.tableData = boxResult
+			this.tableData = boxResult;
+      this.isLoading = false;
 		}
   },
   mounted() {

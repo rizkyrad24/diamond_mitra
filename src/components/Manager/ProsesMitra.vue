@@ -1,4 +1,11 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <h1 class="w-[51px] h-[22px] font-sans text-[#7F7F80] text-[14px] font-semibold ml-6 mt-4 mb-4">Proses</h1>
@@ -78,7 +85,7 @@
       </div>
       <div>
         <div class="flex">
-          <div class="flex w-full h-[480px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
+          <div class="flex w-full rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
             <table class="table-auto w-full text-left border-collapse border border-[#E5E7E9]">
               <thead>
                 <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
@@ -222,12 +229,12 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.judul}`" class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
-                  <td class="p-2 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.judul }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.nomor }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.tipe }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.user }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.judul }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.nomor }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.tipe }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.user }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span
                       :class="[
                         'w-[55px] h-[24px] font-sans text-[12px] font-semibold',
@@ -241,13 +248,13 @@
                       >{{ item.date }}
                     </span>
                   </td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.pic }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pic }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span class="w-[55px] h-[24px] px-4 py-1 rounded-full font-sans text-[12px] text-[#4791F2] bg-[#E7F1FD] border-[1px] border-[#91BEF7]">
                       {{ item.progress }}
                     </span>
                   </td>
-                  <td class="p-2 border border-[#E5E7E9] relative">
+                  <td class="p-2 py-4 border border-[#E5E7E9] relative">
                     <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
                       <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -267,7 +274,7 @@
                           fill="#2671D9"
                         />
                       </svg>
-                      <button @click="navigateToDetail(item.tipe, item.id)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
+                      <button @click="navigateToDetail(item.tipe, item.did)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
                     </div>
                   </td>
                 </tr>
@@ -301,9 +308,15 @@
 
 <script>
 import { fetchGet } from '@/api/apiFunction';
-import { parseStatusAproval } from '@/utils/helper';
+import { parseStatusAproval, dateParsing } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 
 export default {
+  components: {
+    Loading,
+    ModalFailed
+  },
   data() {
     return {
       showDropdown: false,
@@ -319,34 +332,40 @@ export default {
       displayOptions: [8, 16, 25],
       actionDropdownIndex: null,
       searchQuery: "",
-
-      tableData: [
-        { judul: "MoU Rencan...", nomor: 201423, tipe: "MoU", user: "Sales", date: "15 Hari", pic: "Farhan", progress: "Surat Penawaran" },
-        { judul: "NDA FTTH P...", nomor: 300423, tipe: "MoU", user: "Sales", date: "15 Hari", pic: "Nathan", progress: "Proposal" },
-        { judul: "MoU Rencan...", nomor: 201623, tipe: "MoU", user: "Produk", date: "7 Hari", pic: "Budi", progress: "Evaluasi" },
-        { judul: "Rencana Ker...", nomor: 102223, tipe: "PKS", user: "Sales", date: "Stop Clock", pic: "Farhan", progress: "Surat Pesanan" },
-        { judul: "MoU Rencan...", nomor: 201723, tipe: "MoU", user: "Produk", date: "7 Hari", pic: "Nathan", progress: "BAK Pemilihan Mitra" },
-        { judul: "Kerja Sama J...", nomor: 101923, tipe: "PKS", user: "Produk", date: "15 Hari", pic: "Budi", progress: "Negosiasi" },
-        { judul: "MoU Rencan...", nomor: 201823, tipe: "MoU", user: "Sales", date: "0 Hari", pic: "Farhan", progress: "PKS" },
-        { judul: "MoU Rencan...", nomor: 202023, tipe: "MoU", user: "Sales", date: "30 Hari", pic: "Nathan", progress: "PKS" },
-        { judul: "MoU Rencan...", nomor: 201923, tipe: "MoU", user: "Sales", date: "10 Hari", pic: "Farhan", progress: "Draft" },
-        { judul: "NDA Data C...", nomor: 302423, tipe: "NDA", user: "Produk", date: "5 Hari", pic: "Nathan", progress: "Review" },
-        { judul: "Kerjasama E...", nomor: 301023, tipe: "PKS", user: "Sales", date: "20 Hari", pic: "Budi", progress: "Penandatanganan" },
-        { judul: "MoU Pengembangan...", nomor: 202123, tipe: "MoU", user: "Sales", date: "3 Hari", pic: "Farhan", progress: "Evaluasi" },
-        { judul: "NDA Kerjasama...", nomor: 301123, tipe: "NDA", user: "Produk", date: "12 Hari", pic: "Nathan", progress: "Draft" },
-        { judul: "Kerja Sama Pro...", nomor: 103223, tipe: "PKS", user: "Produk", date: "18 Hari", pic: "Budi", progress: "Negosiasi" },
-        { judul: "MoU Perjanjian...", nomor: 202223, tipe: "MoU", user: "Sales", date: "25 Hari", pic: "Farhan", progress: "PKS" },
-        { judul: "NDA Rencana...", nomor: 302523, tipe: "NDA", user: "Sales", date: "10 Hari", pic: "Nathan", progress: "Finalisasi" },
-        { judul: "Kerjasama Teknologi...", nomor: 102323, tipe: "PKS", user: "Sales", date: "15 Hari", pic: "Budi", progress: "Proposal" },
-        { judul: "MoU Rencana Kerjasama...", nomor: 202323, tipe: "MoU", user: "Produk", date: "30 Hari", pic: "Farhan", progress: "Persetujuan" },
-        { judul: "MoU Kolaborasi...", nomor: 202423, tipe: "MoU", user: "Sales", date: "7 Hari", pic: "Nathan", progress: "Draft" },
-        { judul: "PKS Implementasi...", nomor: 103423, tipe: "PKS", user: "Produk", date: "0 Hari", pic: "Budi", progress: "Negosiasi" },
-        { judul: "MoU Kerjasama L...", nomor: 203023, tipe: "MoU", user: "Sales", date: "14 Hari", pic: "Farhan", progress: "Surat Penawaran" },
-        { judul: "NDA Kerjasama P...", nomor: 303123, tipe: "NDA", user: "Produk", date: "8 Hari", pic: "Nathan", progress: "Finalisasi" },
-        { judul: "MoU Perjanjian P...", nomor: 202523, tipe: "MoU", user: "Sales", date: "9 Hari", pic: "Budi", progress: "Evaluasi" },
-        { judul: "PKS Proyek X...", nomor: 104223, tipe: "PKS", user: "Produk", date: "21 Hari", pic: "Farhan", progress: "Penyusunan" },
-        { judul: "Kerja Sama Pembangunan...", nomor: 203123, tipe: "MoU", user: "Sales", date: "17 Hari", pic: "Nathan", progress: "Proposal" },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      tableData: [],
+      // tableData: [
+      //   { judul: "MoU Rencan...", nomor: 201423, tipe: "MoU", user: "Sales", date: "15 Hari", pic: "Farhan", progress: "Surat Penawaran" },
+      //   { judul: "NDA FTTH P...", nomor: 300423, tipe: "MoU", user: "Sales", date: "15 Hari", pic: "Nathan", progress: "Proposal" },
+      //   { judul: "MoU Rencan...", nomor: 201623, tipe: "MoU", user: "Produk", date: "7 Hari", pic: "Budi", progress: "Evaluasi" },
+      //   { judul: "Rencana Ker...", nomor: 102223, tipe: "PKS", user: "Sales", date: "Stop Clock", pic: "Farhan", progress: "Surat Pesanan" },
+      //   { judul: "MoU Rencan...", nomor: 201723, tipe: "MoU", user: "Produk", date: "7 Hari", pic: "Nathan", progress: "BAK Pemilihan Mitra" },
+      //   { judul: "Kerja Sama J...", nomor: 101923, tipe: "PKS", user: "Produk", date: "15 Hari", pic: "Budi", progress: "Negosiasi" },
+      //   { judul: "MoU Rencan...", nomor: 201823, tipe: "MoU", user: "Sales", date: "0 Hari", pic: "Farhan", progress: "PKS" },
+      //   { judul: "MoU Rencan...", nomor: 202023, tipe: "MoU", user: "Sales", date: "30 Hari", pic: "Nathan", progress: "PKS" },
+      //   { judul: "MoU Rencan...", nomor: 201923, tipe: "MoU", user: "Sales", date: "10 Hari", pic: "Farhan", progress: "Draft" },
+      //   { judul: "NDA Data C...", nomor: 302423, tipe: "NDA", user: "Produk", date: "5 Hari", pic: "Nathan", progress: "Review" },
+      //   { judul: "Kerjasama E...", nomor: 301023, tipe: "PKS", user: "Sales", date: "20 Hari", pic: "Budi", progress: "Penandatanganan" },
+      //   { judul: "MoU Pengembangan...", nomor: 202123, tipe: "MoU", user: "Sales", date: "3 Hari", pic: "Farhan", progress: "Evaluasi" },
+      //   { judul: "NDA Kerjasama...", nomor: 301123, tipe: "NDA", user: "Produk", date: "12 Hari", pic: "Nathan", progress: "Draft" },
+      //   { judul: "Kerja Sama Pro...", nomor: 103223, tipe: "PKS", user: "Produk", date: "18 Hari", pic: "Budi", progress: "Negosiasi" },
+      //   { judul: "MoU Perjanjian...", nomor: 202223, tipe: "MoU", user: "Sales", date: "25 Hari", pic: "Farhan", progress: "PKS" },
+      //   { judul: "NDA Rencana...", nomor: 302523, tipe: "NDA", user: "Sales", date: "10 Hari", pic: "Nathan", progress: "Finalisasi" },
+      //   { judul: "Kerjasama Teknologi...", nomor: 102323, tipe: "PKS", user: "Sales", date: "15 Hari", pic: "Budi", progress: "Proposal" },
+      //   { judul: "MoU Rencana Kerjasama...", nomor: 202323, tipe: "MoU", user: "Produk", date: "30 Hari", pic: "Farhan", progress: "Persetujuan" },
+      //   { judul: "MoU Kolaborasi...", nomor: 202423, tipe: "MoU", user: "Sales", date: "7 Hari", pic: "Nathan", progress: "Draft" },
+      //   { judul: "PKS Implementasi...", nomor: 103423, tipe: "PKS", user: "Produk", date: "0 Hari", pic: "Budi", progress: "Negosiasi" },
+      //   { judul: "MoU Kerjasama L...", nomor: 203023, tipe: "MoU", user: "Sales", date: "14 Hari", pic: "Farhan", progress: "Surat Penawaran" },
+      //   { judul: "NDA Kerjasama P...", nomor: 303123, tipe: "NDA", user: "Produk", date: "8 Hari", pic: "Nathan", progress: "Finalisasi" },
+      //   { judul: "MoU Perjanjian P...", nomor: 202523, tipe: "MoU", user: "Sales", date: "9 Hari", pic: "Budi", progress: "Evaluasi" },
+      //   { judul: "PKS Proyek X...", nomor: 104223, tipe: "PKS", user: "Produk", date: "21 Hari", pic: "Farhan", progress: "Penyusunan" },
+      //   { judul: "Kerja Sama Pembangunan...", nomor: 203123, tipe: "MoU", user: "Sales", date: "17 Hari", pic: "Nathan", progress: "Proposal" },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -394,6 +413,13 @@ export default {
   },
 
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -490,6 +516,7 @@ export default {
     },
     // api
 		async getDataApi() {
+      this.isLoading = true;
 			let boxResult = new Array;
       const positionLevel = localStorage.getItem("position");
       let url = null;
@@ -504,24 +531,34 @@ export default {
         url = "mitra/direksi/mounda/proses";
       }
       if (!url) {
-        return alert("Posisi anda tidak dapat mengakses halaman ini");
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
       }
 			const res = await fetchGet(url, params, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.mouNdaNumber,
+					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
 					user: item.user,
-          date: '',
-          pic: '',
+          date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
+          pic: item.disposedStaff,
 					progress: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				console.log(res.data)
 				boxResult = boxResult.concat(cleanData)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
       let url2 = null;
       if (positionLevel == "PartnershipManager") {
@@ -534,27 +571,38 @@ export default {
         url2 = "mitra/direksi/pks/proses";
       }
       if (!url2) {
-        return alert("Posisi anda tidak dapat mengakses halaman ini");
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
       }
 			const res2 = await fetchGet(url2, params, this.$router);
 			if (res2.status == 200) {
 				const cleanData2 = res2.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.budgetNumber,
+					nomor: item.submissionNumber,
 					tipe: "PKS",
 					user: item.user,
-          date: '',
-          pic: '',
+          date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
+          pic: item.disposedStaff,
 					progress: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				boxResult = boxResult.concat(cleanData2)
 				boxResult = boxResult.map((item, index) => ({ id: index + 1, ...item }))
 				console.log(res2.data)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
 			}
 			this.tableData = boxResult
+      this.isLoading = false;
 		}
   },
   mounted() {
