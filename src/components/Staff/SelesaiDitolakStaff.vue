@@ -1,4 +1,7 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed :isVisible="modalFailed.isVisible" :title="modalFailed.title" :message="modalFailed.message"
+    @close="closeModalFailed" />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <h1 class="w-[51px] h-[22px] font-sans text-[#7F7F80] text-[14px] font-semibold ml-6 mt-4 mb-4">Selesai</h1>
@@ -83,7 +86,7 @@
       </div>
       <div class="ApprovalSelesaiStaff">
         <div class="flex">
-          <div class="flex w-full h-[480px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
+          <div class="flex w-full rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
             <table class="table-auto w-full text-left border-collapse border border-[#E5E7E9]">
               <thead>
                 <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
@@ -193,12 +196,12 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.judul}`" class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
-                  <td class="p-2 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.judul }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.nomor }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.tipe }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.pelaksana }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.judul }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.nomor }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.tipe }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pelaksana }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span class="w-[55px] h-[24px] px-4 py-1 rounded-full font-sans text-[12px] text-[#FF5656] bg-[#FFE5E6] border-[1px] border-[#FD8A8A]">
                       {{ item.status }}
                     </span>
@@ -233,7 +236,16 @@
 </template>
 
 <script>
+import { fetchGet } from '@/api/apiFunction';
+import { parseStatusAproval } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
+
 export default {
+  components: {
+    Loading,
+    ModalFailed
+  },
   data() {
     return {
       selectedTable: "ApprovalMitra",
@@ -247,34 +259,40 @@ export default {
       currentPage: 1,
       displayOptions: [8, 16, 25],
       searchQuery: "",
-
-      tableData: [
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-        { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      tableData: [],
+      // tableData: [
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "MoU", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Ditolak" },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -318,6 +336,13 @@ export default {
     },
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -390,7 +415,63 @@ export default {
         this.currentPage++;
       }
     },
+    // api
+		async getDataApi() {
+      this.isLoading = true;
+			let boxResult = new Array;
+      let url = "mitra/staff/mounda/finish";
+      let params = null;
+			const res = await fetchGet(url, params, this.$router);
+			if (res.status == 200) {
+				const cleanData = res.data.map((item) => ({
+					judul: item.partnershipTitle,
+					nomor: item.submissionNumber,
+					tipe: item.base == "MOU" ? "MoU" : item.base,
+					pelaksana: 'Pusat',
+					status: item.status,
+          statusapp: parseStatusAproval(item.positionLevel, item.status),
+          did: item.id
+				}))
+				console.log(res.data)
+				boxResult = boxResult.concat(cleanData)
+			} else {
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
+			}
+      let url2 = "mitra/staff/pks/finish";
+			const res2 = await fetchGet(url2, params, this.$router);
+			if (res2.status == 200) {
+				const cleanData2 = res2.data.map((item) => ({
+					judul: item.partnershipTitle,
+					nomor: item.submissionNumber,
+					tipe: "PKS",
+					pelaksana: 'Pusat',
+					status: item.status,
+          statusapp: parseStatusAproval(item.positionLevel, item.status),
+          did: item.id
+				}))
+				boxResult = boxResult.concat(cleanData2)
+				boxResult = boxResult.map((item, index) => ({ id: index + 1, ...item }))
+				console.log(res2.data)
+			} else {
+				this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
+			}
+			this.tableData = boxResult.filter(item => item.status === 'Ditolak')
+      this.isLoading = false;
+		}
   },
+  mounted() {
+    this.getDataApi();
+  }
 };
 </script>
 

@@ -2,6 +2,8 @@
 import dialog from '@/assets/img/Dialog.png';
 import kirim from '@/assets/img/Dialogkirim.png';
 import gagal from '@/assets/img/Dialogkirimgagal.png';
+// import Loading from '../loading.vue';
+// import ModalFailed from '../modalfailed.vue';
 </script>
 
 <template>

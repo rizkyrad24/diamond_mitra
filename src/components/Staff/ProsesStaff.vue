@@ -1,4 +1,11 @@
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <h1 class="w-[51px] h-[22px] font-sans text-[#7F7F80] text-[14px] font-semibold ml-6 mt-4 mb-4">Proses</h1>
@@ -78,7 +85,7 @@
       </div>
       <div>
         <div class="flex">
-          <div class="flex w-full h-[480px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
+          <div class="flex w-full rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
             <table class="table-auto w-full text-left border-collapse border border-[#E5E7E9]">
               <thead>
                 <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
@@ -222,12 +229,12 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.judul}`" class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
-                  <td class="p-2 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.judul }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.nomor }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.tipe }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.user }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.judul }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.nomor }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.tipe }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.user }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span
                       :class="[
                         'w-[55px] h-[24px] font-sans text-[12px] font-semibold',
@@ -241,13 +248,13 @@
                       >{{ item.date }}
                     </span>
                   </td>
-                  <td class="p-2 border border-[#E5E7E9]">{{ item.pic }}</td>
-                  <td class="p-2 border border-[#E5E7E9]">
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pic }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span class="w-[55px] h-[24px] px-4 py-1 rounded-full font-sans text-[12px] text-[#4791F2] bg-[#E7F1FD] border-[1px] border-[#91BEF7]">
                       {{ item.progress }}
                     </span>
                   </td>
-                  <td class="p-2 border border-[#E5E7E9] relative">
+                  <td class="p-2 py-4 border border-[#E5E7E9] relative">
                     <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
                       <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -267,7 +274,7 @@
                           fill="#2671D9"
                         />
                       </svg>
-                      <button @click="navigateToDetail(item.tipe, item.id)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
+                      <button @click="navigateToDetail(item.tipe, item.did)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
                     </div>
                   </td>
                 </tr>
@@ -301,9 +308,15 @@
 
 <script>
 import { fetchGet } from '@/api/apiFunction';
-import { parseStatusAproval } from '@/utils/helper';
+import { parseStatusAproval, dateParsing } from '@/utils/helper';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 
 export default {
+  components: {
+    Loading,
+    ModalFailed
+  },
   data() {
     return {
       showDropdown: false,
@@ -319,34 +332,40 @@ export default {
       displayOptions: [8, 16, 25],
       actionDropdownIndex: null,
       searchQuery: "",
-
-      tableData: [
-        { judul: "lorem ipsum", nomor: 90225, tipe: "MoU", user: "pusat", date: "15 Hari", pic: "Farhan", progress: "Surat Penawaran" },
-        { judul: "lorem ipsum", nomor: 90226, tipe: "MoU", user: "pusat", date: "15 Hari", pic: "Nathan", progress: "Proposal" },
-        { judul: "lorem ipsum", nomor: 90227, tipe: "PKS", user: "pusat", date: "7 Hari", pic: "Budi", progress: "Evaluasi" },
-        { judul: "lorem ipsum", nomor: 90228, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Farhan", progress: "Surat Pesanan" },
-        { judul: "lorem ipsum", nomor: 90229, tipe: "MoU", user: "pusat", date: "7 Hari", pic: "Nathan", progress: "BAK Pemilihan Mitra" },
-        { judul: "lorem ipsum", nomor: 90230, tipe: "PKS", user: "pusat", date: "15 Hari", pic: "Budi", progress: "Negosiasi" },
-        { judul: "lorem ipsum", nomor: 90231, tipe: "MoU", user: "pusat", date: "0 Hari", pic: "Farhan", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90232, tipe: "PKS", user: "pusat", date: "30 Hari", pic: "Nathan", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90233, tipe: "MoU", user: "pusat", date: "10 Hari", pic: "Budi", progress: "Surat Penawaran" },
-        { judul: "lorem ipsum", nomor: 90234, tipe: "MoU", user: "pusat", date: "5 Hari", pic: "Farhan", progress: "Proposal" },
-        { judul: "lorem ipsum", nomor: 90235, tipe: "PKS", user: "pusat", date: "8 Hari", pic: "Nathan", progress: "Evaluasi" },
-        { judul: "lorem ipsum", nomor: 90236, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Budi", progress: "Surat Pesanan" },
-        { judul: "lorem ipsum", nomor: 90237, tipe: "MoU", user: "pusat", date: "12 Hari", pic: "Farhan", progress: "BAK Pemilihan Mitra" },
-        { judul: "lorem ipsum", nomor: 90238, tipe: "PKS", user: "pusat", date: "20 Hari", pic: "Nathan", progress: "Negosiasi" },
-        { judul: "lorem ipsum", nomor: 90239, tipe: "MoU", user: "pusat", date: "3 Hari", pic: "Budi", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90240, tipe: "PKS", user: "pusat", date: "25 Hari", pic: "Farhan", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90241, tipe: "MoU", user: "pusat", date: "18 Hari", pic: "Nathan", progress: "Surat Penawaran" },
-        { judul: "lorem ipsum", nomor: 90242, tipe: "MoU", user: "pusat", date: "22 Hari", pic: "Budi", progress: "Proposal" },
-        { judul: "lorem ipsum", nomor: 90243, tipe: "PKS", user: "pusat", date: "14 Hari", pic: "Farhan", progress: "Evaluasi" },
-        { judul: "lorem ipsum", nomor: 90244, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Nathan", progress: "Surat Pesanan" },
-        { judul: "lorem ipsum", nomor: 90245, tipe: "MoU", user: "pusat", date: "11 Hari", pic: "Budi", progress: "BAK Pemilihan Mitra" },
-        { judul: "lorem ipsum", nomor: 90246, tipe: "PKS", user: "pusat", date: "6 Hari", pic: "Farhan", progress: "Negosiasi" },
-        { judul: "lorem ipsum", nomor: 90247, tipe: "MoU", user: "pusat", date: "0 Hari", pic: "Nathan", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90248, tipe: "PKS", user: "pusat", date: "30 Hari", pic: "Budi", progress: "PKS" },
-        { judul: "lorem ipsum", nomor: 90249, tipe: "MoU", user: "pusat", date: "9 Hari", pic: "Farhan", progress: "Surat Penawaran" },
-      ],
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+      tableData: [],
+      // tableData: [
+      //   { judul: "lorem ipsum", nomor: 90225, tipe: "MoU", user: "pusat", date: "15 Hari", pic: "Farhan", progress: "Surat Penawaran" },
+      //   { judul: "lorem ipsum", nomor: 90226, tipe: "MoU", user: "pusat", date: "15 Hari", pic: "Nathan", progress: "Proposal" },
+      //   { judul: "lorem ipsum", nomor: 90227, tipe: "PKS", user: "pusat", date: "7 Hari", pic: "Budi", progress: "Evaluasi" },
+      //   { judul: "lorem ipsum", nomor: 90228, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Farhan", progress: "Surat Pesanan" },
+      //   { judul: "lorem ipsum", nomor: 90229, tipe: "MoU", user: "pusat", date: "7 Hari", pic: "Nathan", progress: "BAK Pemilihan Mitra" },
+      //   { judul: "lorem ipsum", nomor: 90230, tipe: "PKS", user: "pusat", date: "15 Hari", pic: "Budi", progress: "Negosiasi" },
+      //   { judul: "lorem ipsum", nomor: 90231, tipe: "MoU", user: "pusat", date: "0 Hari", pic: "Farhan", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90232, tipe: "PKS", user: "pusat", date: "30 Hari", pic: "Nathan", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90233, tipe: "MoU", user: "pusat", date: "10 Hari", pic: "Budi", progress: "Surat Penawaran" },
+      //   { judul: "lorem ipsum", nomor: 90234, tipe: "MoU", user: "pusat", date: "5 Hari", pic: "Farhan", progress: "Proposal" },
+      //   { judul: "lorem ipsum", nomor: 90235, tipe: "PKS", user: "pusat", date: "8 Hari", pic: "Nathan", progress: "Evaluasi" },
+      //   { judul: "lorem ipsum", nomor: 90236, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Budi", progress: "Surat Pesanan" },
+      //   { judul: "lorem ipsum", nomor: 90237, tipe: "MoU", user: "pusat", date: "12 Hari", pic: "Farhan", progress: "BAK Pemilihan Mitra" },
+      //   { judul: "lorem ipsum", nomor: 90238, tipe: "PKS", user: "pusat", date: "20 Hari", pic: "Nathan", progress: "Negosiasi" },
+      //   { judul: "lorem ipsum", nomor: 90239, tipe: "MoU", user: "pusat", date: "3 Hari", pic: "Budi", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90240, tipe: "PKS", user: "pusat", date: "25 Hari", pic: "Farhan", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90241, tipe: "MoU", user: "pusat", date: "18 Hari", pic: "Nathan", progress: "Surat Penawaran" },
+      //   { judul: "lorem ipsum", nomor: 90242, tipe: "MoU", user: "pusat", date: "22 Hari", pic: "Budi", progress: "Proposal" },
+      //   { judul: "lorem ipsum", nomor: 90243, tipe: "PKS", user: "pusat", date: "14 Hari", pic: "Farhan", progress: "Evaluasi" },
+      //   { judul: "lorem ipsum", nomor: 90244, tipe: "PKS", user: "pusat", date: "Stop Clock", pic: "Nathan", progress: "Surat Pesanan" },
+      //   { judul: "lorem ipsum", nomor: 90245, tipe: "MoU", user: "pusat", date: "11 Hari", pic: "Budi", progress: "BAK Pemilihan Mitra" },
+      //   { judul: "lorem ipsum", nomor: 90246, tipe: "PKS", user: "pusat", date: "6 Hari", pic: "Farhan", progress: "Negosiasi" },
+      //   { judul: "lorem ipsum", nomor: 90247, tipe: "MoU", user: "pusat", date: "0 Hari", pic: "Nathan", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90248, tipe: "PKS", user: "pusat", date: "30 Hari", pic: "Budi", progress: "PKS" },
+      //   { judul: "lorem ipsum", nomor: 90249, tipe: "MoU", user: "pusat", date: "9 Hari", pic: "Farhan", progress: "Surat Penawaran" },
+      // ],
       sortOrder: "asc",
     };
   },
@@ -394,6 +413,13 @@ export default {
   },
 
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     sortTable(columnName) {
       this.sortOrder = this.sortOrder === "asc" ? "desc" : "asc";
 
@@ -490,44 +516,56 @@ export default {
     },
     // api
 		async getDataApi() {
+      this.isLoading = true;
 			let boxResult = new Array;
       const params = {staffName: localStorage.getItem('username')}
 			const res = await fetchGet("mitra/staff/mounda/proses", params, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.mouNdaNumber,
+					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
 					user: item.user,
-          date: '',
-          pic: '',
+          date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
+          pic: item.disposedStaff,
 					progress: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				console.log(res.data)
 				boxResult = boxResult.concat(cleanData)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
 			}
 			const res2 = await fetchGet("mitra/staff/pks/proses", params, this.$router);
 			if (res2.status == 200) {
 				const cleanData2 = res2.data.map((item) => ({
 					judul: item.partnershipTitle,
-					nomor: item.budgetNumber,
+					nomor: item.submissionNumber,
 					tipe: "PKS",
 					user: item.user,
-          date: '',
-          pic: '',
+          date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
+          pic: item.disposedStaff,
 					progress: parseStatusAproval(item.positionLevel, item.status),
-          id: item.id
+          did: item.id
 				}))
 				boxResult = boxResult.concat(cleanData2)
 				boxResult = boxResult.map((item, index) => ({ id: index + 1, ...item }))
 				console.log(res2.data)
 			} else {
-				alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+				this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
 			}
 			this.tableData = boxResult
+      this.isLoading = false;
 		}
   },
   mounted() {
