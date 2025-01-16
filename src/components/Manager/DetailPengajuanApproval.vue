@@ -1,9 +1,18 @@
 <script setup>
 import dialog from '@/assets/img/Dialog.png';
 import kirim from '@/assets/img/Dialogkirim.png';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 </script>
 
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
@@ -26,9 +35,10 @@ import kirim from '@/assets/img/Dialogkirim.png';
             xmlns="http://www.w3.org/2000/svg">
             <rect width="6" height="28" fill="#1F5AAD" />
           </svg>
-          <h1 class="font-sans text-[20px] text-[#333333] mt-2 ml-[5px] font-semibold">Detail Pengajuan</h1>
+          <h1 class="font-sans text-[20px] text-[#333333] mt-2 ml-[5px] font-semibold">Detail Pengajuan {{
+            dataBerkas?.base || 'PKS' }}</h1>
         </div>
-        <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">#no_pengajuan</h1>
+        <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">{{ dataBerkas?.submissionNumber }}</h1>
         <div
           class="flex items-center w-[1046px] h-[55px] rounded-lg border-[#4791F2] border-[1px] bg-[#e7f1fd] ml-4 mt-4 mb-4">
           <h1 class="text-[16px] font-semibold text-[#2671D9] font-sans ml-4 mt-4 mb-5">Info Approval :</h1>
@@ -53,7 +63,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
-                dataBerkas?.mouNdaNumber || dataBerkas?.pksNumber || '#876654' }}</span>
+                dataBerkas?.submissionNumber }}</span>
               <div class="flex">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Metode
                   Kemitraan</h1>
@@ -77,9 +87,8 @@ import kirim from '@/assets/img/Dialogkirim.png';
               <span class="w-[57px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
                 dataBerkas?.budgetNumber || '-' }}</span>
               <div class="flex ml-[335px]">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Barang</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">lorem
-                  ipsum</span>
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Kemitraan</h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">{{ dataBerkas.partnershipType }}</span>
               </div>
             </div>
             <div class="flex mt-6 items-center">
@@ -201,8 +210,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
             </table>
           </div>
         </transition>
-        <div
-          v-if="base == 'PKS'"
+        <div v-if="base == 'PKS'"
           class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
           <div class="w-[30px] h-[48px] bg-[#0FB37D] rounded-tl-md rounded-bl-md"></div>
           <div class="text-[16px] font-sans font-semibold text-[#333333] ml-[10px] mt-[14.5px] mb-[14.5px]">Informasi
@@ -330,7 +338,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
               <div class="px-6 mt-6 mb-4 flex justify-between">
                 <div>
                   <label class="text-[#4D5E80] font-semibold">KKB <span class="text-[#FF5656] text-xs">*</span></label>
-                  <div v-if="fileNameKKB" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadKKB" v-if="fileNameKKB" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -338,18 +346,18 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKB }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKB }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
                 <div>
                   <label class="text-[#4D5E80] font-semibold">KKR <span class="text-[#FF5656] text-xs">*</span></label>
-                  <div v-if="fileNameKKR" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadKKR" v-if="fileNameKKR" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -357,18 +365,18 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKR }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKR }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
                 <div>
                   <label class="text-[#4D5E80] font-semibold">KKF <span class="text-[#FF5656] text-xs">*</span></label>
-                  <div v-if="fileNameKKF" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadKKF" v-if="fileNameKKF" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -376,11 +384,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKF }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKF }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -389,7 +397,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
               <div class="px-6 mt-6 mb-4 flex justify-between">
                 <div>
                   <label class="text-[#4D5E80] font-semibold">KKO <span class="text-[#FF5656] text-xs">*</span></label>
-                  <div v-if="fileNameKKO" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadKKO" v-if="fileNameKKO" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -397,11 +405,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKO }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKO }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -409,7 +417,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
                 <div>
                   <label class="text-[#4D5E80] font-semibold">Proposal Mitra
                     <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
-                  <div v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadmitra" v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -417,11 +425,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNamemitra }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizemitra }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -429,7 +437,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
                 <div>
                   <label class="text-[#4D5E80] font-semibold">Dokumen Surat Menyurat
                     <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
-                  <div v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadsurat" v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -437,11 +445,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNamesurat }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizesurat }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -450,7 +458,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
               <div class="px-6 mt-6 mb-4">
                 <label class="text-[#4D5E80] font-semibold">Dokumen Lainnya
                   <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
-                <div v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                <a :href="linkDownloadlainnya" v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                   <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -458,11 +466,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                       d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                       fill="#2671D9" />
                   </svg>
-                  <div class="py-2 w-[200px] flex-grow">
+                  <div class="py-2 w-[200px] flex-grow truncate pe-3">
                     <span class="text-[#333333] text-sm font-semibold">{{ fileNamelainnya }}</span>
                     <p class="text-[#9E9E9E] text-xs">{{ fileSizelainnya }}</p>
                   </div>
-                </div>
+                </a>
                 <div v-else class="w-[333px] h-auto">
                   <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                 </div>
@@ -473,7 +481,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
                 <div>
                   <label class="text-[#4D5E80] font-semibold">Proposal Mitra
                     <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
-                  <div v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadmitra" v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -481,11 +489,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNamemitra }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizemitra }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -495,7 +503,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
                     Dokumen Surat Menyurat
                     <span class="text-[#FF5656] text-xs">*</span>
                   </label>
-                  <div v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadsurat" v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -503,11 +511,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNamesurat }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizesurat }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -515,7 +523,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
                 <div>
                   <label class="text-[#4D5E80] font-semibold">Dokumen Lainnya
                     <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
-                  <div v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <a :href="linkDownloadlainnya" v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
                     <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
@@ -523,11 +531,11 @@ import kirim from '@/assets/img/Dialogkirim.png';
                         d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
                         fill="#2671D9" />
                     </svg>
-                    <div class="py-2 w-[200px] flex-grow">
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
                       <span class="text-[#333333] text-sm font-semibold">{{ fileNamelainnya }}</span>
                       <p class="text-[#9E9E9E] text-xs">{{ fileSizelainnya }}</p>
                     </div>
-                  </div>
+                  </a>
                   <div v-else class="w-[333px] h-auto">
                     <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
@@ -896,6 +904,7 @@ import kirim from '@/assets/img/Dialogkirim.png';
 
 <script>
 import { fetchGet, fetchPostForm } from '@/api/apiFunction';
+import { baseURL } from '@/api/apiManager';
 
 export default {
   data() {
@@ -922,18 +931,32 @@ export default {
       id: null,
       fileNameKKB: null,
       fileSizeKKB: null,
+      linkDownloadKKB: "",
       fileNameKKR: null,
       fileSizeKKR: null,
+      linkDownloadKKR: "",
       fileNameKKF: null,
       fileSizeKKF: null,
+      linkDownloadKKF: "",
       fileNameKKO: null,
       fileSizeKKO: null,
+      linkDownloadKKO: "",
       fileNamemitra: null,
       fileSizemitra: null,
+      linkDownloadmitra: "",
       fileNamesurat: null,
       fileSizesurat: null,
+      linkDownloadsurat: "",
       fileNamelainnya: null,
       fileSizelainnya: null,
+      linkDownloadlainnya: "",
+
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
 
       // Popup Acprrove
       isSendSetuju: false,
@@ -947,6 +970,13 @@ export default {
     };
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     toggleDropdownArrow() {
       this.isDropdownArrowOpen = !this.isDropdownArrowOpen;
     },
@@ -1005,10 +1035,11 @@ export default {
     },
     closeSelesaitolak() {
       this.isSelesaiTolak = false;
-      this.$router.push('/masukstaff')
+      this.$router.push('/approval')
     },
     // api
     async getDataApi(base, id) {
+      this.isLoading = true;
       if (base == "PKS") {
         let url = "";
         const position = localStorage.getItem('position')
@@ -1019,7 +1050,12 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/pks/approval/${id}`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchGet(url, null, this.$router);
         if (res.status == 200) {
@@ -1028,45 +1064,58 @@ export default {
             if (item.fileType == 'KKO') {
               this.fileNameKKO = item.fileName;
               this.fileSizeKKO = item.fileSize;
+              this.linkDownloadKKO = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'KKF') {
               this.fileNameKKF = item.fileName;
               this.fileSizeKKF = item.fileSize;
+              this.linkDownloadKKF = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'KKR') {
               this.fileNameKKR = item.fileName;
               this.fileSizeKKR = item.fileSize;
+              this.linkDownloadKKR = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'KKB') {
               this.fileNameKKB = item.fileName;
               this.fileSizeKKB = item.fileSize;
+              this.linkDownloadKKB = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'Dokumen Surat Menyurat') {
               this.fileNamesurat = item.fileName;
               this.fileSizesurat = item.fileSize;
+              this.linkDownloadsurat = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'Proposal Mitra') {
               this.fileNamemitra = item.fileName;
               this.fileSizemitra = item.fileSize;
+              this.linkDownloadmitra = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'Dokumen Lainnya') {
               this.fileNamelainnya = item.fileName;
               this.fileSizelainnya = item.fileSize;
+              this.linkDownloadlainnya = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
           })
-          if (
-            this.fileNameKKB && this.fileSizeKKB && this.fileNameKKR && this.fileSizeKKR &&
-            this.fileNameKKF && this.fileSizeKKF && this.fileNameKKO && this.fileSizeKKO &&
-            res.data.partnershipTitle && res.data.partnershipMethod &&
-            res.data.scopesPks.length > 0 && res.data.rab.length > 0 &&
-            res.data.partnershipType && res.data.budgetType &&
-            res.data.budgetNumber && res.data.materialType && res.data.partnershipCandidate
-          ) {
-            this.disableKirim = false;
-          }
+          // if (
+          //   this.fileNameKKB && this.fileSizeKKB && this.fileNameKKR && this.fileSizeKKR &&
+          //   this.fileNameKKF && this.fileSizeKKF && this.fileNameKKO && this.fileSizeKKO &&
+          //   res.data.partnershipTitle && res.data.partnershipMethod &&
+          //   res.data.scopesPks.length > 0 && res.data.rab.length > 0 &&
+          //   res.data.partnershipType && res.data.budgetType &&
+          //   res.data.budgetNumber && res.data.materialType && res.data.partnershipCandidate
+          // ) {
+          //   this.disableKirim = false;
+          // }
+          this.isLoading = false;
           console.log(res.data);
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin");
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Gagal Ambil Data',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       } else {
         let url = "";
@@ -1078,7 +1127,12 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/mounda/approval/${id}`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchGet(url, null, this.$router);
         if (res.status == 200) {
@@ -1087,29 +1141,39 @@ export default {
             if (item.fileType == 'Dokumen Surat Menyurat') {
               this.fileNamesurat = item.fileName;
               this.fileSizesurat = item.fileSize;
+              this.linkDownloadsurat = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'Proposal Mitra') {
               this.fileNamemitra = item.fileName;
               this.fileSizemitra = item.fileSize;
+              this.linkDownloadmitra = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
             if (item.fileType == 'Dokumen Lainnya') {
               this.fileNamelainnya = item.fileName;
               this.fileSizelainnya = item.fileSize;
+              this.linkDownloadlainnya = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
             }
           })
-          if (
-            this.fileNamesurat && this.fileSizesurat && res.data.partnershipTitle &&
-            res.data.partnershipCandidate && res.data.scopesMou.length > 0
-          ) {
-            this.disableKirim = false;
-          }
+          // if (
+          //   this.fileNamesurat && this.fileSizesurat && res.data.partnershipTitle &&
+          //   res.data.partnershipCandidate && res.data.scopesMou.length > 0
+          // ) {
+          //   this.disableKirim = false;
+          // }
+          this.isLoading = false;
           console.log(res.data);
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin");
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Gagal Ambil Data',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       }
     },
     async postAproval() {
+      this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
       if (this.base == "PKS") {
@@ -1122,15 +1186,26 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/pks/approval/${this.id}`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchPostForm(url, null, form, this.$router);
         if (res.status == 200) {
           this.isSelesaiSetuju = true;
           this.isSendSetuju = false;
+          this.isLoading = false;
           console.log(res.data)
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Approval Gagal',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       } else {
         let url = "";
@@ -1142,19 +1217,31 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/mounda/approval/${this.id}`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchPostForm(url, null, form, this.$router);
         if (res.status == 200) {
           this.isSelesaiSetuju = true;
           this.isSendSetuju = false;
+          this.isLoading = false;
           console.log(res.data)
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Approval Gagal',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       }
     },
     async postTolak() {
+      this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
       if (this.base == "PKS") {
@@ -1167,15 +1254,26 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/pks/approval/${this.id}/reject`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchPostForm(url, null, form, this.$router);
         if (res.status == 200) {
           this.isSelesaiTolak = true;
           this.isSendTolak = false;
+          this.isLoading = false;
           console.log(res.data)
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Reject Gagal',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       } else {
         let url = "";
@@ -1187,15 +1285,26 @@ export default {
         } else if (position == "PartnershipDirector") {
           url = `mitra/direksi/mounda/approval/${this.id}/reject`;
         } else {
-          return alert("Anda tidak mempunyai akses untuk aproval")
+          this.isLoading = false;
+          return this.modalFailed = {
+            isVisible: true,
+            title: 'Tidak Ada Akses',
+            message: "Anda tidak mempunyai akses untuk aproval"
+          }
         }
         const res = await fetchPostForm(url, null, form, this.$router);
         if (res.status == 200) {
           this.isSelesaiTolak = true;
           this.isSendTolak = false;
+          this.isLoading = false;
           console.log(res.data)
         } else {
-          alert(res.data.message ? res.data.message : "Silahkan hubungi admin")
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Reject Gagal',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
         }
       }
     }

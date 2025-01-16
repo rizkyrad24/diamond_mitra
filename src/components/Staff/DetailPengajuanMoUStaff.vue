@@ -1072,16 +1072,9 @@ export default {
       linkDownloadFile3: "",
 
       fileDetails: {
-        // KKB: { fileName: "", fileSize: "", file: null, fileId: null },
-        // KKR: { fileName: "", fileSize: "", file: null, fileId: null },
-        // KKF: { fileName: "", fileSize: "", file: null, fileId: null },
-        // KKO: { fileName: "", fileSize: "", file: null, fileId: null },
         ProposalMitra: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
         DokumenSuratMenyurat: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
         DokumenLainnya: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
-        // SuratPenawaran: { fileName: "", fileSize: "", file: null },
-        // Proposal: { fileName: "", fileSize: "", file: null },
-        // Evaluasi: { fileName: "", fileSize: "", file: null },
       },
       kirimClicked: false,
       isDropdownArrowOpen: false,
@@ -1157,7 +1150,7 @@ export default {
       }
     },
     checkConditions() {
-      if (this.fileId1 !== "" && this.fileId2 !== "" && this.fileId3 !== "") {
+      if (this.fileId1 && this.fileId2 && this.fileId3) {
         this.kirimClicked = true;
       }
     },

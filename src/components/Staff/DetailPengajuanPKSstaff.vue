@@ -2,11 +2,18 @@
 import dialog from '@/assets/img/Dialog.png';
 import kirim from '@/assets/img/Dialogkirim.png';
 import gagal from '@/assets/img/Dialogkirimgagal.png';
-// import Loading from '../loading.vue';
-// import ModalFailed from '../modalfailed.vue';
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
 </script>
 
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
@@ -82,7 +89,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
                   </svg>
                   <h1 class="font-sans text-[20px] text-[#333333] mt-2 ml-[5px] font-semibold">Progress Kemitraan</h1>
                 </div>
-                <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">$judul_pengajuan</h1>
+                <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">{{ dataBerkas?.partnershipTitle }}</h1>
                 <div class="flex">
                   <div :class="boxClass1" class="flex flex-col w-[289px] h-[130px] rounded-lg mt-6 ml-5 border-[1px] border-[#DEDEDE]">
                     <div :class="headerClass1" class="w-[289px] h-[40px] p-4 flex justify-between items-center rounded-t-lg">
@@ -441,7 +448,14 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
                       </div>
                     </div>
                   </div>
-                  <button
+                  <button v-if="!allFilesUploaded" @click="SendFile"
+                    class="absolute mt-[518px] ml-[915px] flex bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] rounded-lg border-[#FFFFFF] border-[1px]">
+                    <div
+                      class="flex items-center justify-center w-[83px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+                      <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Submit</span>
+                    </div>
+                  </button>
+                  <!-- <button
                     @click="handleKirimClick"
                     :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] rounded-lg border-[#FFFFFF] border-[1px]': allFilesUploaded, 'bg-[#E6E6E6] text-[#7F7F80] rounded-lg border-[#FFFFFF] border-[1px]': !allFilesUploaded }"
                     :disabled="!allFilesUploaded"
@@ -450,7 +464,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
                     <div class="flex items-center justify-center w-[83px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
                       <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Kirim</span>
                     </div>
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -471,7 +485,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
-                dataBerkas?.mouNdaNumber || dataBerkas?.pksNumber || '#876654' }}</span>
+                dataBerkas?.submissionNumber }}</span>
               <div class="flex">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Metode
                   Kemitraan</h1>
@@ -495,9 +509,8 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <span class="w-[57px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
                 dataBerkas?.budgetNumber || '-' }}</span>
               <div class="flex ml-[335px]">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Barang</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">lorem
-                  ipsum</span>
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Kemitraan</h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">{{ dataBerkas?.partnershipType }}</span>
               </div>
             </div>
             <div class="flex mt-6 items-center">
@@ -736,6 +749,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKB</h1>
                 <span class="text-[#FF5656] font-bold ml-1">*</span>
+                <a v-if="fileDetails.KKB.linkDownload" :href="fileDetails.KKB?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -772,6 +786,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKR</h1>
                 <span class="text-[#FF5656] font-bold ml-1">*</span>
+                <a v-if="fileDetails.KKR.linkDownload" :href="fileDetails.KKR?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -808,6 +823,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKF</h1>
                 <span class="text-[#FF5656] font-bold ml-1">*</span>
+                <a v-if="fileDetails.KKF.linkDownload" :href="fileDetails.KKF?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -844,6 +860,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKO</h1>
                 <span class="text-[#FF5656] font-bold ml-1">*</span>
+                <a v-if="fileDetails.KKO.linkDownload" :href="fileDetails.KKO?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -880,6 +897,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Proposal Mitra</h1>
                 <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
+                <a v-if="fileDetails.ProposalMitra.linkDownload" :href="fileDetails.ProposalMitra?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -916,6 +934,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Dokumen Surat Menyurat</h1>
                 <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
+                <a v-if="fileDetails.DokumenSuratMenyurat.linkDownload" :href="fileDetails.DokumenSuratMenyurat?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -952,6 +971,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Dokumen Lainnya</h1>
                 <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
+                <a v-if="fileDetails.DokumenLainnya.linkDownload" :href="fileDetails.DokumenLainnya?.linkDownload" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1000,6 +1020,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Surat Penawaran</h1>
+                <a v-if="linkDownloadFile1" :href="linkDownloadFile1" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1035,6 +1056,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Proposal</h1>
+                <a v-if="linkDownloadFile2" :href="linkDownloadFile2" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1070,6 +1092,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Evaluasi</h1>
+                <a v-if="linkDownloadFile3" :href="linkDownloadFile3" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1105,6 +1128,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Negosiasi</h1>
+                <a v-if="linkDownloadFile4" :href="linkDownloadFile4" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1138,6 +1162,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">BAK Pemilihan Mitra</h1>
+                <a v-if="linkDownloadFile5" :href="linkDownloadFile5" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1171,6 +1196,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Surat Pesanan</h1>
+                <a v-if="linkDownloadFile6" :href="linkDownloadFile6" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1204,6 +1230,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
             <div class="flex flex-col w-[316.6px]">
               <div class="flex items-center">
                 <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">PKS</h1>
+                <a v-if="linkDownloadFile7" :href="linkDownloadFile7" class="text-sm text-blue-700 italic ms-2">download</a>
               </div>
               <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
                 <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
@@ -1256,13 +1283,16 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
           </div>
         </div>
         <div class="w-[1046px] h-[1px] bg-[#E5E7E9] items-center transform ml-4 mt-6"></div>
-        <div class="flex flex-row w-[1046px] h-auto ml-4 py-9">
-          <button
-            @click="SendApprov"
+        <div class="flex w-[1046px] h-auto ml-4 py-9">
+          <button @click="SendFile"
+            class="absolute bottom-[12px] right-[125px] flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center w-[120px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Upload File</span>
+            </div>
+          </button>
+          <button @click="SendApprov"
             :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]': kirimClicked, 'bg-[#E6E6E6] rounded-lg border-[1px] text-[#7F7F80]': !kirimClicked }"
-            :disabled="!kirimClicked"
-            class="absolute bottom-[12px] right-[24px] flex"
-          >
+            :disabled="!kirimClicked" class="absolute bottom-[12px] right-[24px] flex">
             <div class="flex items-center justify-center w-[83px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Selesai</span>
             </div>
@@ -1323,6 +1353,22 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
         </div>
       </div>
     </div>
+    <!-- Kirim File -->
+    <div v-if="isSelesaiFile" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
+        <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
+        <div class="flex justify-center">
+          <h1 class="text-[#333333] text-xl font-semibold mt-2">Upload File</h1>
+        </div>
+        <div class="ml-8 mt-3 w-[250px]">
+          <p class="text-center">Anda telah berhasil mengupload file</p>
+        </div>
+        <div class="flex justify-center mt-8">
+          <button @click="closeSelesaiFile"
+            class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
+        </div>
+      </div>
+    </div>
     <!-- Model 2: isFailOpen -->
     <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[452px]">
@@ -1344,6 +1390,7 @@ import gagal from '@/assets/img/Dialogkirimgagal.png';
 
 <script>
 import { fetchGet, fetchPostForm } from '@/api/apiFunction';
+import { baseURL } from '@/api/apiManager';
 
 export default {
   data() {
@@ -1352,46 +1399,53 @@ export default {
       fileName1: "",
       fileSize1: "",
       file1: null,
+      fileId1: null,
+      linkDownloadFile1: "",
       fileUploaded2: false,
       fileName2: "",
       fileSize2: "",
       file2: null,
+      fileId2: null,
+      linkDownloadFile2: "",
       fileUploaded3: false,
       fileName3: "",
       fileSize3: "",
       file3: null,
+      fileId3: null,
+      linkDownloadFile3: "",
       fileUploaded4: false,
       fileName4: "",
       fileSize4: "",
       file4: null,
+      fileId4: null,
+      linkDownloadFile4: "",
       fileUploaded5: false,
       fileName5: "",
       fileSize5: "",
       file5: null,
+      fileId5: null,
+      linkDownloadFile5: "",
       fileUploaded6: false,
       fileName6: "",
       fileSize6: "",
       file6: null,
+      fileId6: null,
+      linkDownloadFile6: "",
       fileUploaded7: false,
       fileName7: "",
       fileSize7: "",
       file7: null,
+      fileId7: null,
+      linkDownloadFile7: "",
 
       fileDetails: {
-        KKB: { fileName: "", fileSize: "", file: null, fileId: null  },
-        KKR: { fileName: "", fileSize: "", file: null, fileId: null  },
-        KKF: { fileName: "", fileSize: "", file: null, fileId: null },
-        KKO: { fileName: "", fileSize: "", file: null, fileId: null },
-        ProposalMitra: { fileName: "", fileSize: "", file: null, fileId: null },
-        DokumenSuratMenyurat: { fileName: "", fileSize: "", file: null, fileId: null },
-        DokumenLainnya: { fileName: "", fileSize: "", file: null, fileId: null },
-        // SuratPenawaran: { fileName: "", fileSize: "", file: null, fileId: null },
-        // Proposal: { fileName: "", fileSize: "", file: null, fileId: null },
-        // Evaluasi: { fileName: "", fileSize: "", file: null, fileId: null },
-        // Negosiasi: { fileName: "", fileSize: "", file: null, fileId: null },
-        // BAKPemilihanMitra: { fileName: "", fileSize: "", file: null, fileId: null },
-        // SuratPesanan: { fileName: "", fileSize: "", file: null, fileId: null },
-        // PKS: { fileName: "", fileSize: "", file: null, fileId: null },
+        KKB: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: ""  },
+        KKR: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: ""  },
+        KKF: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
+        KKO: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
+        ProposalMitra: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
+        DokumenSuratMenyurat: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
+        DokumenLainnya: { fileName: "", fileSize: "", file: null, fileId: null, linkDownload: "" },
       },
       kirimClicked: false,
       isDropdownArrowOpen: false,
@@ -1415,10 +1469,18 @@ export default {
       id: null,
       ApprovalNote: '',
 
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      isLoading: false,
+
       // Popup Acprrove
       isSendSetuju: false,
       isSelesaiSetuju: false,
-      isFailOpen: false
+      isFailOpen: false,
+      isSelesaiFile: false,
     };
   },
   computed: {
@@ -1426,7 +1488,7 @@ export default {
       return this.nomorPKS && this.selectedDateSelesai && this.jangkaWaktuPerjanjian && this.namaPejabat;
     },
     allFilesUploaded() {
-      return this.fileUploaded1 && this.fileUploaded2 && this.fileUploaded3 && this.fileUploaded4 && this.fileUploaded5 && this.fileUploaded6 && this.fileUploaded7;
+      return this.fileId1 && this.fileId2 && this.fileId3 && this.fileId4 && this.fileId5 && this.fileId6 && this.fileId7;
     },
     boxClass1() {
       return this.fileUploaded1 ? "border-[#0EA976]" : "border-[#FFC107]";
@@ -1472,20 +1534,27 @@ export default {
     },
   },
   watch: {
-    fileName1: 'checkConditions',
-    fileName2: 'checkConditions',
-    fileName3: 'checkConditions',
-    fileName4: 'checkConditions',
-    fileName5: 'checkConditions',
-    fileName6: 'checkConditions',
-    fileName7: 'checkConditions',
+    fileId1: 'checkConditions',
+    fileId2: 'checkConditions',
+    fileId3: 'checkConditions',
+    fileId4: 'checkConditions',
+    fileId5: 'checkConditions',
+    fileId6: 'checkConditions',
+    fileId7: 'checkConditions',
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
     checkConditions() {
       if (
-        this.fileName1 !== "" && this.fileName2 !== "" && this.fileName3 !== "" &&
-        this.fileName4 !== "" && this.fileName5 !== "" && this.fileName6 !== "" && 
-        this.fileName6 !== ""
+        this.fileId1 && this.fileId2 && this.fileId3 &&
+        this.fileId4 && this.fileId5 && this.fileId6 && 
+        this.fileId7
       ) {
         this.kirimClicked = true;
       }
@@ -1700,8 +1769,17 @@ export default {
     closeFail() {
       this.isFailOpen = false;
     },
+    SendFile() {
+      this.postFilePks();
+    },
+    closeSelesaiFile() {
+      this.isSelesaiFile = false;
+      this.showProgressPKSPopupStaff = false;
+      this.getDataApi(this.id);
+    },
     // api
     async getDataApi(id) {
+      this.isLoading = true;
       const res = await fetchGet(
         `mitra/staff/pks/proses/${id}`,
         null,
@@ -1714,36 +1792,106 @@ export default {
             this.fileDetails.KKB.fileName = item.fileName;
             this.fileDetails.KKB.fileSize = item.fileSize;
             this.fileDetails.KKB.fileId = item.id;
+            this.fileDetails.KKB.file = null;
+            this.fileDetails.KKB.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'KKR') {
             this.fileDetails.KKR.fileName = item.fileName;
             this.fileDetails.KKR.fileSize = item.fileSize;
             this.fileDetails.KKR.fileId = item.id;
+            this.fileDetails.KKR.file = null;
+            this.fileDetails.KKR.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'KKF') {
             this.fileDetails.KKF.fileName = item.fileName;
             this.fileDetails.KKF.fileSize = item.fileSize;
             this.fileDetails.KKF.fileId = item.id;
+            this.fileDetails.KKF.file = null;
+            this.fileDetails.KKF.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'KKO') {
             this.fileDetails.KKO.fileName = item.fileName;
             this.fileDetails.KKO.fileSize = item.fileSize;
             this.fileDetails.KKO.fileId = item.id;
+            this.fileDetails.KKO.file = null;
+            this.fileDetails.KKO.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'Dokumen Surat Menyurat') {
             this.fileDetails.DokumenSuratMenyurat.fileName = item.fileName;
             this.fileDetails.DokumenSuratMenyurat.fileSize = item.fileSize;
             this.fileDetails.DokumenSuratMenyurat.fileId = item.id;
+            this.fileDetails.DokumenSuratMenyurat.file = null;
+            this.fileDetails.DokumenSuratMenyurat.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'Proposal Mitra') {
             this.fileDetails.ProposalMitra.fileName = item.fileName;
             this.fileDetails.ProposalMitra.fileSize = item.fileSize;
             this.fileDetails.ProposalMitra.fileId = item.id;
+            this.fileDetails.ProposalMitra.file = null;
+            this.fileDetails.ProposalMitra.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
           if (item.fileType == 'Dokumen Lainnya') {
             this.fileDetails.DokumenLainnya.fileName = item.fileName;
             this.fileDetails.DokumenLainnya.fileSize = item.fileSize;
             this.fileDetails.DokumenLainnya.fileId = item.id;
+            this.fileDetails.DokumenLainnya.file = null;
+            this.fileDetails.DokumenLainnya.linkDownload = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'Surat Penawaran') {
+            this.fileName1 = item.fileName;
+            this.fileSize1 = item.fileSize;
+            this.fileId1 = item.id;
+            this.file1 = null;
+            this.fileUploaded1 = true;
+            this.linkDownloadFile1 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'Proposal') {
+            this.fileName2 = item.fileName;
+            this.fileSize2 = item.fileSize;
+            this.fileId2 = item.id;
+            this.file2 = null;
+            this.fileUploaded2 = true;
+            this.linkDownloadFile2 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'Evaluasi') {
+            this.fileName3 = item.fileName;
+            this.fileSize3 = item.fileSize;
+            this.fileId3 = item.id;
+            this.file3 = null;
+            this.fileUploaded3 = true;
+            this.linkDownloadFile3 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'Negosiasi') {
+            this.fileName4 = item.fileName;
+            this.fileSize4 = item.fileSize;
+            this.fileId4 = item.id;
+            this.file4 = null;
+            this.fileUploaded4 = true;
+            this.linkDownloadFile4 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'BAK Pemilihan Mitra') {
+            this.fileName5 = item.fileName;
+            this.fileSize5 = item.fileSize;
+            this.fileId5 = item.id;
+            this.file5 = null;
+            this.fileUploaded5 = true;
+            this.linkDownloadFile5 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'Surat Pesanan') {
+            this.fileName6 = item.fileName;
+            this.fileSize6 = item.fileSize;
+            this.fileId6 = item.id;
+            this.file6 = null;
+            this.fileUploaded6 = true;
+            this.linkDownloadFile6 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+          }
+          if (item.fileType == 'PKS') {
+            this.fileName7 = item.fileName;
+            this.fileSize7 = item.fileSize;
+            this.fileId7 = item.id;
+            this.file7 = null;
+            this.fileUploaded7 = true;
+            this.linkDownloadFile7 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
         })
         // if (
@@ -1752,120 +1900,21 @@ export default {
         // ) {
         //   this.disableKirim = false;
         // }
+        this.isLoading = false;
         console.log(res.data);
       } else {
-        alert(res.data.message ? res.data.message : "Silahkan hubungi admin");
+        this.isLoading = false;
+        this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
       }
     },
     async postPKS() {
+      this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
-      let sort = 0;
-      if (this.fileDetails.KKB.file || this.fileDetails.KKB.fileId) {
-        if (this.fileDetails.KKB.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'KKB')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKB.file)
-          sort++
-        }
-        if (this.fileDetails.KKB.fileId && this.fileDetails.KKB.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKB.fileId)
-        }
-      }
-      if (this.fileDetails.KKR.file || this.fileDetails.KKR.fileId) {
-        if (this.fileDetails.KKR.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'KKR')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKR.file)
-          sort++
-        }
-        if (this.fileDetails.KKR.fileId && this.fileDetails.KKR.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKR.fileId)
-        }
-      }
-      if (this.fileDetails.KKF.file || this.fileDetails.KKF.fileId) {
-        if (this.fileDetails.KKF.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'KKF')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKF.file)
-          sort++
-        }
-        if (this.fileDetails.KKF.fileId && this.fileDetails.KKF.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKF.fileId)
-        }
-      }
-      if (this.fileDetails.KKO.file || this.fileDetails.KKO.fileId) {
-        if (this.fileDetails.KKO.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'KKO')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKO.file)
-          sort++
-        }
-        if (this.fileDetails.KKO.fileId && this.fileDetails.KKO.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKO.fileId)
-        }
-      }
-      if (this.fileDetails.DokumenSuratMenyurat.file || this.fileDetails.DokumenSuratMenyurat.fileId) {
-        if (this.fileDetails.DokumenSuratMenyurat.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'Dokumen Surat Menyurat')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.DokumenSuratMenyurat.file)
-          sort++
-        }
-        if (this.fileDetails.DokumenSuratMenyurat.fileId && this.fileDetails.DokumenSuratMenyurat.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.DokumenSuratMenyurat.fileId)
-        }
-      }
-      if (this.fileDetails.ProposalMitra.file || this.fileDetails.ProposalMitra.fileId) {
-        if (this.fileDetails.ProposalMitra.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'Proposal Mitra')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.ProposalMitra.file)
-          sort++
-        }
-        if (this.fileDetails.ProposalMitra.fileId && this.fileDetails.ProposalMitra.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.ProposalMitra.fileId)
-        }
-      }
-      if (this.fileDetails.DokumenLainnya.file || this.fileDetails.DokumenLainnya.fileId) {
-        if (this.fileDetails.DokumenLainnya.file) {
-          form.append(`attachmentsPks[${sort}].fileType`, 'Dokumen Lainnya')
-          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.DokumenLainnya.file)
-          sort++
-        }
-        if (this.fileDetails.DokumenLainnya.fileId && this.fileDetails.DokumenLainnya.file) {
-          form.append(`attachmentsPks[${sort}].id`, this.fileDetails.DokumenLainnya.fileId)
-        }
-      }
-      if (this.file1) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'Surat Penawaran')
-        form.append(`attachmentsPks[${sort}].file`, this.file1)
-        sort++
-      }
-      if (this.file2) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'Proposal')
-        form.append(`attachmentsPks[${sort}].file`, this.file2)
-        sort++
-      }
-      if (this.file3) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'Evaluasi')
-        form.append(`attachmentsPks[${sort}].file`, this.file3)
-        sort++
-      }
-      if (this.file4) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'Negosiasi')
-        form.append(`attachmentsPks[${sort}].file`, this.file4)
-        sort++
-      }
-      if (this.file5) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'BAK Pemilihan Mitra')
-        form.append(`attachmentsPks[${sort}].file`, this.file5)
-        sort++
-      }
-      if (this.file6) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'Surat Pesanan')
-        form.append(`attachmentsPks[${sort}].file`, this.file6)
-        sort++
-      }
-      if (this.file7) {
-        form.append(`attachmentsPks[${sort}].fileType`, 'PKS')
-        form.append(`attachmentsPks[${sort}].file`, this.file7)
-        sort++
-      }
       // Display the values
       for (var pair of form.entries()) {
         console.log(pair[0] + ', ' + pair[1]);
@@ -1873,8 +1922,169 @@ export default {
       const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}`, null, form, this.$router);
       console.log(res.data)
       if (res.status == 200) {
+        this.isLoading = false;
         this.isSelesaiSetuju = true;
       } else {
+        this.isLoading = false;
+        this.isFailOpen = true;
+        console.log(res.data.message);
+      }
+    },
+    async postFilePks() {
+      this.isLoading = true;
+      const form = new FormData()
+      let sort = 0;
+      if (this.fileDetails.KKB.file || this.fileDetails.KKB.fileId) {
+        if (this.fileDetails.KKB.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'KKB')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKB.file)
+          if (this.fileDetails.KKB.fileId && this.fileDetails.KKB.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKB.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.KKR.file || this.fileDetails.KKR.fileId) {
+        if (this.fileDetails.KKR.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'KKR')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKR.file)
+          if (this.fileDetails.KKR.fileId && this.fileDetails.KKR.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKR.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.KKF.file || this.fileDetails.KKF.fileId) {
+        if (this.fileDetails.KKF.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'KKF')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKF.file)
+          if (this.fileDetails.KKF.fileId && this.fileDetails.KKF.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKF.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.KKO.file || this.fileDetails.KKO.fileId) {
+        if (this.fileDetails.KKO.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'KKO')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.KKO.file)
+          if (this.fileDetails.KKO.fileId && this.fileDetails.KKO.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.KKO.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.DokumenSuratMenyurat.file || this.fileDetails.DokumenSuratMenyurat.fileId) {
+        if (this.fileDetails.DokumenSuratMenyurat.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Dokumen Surat Menyurat')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.DokumenSuratMenyurat.file)
+          if (this.fileDetails.DokumenSuratMenyurat.fileId && this.fileDetails.DokumenSuratMenyurat.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.DokumenSuratMenyurat.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.ProposalMitra.file || this.fileDetails.ProposalMitra.fileId) {
+        if (this.fileDetails.ProposalMitra.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Proposal Mitra')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.ProposalMitra.file)
+          if (this.fileDetails.ProposalMitra.fileId && this.fileDetails.ProposalMitra.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.ProposalMitra.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.fileDetails.DokumenLainnya.file || this.fileDetails.DokumenLainnya.fileId) {
+        if (this.fileDetails.DokumenLainnya.file) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Dokumen Lainnya')
+          form.append(`attachmentsPks[${sort}].file`, this.fileDetails.DokumenLainnya.file)
+          if (this.fileDetails.DokumenLainnya.fileId && this.fileDetails.DokumenLainnya.file) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileDetails.DokumenLainnya.fileId)
+          }
+          sort++
+        }
+      }
+      if (this.file1 || this.fileId1) {
+        if (this.file1) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Surat Penawaran')
+          form.append(`attachmentsPks[${sort}].file`, this.file1)
+          if (this.fileId1 && this.file1) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId1)
+          }
+          sort++
+        }
+      }
+      if (this.file2 || this.fileId2) {
+        if (this.file2) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Proposal')
+          form.append(`attachmentsPks[${sort}].file`, this.file2)
+          if (this.fileId2 && this.file2) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId2)
+          }
+          sort++
+        }
+      }
+      if (this.file3 || this.fileId3) {
+        if (this.file3) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Evaluasi')
+          form.append(`attachmentsPks[${sort}].file`, this.file3)
+          if (this.fileId3 && this.file3) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId3)
+          }
+          sort++
+        }
+      }
+      if (this.file4 || this.fileId4) {
+        if (this.file4) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Negosiasi')
+          form.append(`attachmentsPks[${sort}].file`, this.file4)
+          if (this.fileId4 && this.file4) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId4)
+          }
+          sort++
+        }
+      }
+      if (this.file5 || this.fileId5) {
+        if (this.file5) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'BAK Pemilihan Mitra')
+          form.append(`attachmentsPks[${sort}].file`, this.file5)
+          if (this.fileId5 && this.file5) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId5)
+          }
+          sort++
+        }
+      }
+      if (this.file6 || this.fileId6) {
+        if (this.file6) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'Surat Pesanan')
+          form.append(`attachmentsPks[${sort}].file`, this.file6)
+          if (this.fileId6 && this.file6) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId6)
+          }
+          sort++
+        }
+      }
+      if (this.file7 || this.fileId7) {
+        if (this.file7) {
+          form.append(`attachmentsPks[${sort}].fileType`, 'PKS')
+          form.append(`attachmentsPks[${sort}].file`, this.file7)
+          if (this.fileId7 && this.file7) {
+            form.append(`attachmentsPks[${sort}].id`, this.fileId7)
+          }
+          sort++
+        }
+      }
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}/req/files`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 201) {
+        this.isLoading = false;
+        this.isSelesaiFile = true;
+      } else {
+        this.isLoading = false;
         this.isFailOpen = true;
         console.log(res.data.message);
       }
