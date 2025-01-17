@@ -1,6 +1,7 @@
 <script setup>
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
+import SelectSearch from '../SelectSearch/SelectSearch.vue';
 </script>
 
 <template>
@@ -849,7 +850,14 @@ import ModalFailed from '../modalfailed.vue';
                   <h1 class="w-[122px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Tanggal Selesai</h1>
                   <span class="text-[#FF5656] font-bold">*</span>
                 </div>
-                <input v-model="selectedDateSelesai" type="text" placeholder="mm/dd/yyyy" class="border rounded mt-2 p-2 pl-3 w-full cursor-pointer" @focus="toggleDatePickerSelesai" readonly />
+                <input
+                  ref="datePickerSelesaiInput"
+                  type="date"
+                  class="custom-date-picker border border-[#E5E7E9] font-sans text-[15px] text-[#9C9C9C] rounded-lg p-[7px] mt-2 hover:bg-[#DBEAFE] cursor-pointer transition-all"
+                  @change="updateDateSelesai"
+                  @blur="hideDatePickerSelesai"
+                />
+                <!-- <input v-model="selectedDateSelesai" type="text" placeholder="mm/dd/yyyy" class="border rounded mt-2 p-2 pl-3 w-full cursor-pointer" @focus="toggleDatePickerSelesai" readonly />
                 <span ref="datePickerSelesaiButton" class="absolute right-3 top-[45px] cursor-pointer" @click="toggleDatePickerSelesai">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -868,18 +876,18 @@ import ModalFailed from '../modalfailed.vue';
                   style="top: 105%; right: 0"
                   @change="updateDateSelesai"
                   @blur="hideDatePickerSelesai"
-                />
+                /> -->
               </div>
               <div class="flex flex-col w-[454.5px] h-[72px] mt-4">
                 <div class="flex items-center">
                   <h1 class="w-[286px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Nama Pejabat yang Bertanda Tangan</h1>
                   <span class="text-[#FF5656] font-bold">*</span>
                 </div>
-                <input
-                  v-model="namaPejabat"
-                  type="text"
-                  placeholder="Cari Nama Pejabat"
-                  class="w-[454.5px] h-[40px] rounded-md bg-[#FFFFFF] border border-[#E5E7E9] mt-2 pl-4 font-sans text-[14px] text-[#7F7F80] font-extralight outline-none"
+                <SelectSearch
+                  :options="optionsPejabat"
+                  placeholder="Pilih staff..."
+                  :initialValue="namaPejabat"
+                  @change="handleSelectionChange"
                 />
                 <span class="absolute mt-[45px] ml-[428px] cursor-pointer">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -953,7 +961,8 @@ export default {
       selectedDateSelesai: "", // Untuk menyimpan tanggal selesai
       showDatePickerSelesai: false,
       nomorMoU: "",
-      namaPejabat: "",
+      namaPejabat: null,
+      optionsPejabat: [],
 
       dataBerkas: null,
       id: null,
@@ -1041,7 +1050,7 @@ export default {
     updateDateSelesai(event) {
       const formattedDate = this.formatDateToDDMMYYYY(event.target.value);
       this.selectedDateSelesai = formattedDate;
-      this.showDatePickerSelesai = false;
+      // this.showDatePickerSelesai = false;
     },
     handleClickOutside(event) {
       const datePickerSelesaiContainer = this.$refs.datePickerSelesaiContainer;
@@ -1068,9 +1077,27 @@ export default {
       this.showDisetujuiPopup = false;
       this.$router.push('/proses')
     },
+    handleSelectionChange(option) {
+      this.namaPejabat = option;
+    },
     // api
     async getDataApi(id) {
       this.isLoading = true;
+      const res1 = await fetchGet('functionary', null, this.$router);
+      if (res1.status == 200) {
+        this.optionsPejabat = res1.data.map(item => ({
+          value: item.fullName,
+          label: item.title
+        }))
+        console.log(res1.data, 'functionary');
+      } else {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
+      }
       let url = "";
       const position = localStorage.getItem('position')
       if (position == "PartnershipManager") {
@@ -1126,6 +1153,12 @@ export default {
             this.linkDownloadFile3 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
         })
+        if (res.data.officialUndersign) {
+          const choosenStaff = res1.data.find(item => item.fullName == res.data.officialUndersign);
+          if (choosenStaff) {
+            this.namaPejabat = { label: choosenStaff.title, value: choosenStaff.fullName };
+          }
+        }
         this.isLoading = false;
         console.log(res.data);
       } else {
@@ -1142,7 +1175,7 @@ export default {
       const form = new FormData()
       form.append('approvalNote', this.ApprovalNote)
       form.append('mouNdaNumber', this.nomorMoU)
-      form.append('officialUndersign', this.namaPejabat)
+      form.append('officialUndersign', this.namaPejabat.value)
       form.append('approvalCompletionDate', this.selectedDateSelesai)
       
       // Display the values
