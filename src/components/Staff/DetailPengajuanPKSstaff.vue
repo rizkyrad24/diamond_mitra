@@ -1,9 +1,11 @@
 <script setup>
-import dialog from '@/assets/img/Dialog.png';
-import kirim from '@/assets/img/Dialogkirim.png';
-import gagal from '@/assets/img/Dialogkirimgagal.png';
+// import dialog from '@/assets/img/Dialog.png';
+// import kirim from '@/assets/img/Dialogkirim.png';
+// import gagal from '@/assets/img/Dialogkirimgagal.png';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
+import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
 </script>
 
 <template>
@@ -13,6 +15,19 @@ import ModalFailed from '../modalfailed.vue';
     :title="modalFailed.title"
     :message="modalFailed.message"
     @close="closeModalFailed"
+  />
+  <ModalSuccess
+    :isVisible="modalSuccess.isVisible"
+    :title="modalSuccess.title"
+    :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction"
+  />
+  <ModalDialog
+    :isVisible="modalDialog.isVisible"
+    :title="modalDialog.title"
+    :message="modalDialog.message"
+    @close="modalDialog.closeFunction"
+    @ok="modalDialog.okFunction"
   />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
@@ -1283,35 +1298,56 @@ import ModalFailed from '../modalfailed.vue';
           </div>
         </div>
         <div class="w-[1046px] h-[1px] bg-[#E5E7E9] items-center transform ml-4 mt-6"></div>
-        <div class="flex w-[1046px] h-auto ml-4 py-9">
-          <button @click="SendFile"
-            class="absolute bottom-[12px] right-[125px] flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
-            <div class="flex items-center justify-center w-[120px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+        <div class="flex w-[1046px] h-auto ml-4 py-9 justify-end gap-6">
+          <button v-if="statusAction == 4" @click="SendRequestAbortStartclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Batalkan Pengajuan Startclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 3" @click="SendRequestStartclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Ajukan Startclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 2" @click="SendRequestAbortStopclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Batalkan Pengajuan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendRequestStopclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Ajukan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendRevisiMinor" class="flex">
+            <div
+              class="flex items-center justify-center rounded-lg bg-[#FFFFFF] border-[#2671D9] border-[1px] hover:bg-[#DBEAFE] cursor-pointer transition-all px-2">
+              <span class="text-[14px] font-sans font-medium text-[#2671D9] ml-3 mt-[9px] mr-3 mb-[9px]">Revisi
+                Minor</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendFile"
+            class="flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Upload File</span>
             </div>
           </button>
-          <button @click="SendApprov"
+          <button v-if="statusAction == 1" @click="SendApprov"
             :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]': kirimClicked, 'bg-[#E6E6E6] rounded-lg border-[1px] text-[#7F7F80]': !kirimClicked }"
-            :disabled="!kirimClicked" class="absolute bottom-[12px] right-[24px] flex">
-            <div class="flex items-center justify-center w-[83px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+            :disabled="!kirimClicked" class="flex">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Selesai</span>
             </div>
           </button>
         </div>
       </div>
-      <!-- <div v-if="showDisetujuiPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
-        <div class="bg-[#FFFFFF] rounded-lg shadow-lg w-[360px] h-[452px]">
-          <div class="flex flex-col items-center mt-14 ml-8 mr-8 mb-14">
-            <img src="@/assets/image/pengajuanditerima.png" class="w-[200px] h-[160px] mb-4" />
-            <h2 class="text-[20px] font-sans font-semibold text-[#333333] mb-2">Progress Kemitraan Selesai</h2>
-            <p class="text-[16px] font-sans text-[#333333] font-normal mb-6 text-center">Progress kemitraan PKS telah selesai. Selanjutnya akan dilakukan proses approval oleh atasan.</p>
-            <button @click="closeDisetujuiPopup" class="bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] text-[14px] p-2 rounded-lg w-full">Selesai</button>
-          </div>
-        </div>
-      </div> -->
     </div>
     <!-- Setujui Pengajuan -->
-    <div v-if="isSendSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isSendSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[476px]">
         <div @click="closeApprov" class="flex justify-end cursor-pointer">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1336,9 +1372,9 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] border-[1px] border-[#2671D9] text-[#2671D9] text-sm font-semibold rounded-lg">Batal</button>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Setujui Pengajuan -->
-    <div v-if="isSelesaiSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isSelesaiSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
         <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
         <div class="flex justify-center">
@@ -1352,9 +1388,9 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Kirim File -->
-    <div v-if="isSelesaiFile" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isSelesaiFile" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
         <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
         <div class="flex justify-center">
@@ -1368,9 +1404,9 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Model 2: isFailOpen -->
-    <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[452px]">
         <div class="flex justify-center"><img :src="gagal" alt="Dialog Image" class="pt-6"></div>
         <div class="flex justify-center">
@@ -1384,12 +1420,12 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Oke</button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { fetchGet, fetchPostForm } from '@/api/apiFunction';
+import { fetchGet, fetchPostForm, fetchPost } from '@/api/apiFunction';
 import { baseURL } from '@/api/apiManager';
 
 export default {
@@ -1474,7 +1510,21 @@ export default {
         title: '',
         message: ''
       },
+      modalSuccess: {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      },
       isLoading: false,
+      statusAction: 0,
 
       // Popup Acprrove
       isSendSetuju: false,
@@ -1548,6 +1598,23 @@ export default {
         isVisible: false,
         title: '',
         message: ''
+      }
+    },
+    closeModalSuccess() {
+      this.modalSuccess = {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      }
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
       }
     },
     checkConditions() {
@@ -1750,33 +1817,296 @@ export default {
       this.showDisetujuiPopup = false;
     },
     // Popup Aprrove
+    // SendApprov() {
+    //   this.isSendSetuju = true;
+    //   this.isSelesaiSetuju = false;
+    // },
+    // closeApprov() {
+    //   this.isSendSetuju = false;
+    // },
+    // openSetuju() {
+    //   this.postPKS();
+    //   // this.isSelesaiSetuju = true;
+    //   // this.isSendSetuju = false; 
+    // },
+    // closeSelesai() {
+    //   this.isSelesaiSetuju = false;
+    //   this.$router.push('/prosesstaff')
+    // },
+    // closeFail() {
+    //   this.isFailOpen = false;
+    // },
+    // SendFile() {
+    //   this.postFilePks();
+    // },
+    // closeSelesaiFile() {
+    //   this.isSelesaiFile = false;
+    //   this.showProgressPKSPopupStaff = false;
+    //   this.getDataApi(this.id);
+    // },
+
+    // Popup Selesai
     SendApprov() {
-      this.isSendSetuju = true;
-      this.isSelesaiSetuju = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Kirim Pengajuan',
+        message: 'Apakan anda yakin akan melanjutkan pengajuan ini ke manager',
+        okFunction: this.openApprov,
+        closeFunction: this.closeApprov
+      }
+    },
+    openApprov() {
+      this.closeModalDialog();
+      this.postPKS(this.successApprov, this.failApprov);
     },
     closeApprov() {
-      this.isSendSetuju = false;
+      this.closeModalDialog()
     },
-    openSetuju() {
-      this.postPKS();
-      // this.isSelesaiSetuju = true;
-      // this.isSendSetuju = false; 
+    successApprov() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Kirim Pengajuan',
+        message: 'Pengajuan berhasil dikirim ke manager',
+        closeFunction: this.closeSelesaiApprov
+      }
     },
-    closeSelesai() {
-      this.isSelesaiSetuju = false;
+    failApprov(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Kirim Pengajuan',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprov() {
+      this.closeModalSuccess()
       this.$router.push('/prosesstaff')
     },
-    closeFail() {
-      this.isFailOpen = false;
-    },
+
+    // Popup Kirim File
     SendFile() {
-      this.postFilePks();
+      this.showProgressPKSPopupStaff = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Upload File',
+        message: 'Apakan anda yakin upload file ini?',
+        okFunction: this.openSendFile,
+        closeFunction: this.closeSendFile
+      }
     },
-    closeSelesaiFile() {
-      this.isSelesaiFile = false;
+    openSendFile() {
+      this.closeModalDialog();
+      this.postFilePks(this.successUploadFile, this.failUploadFile);
+    },
+    closeSendFile() {
+      this.closeModalDialog();
+      this.showProgressPKSPopupStaff = true;
+    },
+    successUploadFile() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Upload File',
+        message: 'File berhasil di upload',
+        closeFunction: this.closeSelesaiUploadFile
+      }
+    },
+    failUploadFile(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Upload File',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiUploadFile() {
+      this.closeModalSuccess();
       this.showProgressPKSPopupStaff = false;
       this.getDataApi(this.id);
     },
+
+    // Popup Revisi Minor
+    SendRevisiMinor() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Permintaan Revisi Pengajuan',
+        message: 'Apakan anda yakin akan meminta pengajuan ini direvisi',
+        okFunction: this.openRevisiMinor,
+        closeFunction: this.closeRevisiMinor
+      }
+    },
+    openRevisiMinor() {
+      this.closeModalDialog();
+      this.postRevisiMinor(this.successRevisiMinor, this.failRevisiMinor);
+    },
+    closeRevisiMinor() {
+      this.closeModalDialog()
+    },
+    successRevisiMinor() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Meminta Revisi',
+        message: 'Pengajuan berhasil diminta untuk direvisi',
+        closeFunction: this.closeSelesaiRevisiMinor
+      }
+    },
+    failRevisiMinor(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Revisi Minor',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRevisiMinor() {
+      this.closeModalSuccess()
+      this.$router.push('/prosesstaff')
+    },
+
+    // Popup Request Stop Clock
+    SendRequestStopclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pengajuan Stopclock',
+        message: 'Apakan anda yakin akan mengajukan stopclock',
+        okFunction: this.openRequestStopclock,
+        closeFunction: this.closeRequestStopclock
+      }
+    },
+    openRequestStopclock() {
+      this.closeModalDialog();
+      this.postRequestStopClock(this.successRequestStopclock, this.failRequestStopclock);
+    },
+    closeRequestStopclock() {
+      this.closeModalDialog()
+    },
+    successRequestStopclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pengajuan Stopclock',
+        message: 'Pengajuan stopclock berhasil',
+        closeFunction: this.closeSelesaiRequestStopclock
+      }
+    },
+    failRequestStopclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pengajuan Stopclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestStopclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Pembatalan Stop Clock
+    SendRequestAbortStopclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Stopclock',
+        message: 'Apakan anda yakin akan membatalkan pengajuan stopclock',
+        okFunction: this.openRequestAbortStopclock,
+        closeFunction: this.closeRequestAbortStopclock
+      }
+    },
+    openRequestAbortStopclock() {
+      this.closeModalDialog();
+      this.postRequestAbortStopClock(this.successRequestAbortStopclock, this.failRequestAbortStopclock);
+    },
+    closeRequestAbortStopclock() {
+      this.closeModalDialog()
+    },
+    successRequestAbortStopclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Stopclock',
+        message: 'Pembatalan pengajuan stopclock berhasil',
+        closeFunction: this.closeSelesaiRequestAbortStopclock
+      }
+    },
+    failRequestAbortStopclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pembatalan Pengajuan Stopclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestAbortStopclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Start Clock
+    SendRequestStartclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pengajuan Startclock',
+        message: 'Apakan anda yakin akan mengajukan startclock',
+        okFunction: this.openRequestStartclock,
+        closeFunction: this.closeRequestStartclock
+      }
+    },
+    openRequestStartclock() {
+      this.closeModalDialog();
+      this.postRequestStartClock(this.successRequestStartclock, this.failRequestStartclock);
+    },
+    closeRequestStartclock() {
+      this.closeModalDialog()
+    },
+    successRequestStartclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pengajuan Startclock',
+        message: 'Pengajuan startclock berhasil',
+        closeFunction: this.closeSelesaiRequestStartclock
+      }
+    },
+    failRequestStartclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pengajuan Startclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestStartclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Pembatalan Start Clock
+    SendRequestAbortStartclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Startclock',
+        message: 'Apakan anda yakin akan membatalkan pengajuan startclock',
+        okFunction: this.openRequestAbortStartclock,
+        closeFunction: this.closeRequestAbortStartclock
+      }
+    },
+    openRequestAbortStartclock() {
+      this.closeModalDialog();
+      this.postRequestAbortStartClock(this.successRequestAbortStartclock, this.failRequestAbortStartclock);
+    },
+    closeRequestAbortStartclock() {
+      this.closeModalDialog()
+    },
+    successRequestAbortStartclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Startclock',
+        message: 'Pembatalan pengajuan startclock berhasil',
+        closeFunction: this.closeSelesaiRequestAbortStartclock
+      }
+    },
+    failRequestAbortStartclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pembatalan Pengajuan Startclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestAbortStartclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
     // api
     async getDataApi(id) {
       this.isLoading = true;
@@ -1894,12 +2224,18 @@ export default {
             this.linkDownloadFile7 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
         })
-        // if (
-        //   this.fileNamesurat && this.fileSizesurat && res.data.partnershipTitle &&
-        //   res.data.partnershipCandidate && res.data.scopesMou.length > 0
-        // ) {
-        //   this.disableKirim = false;
-        // }
+        if (!res.data.isStopClock && res.data.status == "Pengajuan") {
+          this.statusAction = 1;
+        }
+        if (!res.data.isStopClock && res.data.status == "Pengajuan StopClock") {
+          this.statusAction = 2;
+        }
+        if (res.data.isStopClock && res.data.status == "Pengajuan") {
+          this.statusAction = 3;
+        }
+        if (res.data.isStopClock && res.data.status == "Pengajuan StartClock") {
+          this.statusAction = 4;
+        }
         this.isLoading = false;
         console.log(res.data);
       } else {
@@ -1911,7 +2247,7 @@ export default {
         }
       }
     },
-    async postPKS() {
+    async postPKS(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
@@ -1923,14 +2259,13 @@ export default {
       console.log(res.data)
       if (res.status == 200) {
         this.isLoading = false;
-        this.isSelesaiSetuju = true;
+        successFunction();
       } else {
         this.isLoading = false;
-        this.isFailOpen = true;
-        console.log(res.data.message);
+        failFunction();
       }
     },
-    async postFilePks() {
+    async postFilePks(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
       let sort = 0;
@@ -2082,13 +2417,98 @@ export default {
       console.log(res.data)
       if (res.status == 201) {
         this.isLoading = false;
-        this.isSelesaiFile = true;
+        successFunction();
       } else {
         this.isLoading = false;
-        this.isFailOpen = true;
-        console.log(res.data.message);
+        failFunction(res.data);
       }
-    }
+    },
+    async postRevisiMinor(successFunction, failFunction) {
+      this.isLoading = true;
+      const res = await fetchPost(`mitra/staff/pks/incoming-data/${this.id}/minor-revision`, null, null, this.$router);
+      if (res.status == 200) {
+        this.isSelesaiRevisiMinor = true;
+        this.isSendRevisiMinor = false;
+        this.isLoading = false;
+        successFunction();
+        console.log(res.data)
+      } else {
+        this.isLoading = false;
+        failFunction(res.data);
+      }
+    },
+    async postRequestStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}/req/stop-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestAbortStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}/req/abort-stop-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}/req/start-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestAbortStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/pks/proses/${this.id}/req/abort-start-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
   },
   mounted() {
     if (this.$route.params.id) {

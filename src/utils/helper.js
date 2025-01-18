@@ -2,7 +2,13 @@ export function parseStatusAproval(positionLevel, status) {
     if (status?.includes("Revisi")) {
       return "Revisi"
     }
-    if (status == 'Selesai') {
+    if (status == 'Pengajuan StopClock') {
+      return "Pengajuan StopClock"
+    }
+    if (status == 'Pengajuan StartClock') {
+      return "Pengajuan StartClock"
+    }
+    if (status == 'Approved' && positionLevel >= 8) {
       return "Selesai"
     }
     if (status == 'Ditolak') {

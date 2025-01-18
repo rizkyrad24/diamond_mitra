@@ -1,9 +1,11 @@
 <script setup>
-import dialog from '@/assets/img/Dialog.png';
-import kirim from '@/assets/img/Dialogkirim.png';
-import gagal from '@/assets/img/Dialogkirimgagal.png';
+// import dialog from '@/assets/img/Dialog.png';
+// import kirim from '@/assets/img/Dialogkirim.png';
+// import gagal from '@/assets/img/Dialogkirimgagal.png';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
+import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
 </script>
 
 <template>
@@ -13,6 +15,19 @@ import ModalFailed from '../modalfailed.vue';
     :title="modalFailed.title"
     :message="modalFailed.message"
     @close="closeModalFailed"
+  />
+  <ModalSuccess
+    :isVisible="modalSuccess.isVisible"
+    :title="modalSuccess.title"
+    :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction"
+  />
+  <ModalDialog
+    :isVisible="modalDialog.isVisible"
+    :title="modalDialog.title"
+    :message="modalDialog.message"
+    @close="modalDialog.closeFunction"
+    @ok="modalDialog.okFunction"
   />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
@@ -88,7 +103,7 @@ import ModalFailed from '../modalfailed.vue';
               </button>
             </div>
             <div v-if="showProgressMoUPopupStaff"
-              class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
+              class="fixed inset-0 flex z-[100] items-center justify-center bg-[#1F2937] bg-opacity-50">
               <div class="bg-[#FFFFFF] re rounded-lg shadow-lg w-[684.92px] h-[538.92px] border-collapse">
                 <button @click="closePopup"
                   class="text-[#2671D9] w-[14px] h-[14px] absolute mt-[25px] ml-[650px] text-[20px]">&times;</button>
@@ -453,217 +468,6 @@ import ModalFailed from '../modalfailed.vue';
             </table>
           </div>
         </transition>
-        <!-- <div
-          class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
-          <div class="w-[30px] h-[48px] bg-[#0FB37D] rounded-tl-md rounded-bl-md"></div>
-          <div class="text-[16px] font-sans font-semibold text-[#333333] ml-[10px] mt-[14.5px] mb-[14.5px]">Informasi
-            RAB</div>
-          <button @click="toggleDropdownArrow2" class="ml-auto mr-4 flex py-1 px-1 rounded-full hover:bg-[#FFFFFF]">
-            <svg :class="{ 'rotate-180': isDropdownArrowOpen2 }" class="w-4 h-4 text-[#2671D9]" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </button>
-        </div>
-        <transition name="fade">
-          <div v-if="isDropdownArrowOpen2"
-            class="flex items-center w-[1046px] h-[430px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-6 py-6 rounded-bl-md rounded-br-md">
-            <table class="table-auto w-auto text-left rounded-lg border-collapse border-[1px] border-[#E5E7E9] mt-3">
-              <thead>
-                <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
-                  <th class="p-2 border border-[#E5E7E9] w-[74px] h-[48px]">
-                    <div class="flex items-center">
-                      <span>No.</span>
-                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC" />
-                        <path
-                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th class="p-2 border border-[#E5E7E9]">
-                    <div class="flex items-center justify-between w-[231px]">
-                      <span class="px-3">Aksi</span>
-                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC" />
-                        <path
-                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th class="p-2 border border-[#E5E7E9]">
-                    <div class="flex items-center justify-between w-[231px]">
-                      <span class="px-3">Deskripsi</span>
-                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC" />
-                        <path
-                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th class="p-2 border border-[#E5E7E9]">
-                    <div class="flex items-center w-[300px] justify-between">
-                      <span class="px-3">Pelanggan</span>
-                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC" />
-                        <path
-                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC" />
-                      </svg>
-                    </div>
-                  </th>
-                  <th class="p-2 border border-[#E5E7E9]">
-                    <div class="flex items-center justify-between">
-                      <span class="px-3">PLN/NonPLN</span>
-                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC" />
-                        <path
-                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC" />
-                      </svg>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="h-[54px] w-[231px]">
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">1</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">2</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">3</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">4</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">5</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">6</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">7</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">8</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum dolor sit amet</td>
-                  <td
-                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
-                    Lorem ipsum</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </transition> -->
         <div
           class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
           <div class="w-[30px] h-[48px] bg-[#F42495] rounded-tl-md rounded-bl-md"></div>
@@ -950,17 +754,48 @@ import ModalFailed from '../modalfailed.vue';
           </div>
         </div>
         <div class="w-[1046px] h-[1px] bg-[#E5E7E9] items-center transform ml-4 mt-6"></div>
-        <div class="flex w-[1046px] h-auto ml-4 py-9">
-          <button @click="SendFile"
-            class="absolute bottom-[12px] right-[125px] flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
-            <div class="flex items-center justify-center w-[120px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+        <div class="flex w-[1046px] h-auto ml-4 py-9 justify-end gap-6">
+          <button v-if="statusAction == 4" @click="SendRequestAbortStartclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Batalkan Pengajuan Startclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 3" @click="SendRequestStartclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Ajukan Startclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 2" @click="SendRequestAbortStopclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Batalkan Pengajuan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendRequestStopclock"
+            class="flex bg-[#f59e0b] hover:bg-[#ff9f43] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Ajukan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendRevisiMinor" class="flex">
+            <div
+              class="flex items-center justify-center rounded-lg bg-[#FFFFFF] border-[#2671D9] border-[1px] hover:bg-[#DBEAFE] cursor-pointer transition-all px-2">
+              <span class="text-[14px] font-sans font-medium text-[#2671D9] ml-3 mt-[9px] mr-3 mb-[9px]">Revisi
+                Minor</span>
+            </div>
+          </button>
+          <button v-if="statusAction == 1" @click="SendFile"
+            class="flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Upload File</span>
             </div>
           </button>
-          <button @click="SendApprov"
+          <button v-if="statusAction == 1" @click="SendApprov"
             :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]': kirimClicked, 'bg-[#E6E6E6] rounded-lg border-[1px] text-[#7F7F80]': !kirimClicked }"
-            :disabled="!kirimClicked" class="absolute bottom-[12px] right-[24px] flex">
-            <div class="flex items-center justify-center w-[83px] h-[40px] rounded-lg border-[#FFFFFF] border-[1px]">
+            :disabled="!kirimClicked" class="flex">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Selesai</span>
             </div>
           </button>
@@ -968,7 +803,7 @@ import ModalFailed from '../modalfailed.vue';
       </div>
     </div>
     <!-- Setujui Pengajuan -->
-    <div v-if="isSendSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isSendSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[476px]">
         <div @click="closeApprov" class="flex justify-end cursor-pointer">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -993,9 +828,9 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] border-[1px] border-[#2671D9] text-[#2671D9] text-sm font-semibold rounded-lg">Batal</button>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- Setujui Pengajuan -->
-    <div v-if="isSelesaiSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isSelesaiSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
         <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
         <div class="flex justify-center">
@@ -1009,25 +844,10 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
         </div>
       </div>
-    </div>
-    <!-- Kirim File -->
-    <div v-if="isSelesaiFile" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
-        <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
-        <div class="flex justify-center">
-          <h1 class="text-[#333333] text-xl font-semibold mt-2">Upload File</h1>
-        </div>
-        <div class="ml-8 mt-3 w-[250px]">
-          <p class="text-center">Anda telah berhasil mengupload file</p>
-        </div>
-        <div class="flex justify-center mt-8">
-          <button @click="closeSelesaiFile"
-            class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
-        </div>
-      </div>
-    </div>
+    </div> -->
+
     <!-- Model 2: isFailOpen -->
-    <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    <!-- <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[452px]">
         <div class="flex justify-center"><img :src="gagal" alt="Dialog Image" class="pt-6"></div>
         <div class="flex justify-center">
@@ -1041,12 +861,12 @@ import ModalFailed from '../modalfailed.vue';
             class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Oke</button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { fetchGet, fetchPostForm } from '@/api/apiFunction';
+import { fetchGet, fetchPostForm, fetchPost } from '@/api/apiFunction';
 import { baseURL } from '@/api/apiManager';
 
 export default {
@@ -1101,13 +921,27 @@ export default {
         title: '',
         message: ''
       },
+      modalSuccess: {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      },
       isLoading: false,
+      statusAction: 0,
 
-      // Popup Acprrove
-      isSendSetuju: false,
-      isSelesaiSetuju: false,
-      isFailOpen: false,
-      isSelesaiFile: false,
+      // // Popup Acprrove
+      // isSendSetuju: false,
+      // isSelesaiSetuju: false,
+      // isFailOpen: false,
+
     };
   },
   computed: {
@@ -1147,6 +981,23 @@ export default {
         isVisible: false,
         title: '',
         message: ''
+      }
+    },
+    closeModalSuccess() {
+      this.modalSuccess = {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      }
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
       }
     },
     checkConditions() {
@@ -1277,33 +1128,289 @@ export default {
       this.showDisetujuiPopup = false;
     },
     // Popup Aprrove
+    // SendApprov() {
+    //   this.isSendSetuju = true;
+    //   this.isSelesaiSetuju = false;
+    // },
+    // closeApprov() {
+    //   this.isSendSetuju = false;
+    // },
+    // openSetuju() {
+    //   this.postMounda();
+    //   // this.isSelesaiSetuju = true;
+    //   // this.isSendSetuju = false; 
+    // },
+    // closeSelesai() {
+    //   this.isSelesaiSetuju = false;
+    //   this.$router.push('/prosesstaff')
+    // },
+    // closeFail() {
+    //   this.isFailOpen = false;
+    // },
+
+    // Popup Selesai
     SendApprov() {
-      this.isSendSetuju = true;
-      this.isSelesaiSetuju = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Kirim Pengajuan',
+        message: 'Apakan anda yakin akan melanjutkan pengajuan ini ke manager',
+        okFunction: this.openApprov,
+        closeFunction: this.closeApprov
+      }
+    },
+    openApprov() {
+      this.closeModalDialog();
+      this.postMounda(this.successApprov, this.failApprov);
     },
     closeApprov() {
-      this.isSendSetuju = false;
+      this.closeModalDialog()
     },
-    openSetuju() {
-      this.postMounda();
-      // this.isSelesaiSetuju = true;
-      // this.isSendSetuju = false; 
+    successApprov() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Kirim Pengajuan',
+        message: 'Pengajuan berhasil dikirim ke manager',
+        closeFunction: this.closeSelesaiApprov
+      }
     },
-    closeSelesai() {
-      this.isSelesaiSetuju = false;
+    failApprov(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Kirim Pengajuan',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprov() {
+      this.closeModalSuccess()
       this.$router.push('/prosesstaff')
     },
-    closeFail() {
-      this.isFailOpen = false;
-    },
+
+    // Popup Kirim File
     SendFile() {
-      this.postFileMounda();
+      this.showProgressMoUPopupStaff = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Upload File',
+        message: 'Apakan anda yakin upload file ini?',
+        okFunction: this.openSendFile,
+        closeFunction: this.closeSendFile
+      }
     },
-    closeSelesaiFile() {
-      this.isSelesaiFile = false;
+    openSendFile() {
+      this.closeModalDialog();
+      this.postFileMounda(this.successUploadFile, this.failUploadFile);
+    },
+    closeSendFile() {
+      this.closeModalDialog();
+      this.showProgressMoUPopupStaff = true;
+    },
+    successUploadFile() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Upload File',
+        message: 'File berhasil di upload',
+        closeFunction: this.closeSelesaiUploadFile
+      }
+    },
+    failUploadFile(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Upload File',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiUploadFile() {
+      this.closeModalSuccess();
       this.showProgressMoUPopupStaff = false;
       this.getDataApi(this.id);
     },
+
+    // Popup Revisi Minor
+    SendRevisiMinor() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Permintaan Revisi Pengajuan',
+        message: 'Apakan anda yakin akan meminta pengajuan ini direvisi',
+        okFunction: this.openRevisiMinor,
+        closeFunction: this.closeRevisiMinor
+      }
+    },
+    openRevisiMinor() {
+      this.closeModalDialog();
+      this.postRevisiMinor(this.successRevisiMinor, this.failRevisiMinor);
+    },
+    closeRevisiMinor() {
+      this.closeModalDialog()
+    },
+    successRevisiMinor() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Meminta Revisi',
+        message: 'Pengajuan berhasil diminta untuk direvisi',
+        closeFunction: this.closeSelesaiRevisiMinor
+      }
+    },
+    failRevisiMinor(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Revisi Minor',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRevisiMinor() {
+      this.closeModalSuccess()
+      this.$router.push('/prosesstaff')
+    },
+
+    // Popup Request Stop Clock
+    SendRequestStopclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pengajuan Stopclock',
+        message: 'Apakan anda yakin akan mengajukan stopclock',
+        okFunction: this.openRequestStopclock,
+        closeFunction: this.closeRequestStopclock
+      }
+    },
+    openRequestStopclock() {
+      this.closeModalDialog();
+      this.postRequestStopClock(this.successRequestStopclock, this.failRequestStopclock);
+    },
+    closeRequestStopclock() {
+      this.closeModalDialog()
+    },
+    successRequestStopclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pengajuan Stopclock',
+        message: 'Pengajuan stopclock berhasil',
+        closeFunction: this.closeSelesaiRequestStopclock
+      }
+    },
+    failRequestStopclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pengajuan Stopclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestStopclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Pembatalan Stop Clock
+    SendRequestAbortStopclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Stopclock',
+        message: 'Apakan anda yakin akan membatalkan pengajuan stopclock',
+        okFunction: this.openRequestAbortStopclock,
+        closeFunction: this.closeRequestAbortStopclock
+      }
+    },
+    openRequestAbortStopclock() {
+      this.closeModalDialog();
+      this.postRequestAbortStopClock(this.successRequestAbortStopclock, this.failRequestAbortStopclock);
+    },
+    closeRequestAbortStopclock() {
+      this.closeModalDialog()
+    },
+    successRequestAbortStopclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Stopclock',
+        message: 'Pembatalan pengajuan stopclock berhasil',
+        closeFunction: this.closeSelesaiRequestAbortStopclock
+      }
+    },
+    failRequestAbortStopclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pembatalan Pengajuan Stopclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestAbortStopclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Start Clock
+    SendRequestStartclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pengajuan Startclock',
+        message: 'Apakan anda yakin akan mengajukan startclock',
+        okFunction: this.openRequestStartclock,
+        closeFunction: this.closeRequestStartclock
+      }
+    },
+    openRequestStartclock() {
+      this.closeModalDialog();
+      this.postRequestStartClock(this.successRequestStartclock, this.failRequestStartclock);
+    },
+    closeRequestStartclock() {
+      this.closeModalDialog()
+    },
+    successRequestStartclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pengajuan Startclock',
+        message: 'Pengajuan startclock berhasil',
+        closeFunction: this.closeSelesaiRequestStartclock
+      }
+    },
+    failRequestStartclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pengajuan Startclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestStartclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+
+    // Popup Request Pembatalan Start Clock
+    SendRequestAbortStartclock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Startclock',
+        message: 'Apakan anda yakin akan membatalkan pengajuan startclock',
+        okFunction: this.openRequestAbortStartclock,
+        closeFunction: this.closeRequestAbortStartclock
+      }
+    },
+    openRequestAbortStartclock() {
+      this.closeModalDialog();
+      this.postRequestAbortStartClock(this.successRequestAbortStartclock, this.failRequestAbortStartclock);
+    },
+    closeRequestAbortStartclock() {
+      this.closeModalDialog()
+    },
+    successRequestAbortStartclock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Pembatalan Pengajuan Startclock',
+        message: 'Pembatalan pengajuan startclock berhasil',
+        closeFunction: this.closeSelesaiRequestAbortStartclock
+      }
+    },
+    failRequestAbortStartclock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Pembatalan Pengajuan Startclock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRequestAbortStartclock() {
+      this.closeModalSuccess()
+      this.getDataApi(this.id);
+    },
+    
+
     // api
     async getDataApi(id) {
       this.isLoading = true;
@@ -1367,6 +1474,18 @@ export default {
         // ) {
         //   this.disableKirim = false;
         // }
+        if (!res.data.isStopClock && res.data.status == "Pengajuan") {
+          this.statusAction = 1;
+        }
+        if (!res.data.isStopClock && res.data.status == "Pengajuan StopClock") {
+          this.statusAction = 2;
+        }
+        if (res.data.isStopClock && res.data.status == "Pengajuan") {
+          this.statusAction = 3;
+        }
+        if (res.data.isStopClock && res.data.status == "Pengajuan StartClock") {
+          this.statusAction = 4;
+        }
         this.isLoading = false;
         console.log(res.data);
       } else {
@@ -1378,7 +1497,7 @@ export default {
         }
       }
     },
-    async postMounda() {
+    async postMounda(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
@@ -1390,14 +1509,13 @@ export default {
       console.log(res.data)
       if (res.status == 200) {
         this.isLoading = false;
-        this.isSelesaiSetuju = true;
+        successFunction();
       } else {
         this.isLoading = false;
-        this.isFailOpen = true;
-        console.log(res.data.message);
+        failFunction();
       }
     },
-    async postFileMounda() {
+    async postFileMounda(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
       let sort = 0;
@@ -1469,13 +1587,98 @@ export default {
       console.log(res.data)
       if (res.status == 201) {
         this.isLoading = false;
-        this.isSelesaiFile = true;
+        successFunction();
       } else {
         this.isLoading = false;
-        this.isFailOpen = true;
-        console.log(res.data.message);
+        failFunction(res.data);
       }
-    }
+    },
+    async postRevisiMinor(successFunction, failFunction) {
+      this.isLoading = true;
+      const res = await fetchPost(`mitra/staff/mounda/incoming-data/${this.id}/minor-revision`, null, null, this.$router);
+      if (res.status == 200) {
+        this.isSelesaiRevisiMinor = true;
+        this.isSendRevisiMinor = false;
+        this.isLoading = false;
+        successFunction();
+        console.log(res.data)
+      } else {
+        this.isLoading = false;
+        failFunction(res.data);
+      }
+    },
+    async postRequestStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/mounda/proses/${this.id}/req/stop-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestAbortStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/mounda/proses/${this.id}/req/abort-stop-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/mounda/proses/${this.id}/req/start-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postRequestAbortStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      // Display the values
+      for (var pair of form.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+      const res = await fetchPostForm(`mitra/staff/mounda/proses/${this.id}/req/abort-start-clock`, null, form, this.$router);
+      console.log(res.data)
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
   },
   mounted() {
     if (this.$route.params.id) {
