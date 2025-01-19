@@ -308,7 +308,7 @@
 
 <script>
 import { fetchGet } from '@/api/apiFunction';
-import { parseStatusAproval, dateParsing } from '@/utils/helper';
+import { mapperStatus, dateParsing } from '@/utils/helper';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 
@@ -547,7 +547,7 @@ export default {
 					user: item.user,
           date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
           pic: item.disposedStaff,
-					progress: parseStatusAproval(item.positionLevel, item.status),
+					progress: mapperStatus(item.positionLevel, item.status, item.attachmentsMou, item.isStopClock)[0],
           did: item.id
 				}))
 				console.log(res.data)
@@ -587,7 +587,7 @@ export default {
 					user: item.user,
           date: item.dueDateStaff? dateParsing(item.dueDateStaff): "-",
           pic: item.disposedStaff,
-					progress: parseStatusAproval(item.positionLevel, item.status),
+					progress: mapperStatus(item.positionLevel, item.status, item.attachmentsPks, item.isStopClock)[0],
           did: item.id
 				}))
 				boxResult = boxResult.concat(cleanData2)

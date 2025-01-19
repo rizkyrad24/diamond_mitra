@@ -1,4 +1,31 @@
+<script setup>
+import Loading from '../loading.vue';
+import ModalFailed from '../modalfailed.vue';
+import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
+</script>
+
 <template>
+  <Loading :isVisible="isLoading" />
+  <ModalFailed
+    :isVisible="modalFailed.isVisible"
+    :title="modalFailed.title"
+    :message="modalFailed.message"
+    @close="closeModalFailed"
+  />
+  <ModalSuccess
+    :isVisible="modalSuccess.isVisible"
+    :title="modalSuccess.title"
+    :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction"
+  />
+  <ModalDialog
+    :isVisible="modalDialog.isVisible"
+    :title="modalDialog.title"
+    :message="modalDialog.message"
+    @close="modalDialog.closeFunction"
+    @ok="modalDialog.okFunction"
+  />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
@@ -20,12 +47,12 @@
           <svg class="ml-4 mt-[10px]" width="6" height="28" viewBox="0 0 6 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="6" height="28" fill="#1F5AAD" />
           </svg>
-          <h1 class="font-sans text-[20px] text-[#333333] mt-2 ml-[5px] font-semibold">Detail Pengajuan</h1>
+          <h1 class="font-sans text-[20px] text-[#333333] mt-2 ml-[5px] font-semibold">Detail {{ dataBerkas?.status }} {{ dataBerkas?.base || 'PKS' }}</h1>
         </div>
-        <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">#no_pengajuan</h1>
+        <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">{{ dataBerkas?.submissionNumber }}</h1>
         <div class="flex items-center w-[1046px] h-[55px] rounded-lg border-[#4791F2] border-[1px] bg-[#e7f1fd] ml-4 mt-4 mb-4">
           <h1 class="text-[16px] font-semibold text-[#2671D9] font-sans ml-4 mt-4 mb-5">Info Approval :</h1>
-          <span class="text-[16px] text-[#333333] font-sans ml-1 mt-4 mb-5">Pengajuan ini memerlukan approval untuk stop clock</span>
+          <span class="text-[16px] text-[#333333] font-sans ml-1 mt-4 mb-5">Pengajuan ini memerlukan approval untuk {{ dataBerkas?.status.replace('Pengajuan ', '') }}</span>
         </div>
         <div class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
           <div class="w-[30px] h-[48px] bg-[#4791F2] rounded-tl-md rounded-bl-md"></div>
@@ -40,51 +67,62 @@
           <div v-if="isDropdownArrowOpen" class="flex flex-col w-[1046px] h-[320px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
-              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">370.526.7356</span>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.submissionNumber }}</span>
               <div class="flex">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Metode Kemitraan</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">Tunjuk Langsung</span>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dataBerkas?.partnershipMethod || '-' }}</span>
               </div>
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Judul</h1>
-              <span class="w-[182px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">Uji Coba Aplikasi Kemitraan</span>
+              <span class="w-[182px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.partnershipTitle || '-' }}</span>
               <div class="flex ml-[1px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[209px]">Jenis Material</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">Material Only</span>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dataBerkas?.materialType || '-' }}</span>
               </div>
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Nomor Anggaran</h1>
-              <span class="w-[57px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">2024113</span>
+              <span class="w-[57px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.budgetNumber || '-' }}</span>
               <div class="flex ml-[335px]">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Barang</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">lorem ipsum</span>
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Jenis Kemitraan</h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[17px]">{{ dataBerkas.partnershipType }}</span>
               </div>
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Anggaran</h1>
-              <span class="w-[43px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">Capex</span>
+              <span class="w-[43px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.budgetType || '-' }}</span>
               <div class="flex ml-[348px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">Derek Klocko</span>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                  dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
             <div class="w-[1046px] h-[1px] bg-[#E5E7E9] justify-center transform translate-x-[-2.3%] mt-6"></div>
             <div class="flex items-center mt-6">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
-              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">370.526.7356</span>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.background || '-' }}</span>
               <div class="flex">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Catatan</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">370.526.7356</span>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{ dataBerkas?.note
+                  || '-' }}</span>
               </div>
             </div>
             <div class="flex items-center mt-6">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Dibuat Oleh</h1>
-              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">Kenny Carroll</span>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dataBerkas?.user ||
+                '-' }}</span>
               <div class="flex">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">21/3/2023</span>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dataBerkas?.submissionDate || '-' }}</span>
               </div>
             </div>
           </div>
@@ -99,16 +137,23 @@
           </button>
         </div>
         <transition name="fade">
-          <div v-if="isDropdownArrowOpen1" class="flex flex-col w-[1046px] h-[270px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-6 py-6 rounded-bl-md rounded-br-md">
-            <div class="flex items-center">
-              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Pembayaran</h1>
-              <span class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold ml-[230px]">Time Schedule</span>
-              <span class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold ml-[195px]">Calon Mitra Bisnis</span>
-            </div>
-            <div class="flex items-center mt-2">
-              <h1 class="w-[7px] h-[17px] text-[14px] text-[#7F7F80]">-</h1>
-              <span class="w-[7px] h-[17px] text-[14px] text-[#7F7F80] ml-[355px]">-</span>
-              <span class="w-[7px] h-[17px] text-[14px] text-[#7F7F80] ml-[316px]">-</span>
+          <div v-if="isDropdownArrowOpen1"
+            class="flex flex-col w-[1046px] h-[270px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-6 py-6 rounded-bl-md rounded-br-md">
+            <div class="flex items-center justify-between w-full px-4">
+              <div class="flex flex-col gap-2 items-center">
+                <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Pembayaran</h1>
+                <h1 class="w-[130px] h-[17px] text-[14px] text-[#7F7F80]">-</h1>
+              </div>
+              <div class="flex flex-col gap-2 items-center">
+                <div class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Time Schedule</div>
+                <div class="w-[130px] h-[17px] text-[14px] text-[#7F7F80]">-</div>
+              </div>
+              <div class="flex flex-col gap-2 items-center">
+                <div class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Calon Mitra Bisnis
+                </div>
+                <div class="w-[130px] h-[17px] text-[14px] text-[#7F7F80]">{{ dataBerkas?.partnershipCandidate || "-" }}
+                </div>
+              </div>
             </div>
             <table class="table-auto w-auto text-left border-collapse border-[1px] border-[#E5E7E9] mt-4">
               <thead>
@@ -116,57 +161,54 @@
                   <th class="p-2 border border-[#E5E7E9] w-[74px] h-[48px]">
                     <div class="flex items-center w-[74px]">
                       <span>No.</span>
-                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
                   <th class="p-2 border border-[#E5E7E9]">
                     <div class="flex items-center justify-between">
                       <span class="px-3">Pekerjaan</span>
-                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
                 </tr>
               </thead>
-              <tbody class="h-[54px] w-[998px]">
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal w-[900px] h-[22px]">
-                  <td class="p-2 border border-[#E5E7E9]">1</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">Lorem ipsum dolor sit amet consectetur adipisicing elit</td>
+              <tbody v-if="base == 'PKS'" class="h-[54px] w-[998px]">
+                <tr v-for="(item, index) in dataBerkas?.scopesPks" :key="index"
+                  class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal w-[900px] h-[22px]">
+                  <td class="p-2 border border-[#E5E7E9]">{{ index + 1 }}</td>
+                  <td
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">
+                    {{ item.scopeName }}</td>
                 </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">2</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">Lorem ipsum dolor sit amet consectetur adipisicing elit</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">3</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">Lorem ipsum dolor sit amet consectetur adipisicing elit</td>
+              </tbody>
+              <tbody v-else class="h-[54px] w-[998px]">
+                <tr v-for="(item, index) in dataBerkas?.scopesMou" :key="index"
+                  class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal w-[900px] h-[22px]">
+                  <td class="p-2 border border-[#E5E7E9]">{{ index + 1 }}</td>
+                  <td
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">
+                    {{ item.scopeName }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </transition>
-        <div class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
+        <div v-if="base == 'PKS'" class="flex items-center mt-4 ml-4 w-[1046px] h-[48px] rounded-lg bg-[#FFFFFF] border-[#E5E7E9] border-[1px]">
           <div class="w-[30px] h-[48px] bg-[#0FB37D] rounded-tl-md rounded-bl-md"></div>
           <div class="text-[16px] font-sans font-semibold text-[#333333] ml-[10px] mt-[14.5px] mb-[14.5px]">Informasi RAB</div>
           <button @click="toggleDropdownArrow2" class="ml-auto mr-4 flex py-1 px-1 rounded-full hover:bg-[#FFFFFF]">
@@ -175,25 +217,23 @@
             </svg>
           </button>
         </div>
-        <transition name="fade">
-          <div v-if="isDropdownArrowOpen2" class="flex items-center w-[1046px] h-[430px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-6 py-6 rounded-bl-md rounded-br-md">
+        <transition v-if="base == 'PKS'" name="fade">
+          <div v-if="isDropdownArrowOpen2"
+            class="flex items-center w-[1046px] max-h-[430px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-6 py-6 rounded-bl-md rounded-br-md">
             <table class="table-auto w-auto text-left rounded-lg border-collapse border-[1px] border-[#E5E7E9] mt-3">
               <thead>
                 <tr class="bg-[#FFFFFF] text-[12px] font-sans text-[#4D5E80] font-semibold">
                   <th class="p-2 border border-[#E5E7E9] w-[74px] h-[48px]">
                     <div class="flex items-center">
                       <span>No.</span>
-                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                      <svg width="14" height="10" class="ml-3" viewBox="0 0 14 10" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
@@ -201,16 +241,12 @@
                     <div class="flex items-center justify-between w-[231px]">
                       <span class="px-3">Aksi</span>
                       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
@@ -218,16 +254,12 @@
                     <div class="flex items-center justify-between w-[231px]">
                       <span class="px-3">Deskripsi</span>
                       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
@@ -235,16 +267,12 @@
                     <div class="flex items-center w-[300px] justify-between">
                       <span class="px-3">Pelanggan</span>
                       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
@@ -252,77 +280,36 @@
                     <div class="flex items-center justify-between">
                       <span class="px-3">PLN/NonPLN</span>
                       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                        <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                         <path
                           d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                          fill="#93B8EC"
-                        />
+                          fill="#93B8EC" />
                       </svg>
                     </div>
                   </th>
                 </tr>
               </thead>
               <tbody class="h-[54px] w-[231px]">
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">1</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">2</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">3</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">4</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">5</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">6</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">7</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
-                </tr>
-                <tr class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
-                  <td class="p-2 border border-[#E5E7E9]">8</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum dolor sit amet</td>
-                  <td class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">Lorem ipsum</td>
+                <tr v-for="(item, index) in dataBerkas?.rab" :key="index"
+                  class="bg-[#FFFFFF] border border-[#E5E7E9] text-[#333333] font-sans text-[14px] font-normal">
+                  <td class="p-2 border border-[#E5E7E9]">{{ index + 1 }}</td>
+                  <td
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
+                    {{ item.product || "-" }}</td>
+                  <td
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
+                    {{ item.costDesc || "-" }}</td>
+                  <td
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
+                    {{ item.customer || "-" }}</td>
+                  <td v-if="item.isPln"
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
+                    PLN</td>
+                  <td v-else
+                    class="p-2 border border-[#E5E7E9] text-[14px] text-left pl-5 font-sans font-normal text-[#333333] w-[207px]">
+                    Non PLN</td>
                 </tr>
               </tbody>
             </table>
@@ -338,220 +325,211 @@
           </button>
         </div>
         <transition name="fade">
-          <div v-if="isDropdownArrowOpen3" class="flex flex-wrap w-[1046px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] ml-4 px-5 py-6 rounded-bl-md rounded-br-md gap-6">
-            <!-- KKB -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKB</h1>
-                <span class="text-[#FF5656] font-bold ml-1">*</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div v-if="isDropdownArrowOpen3">
+            <div v-if="base === 'PKS'">
+              <div class="px-6 mt-6 mb-4 flex justify-between">
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">KKB <span class="text-[#FF5656] text-xs">*</span></label>
+                  <a :href="linkDownloadKKB" v-if="fileNameKKB" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
                       <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
                     </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKB }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKB }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputKKB" class="hidden" ref="fileInputKKB" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.KKB.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
+                </div>
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">KKR <span class="text-[#FF5656] text-xs">*</span></label>
+                  <a :href="linkDownloadKKR" v-if="fileNameKKR" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
+                      <path
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
+                    </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKR }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKR }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">KKF <span class="text-[#FF5656] text-xs">*</span></label>
+                  <a :href="linkDownloadKKF" v-if="fileNameKKF" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
+                      <path
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
+                    </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKF }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKF }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- KKR -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKR</h1>
-                <span class="text-[#FF5656] font-bold ml-1">*</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div class="px-6 mt-6 mb-4 flex justify-between">
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">KKO <span class="text-[#FF5656] text-xs">*</span></label>
+                  <a :href="linkDownloadKKO" v-if="fileNameKKO" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
                       <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
                     </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNameKKO }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizeKKO }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputKKR" class="hidden" ref="fileInputKKR" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.KKR.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
+                </div>
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">Proposal Mitra
+                    <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
+                  <a :href="linkDownloadmitra" v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
+                      <path
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
+                    </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNamemitra }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizemitra }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">Dokumen Surat Menyurat
+                    <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
+                  <a :href="linkDownloadsurat" v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
+                      <path
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
+                    </svg>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNamesurat }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizesurat }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- KKF -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKF</h1>
-                <span class="text-[#FF5656] font-bold ml-1">*</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
-                    </svg>
+              <div class="px-6 mt-6 mb-4">
+                <label class="text-[#4D5E80] font-semibold">Dokumen Lainnya
+                  <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
+                <a :href="linkDownloadlainnya" v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                  <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
+                    <path
+                      d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                      fill="#2671D9" />
+                  </svg>
+                  <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                    <span class="text-[#333333] text-sm font-semibold">{{ fileNamelainnya }}</span>
+                    <p class="text-[#9E9E9E] text-xs">{{ fileSizelainnya }}</p>
                   </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputKKF" class="hidden" ref="fileInputKKF" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.KKF.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
+                </a>
+                <div v-else class="w-[333px] h-auto">
+                  <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                 </div>
               </div>
             </div>
-            <!-- KKO -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">KKO</h1>
-                <span class="text-[#FF5656] font-bold ml-1">*</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div v-else>
+              <div class="px-6 mt-6 mb-4 flex justify-between">
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">Proposal Mitra
+                    <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
+                  <a :href="linkDownloadmitra" v-if="fileNamemitra" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
                       <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
                     </svg>
-                  </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputKKO" class="hidden" ref="fileInputKKO" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.KKO.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNamemitra }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizemitra }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- Proposal Mitra -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Proposal Mitra</h1>
-                <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">
+                    Dokumen Surat Menyurat
+                    <span class="text-[#FF5656] text-xs">*</span>
+                  </label>
+                  <a :href="linkDownloadsurat" v-if="fileNamesurat" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
                       <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
                     </svg>
-                  </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputProposalMitra" class="hidden" ref="fileInputProposalMitra" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.ProposalMitra?.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNamesurat }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizesurat }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- Dokumen Surat Menyurat (Opsional) -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Dokumen Surat Menyurat</h1>
-                <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div>
+                  <label class="text-[#4D5E80] font-semibold">Dokumen Lainnya
+                    <span class="text-[#B3B3B3] text-xs">(Opsional)</span></label>
+                  <a :href="linkDownloadlainnya" v-if="fileNamelainnya" class="w-[333px] h-auto border-[1px] flex rounded-lg mt-2 items-center">
+                    <svg width="45" height="46" class="mx-4 my-2" viewBox="0 0 45 46" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="22.5" cy="23" r="22.5" fill="#E9F1FB" />
                       <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
+                        d="M30 20.1312C29.9902 20.0451 29.9714 19.9603 29.9437 19.8781V19.7937C29.8987 19.6974 29.8385 19.6087 29.7656 19.5313L24.1406 13.9062C24.0631 13.8333 23.9745 13.7732 23.8781 13.7281H23.7937C23.6985 13.6735 23.5933 13.6384 23.4844 13.625H17.8125C17.0666 13.625 16.3512 13.9213 15.8238 14.4488C15.2963 14.9762 15 15.6916 15 16.4375V29.5625C15 30.3084 15.2963 31.0238 15.8238 31.5512C16.3512 32.0787 17.0666 32.375 17.8125 32.375H27.1875C27.9334 32.375 28.6488 32.0787 29.1762 31.5512C29.7037 31.0238 30 30.3084 30 29.5625V20.1875V20.1312ZM24.375 16.8219L26.8031 19.25H25.3125C25.0639 19.25 24.8254 19.1512 24.6496 18.9754C24.4738 18.7996 24.375 18.5611 24.375 18.3125V16.8219ZM28.125 29.5625C28.125 29.8111 28.0262 30.0496 27.8504 30.2254C27.6746 30.4012 27.4361 30.5 27.1875 30.5H17.8125C17.5639 30.5 17.3254 30.4012 17.1496 30.2254C16.9738 30.0496 16.875 29.8111 16.875 29.5625V16.4375C16.875 16.1889 16.9738 15.9504 17.1496 15.7746C17.3254 15.5988 17.5639 15.5 17.8125 15.5H22.5V18.3125C22.5 19.0584 22.7963 19.7738 23.3238 20.3012C23.8512 20.8287 24.5666 21.125 25.3125 21.125H28.125V29.5625Z"
+                        fill="#2671D9" />
                     </svg>
-                  </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputDokumenSuratMenyurat" class="hidden" ref="fileInputDokumenSuratMenyurat" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.DokumenSuratMenyurat?.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Dokumen Lainnya (Opsional) -->
-            <div class="flex flex-col w-[316.6px]">
-              <div class="flex items-center">
-                <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Dokumen Lainnya</h1>
-                <span class="text-[#B3B3B3] font-sans text-[12px] font-light mt-1 ml-1">(Opsional)</span>
-              </div>
-              <div class="w-full h-[69px] bg-[#FFFFFF] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-center justify-center">
-                <div class="flex items-center p-4 bg-[#FFFFFF] border border-[#E5E7E9] rounded-lg w-full">
-                  <div class="flex items-center justify-center w-10 h-10 bg-[#E9F1FB] rounded-full">
-                    <svg width="15" height="19" viewBox="0 0 15 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M15 6.63125C14.9902 6.54513 14.9714 6.46028 14.9437 6.37813V6.29375C14.8987 6.19736 14.8385 6.10875 14.7656 6.03125L9.14062 0.40625C9.06313 0.333328 8.97452 0.273201 8.87812 0.228125H8.79375C8.69851 0.173507 8.59333 0.138448 8.48437 0.125H2.8125C2.06658 0.125 1.35121 0.421316 0.823762 0.948762C0.296316 1.47621 0 2.19158 0 2.9375V16.0625C0 16.8084 0.296316 17.5238 0.823762 18.0512C1.35121 18.5787 2.06658 18.875 2.8125 18.875H12.1875C12.9334 18.875 13.6488 18.5787 14.1762 18.0512C14.7037 17.5238 15 16.8084 15 16.0625V6.6875V6.63125ZM9.375 3.32187L11.8031 5.75H10.3125C10.0639 5.75 9.8254 5.65123 9.64959 5.47541C9.47377 5.2996 9.375 5.06114 9.375 4.8125V3.32187ZM13.125 16.0625C13.125 16.3111 13.0262 16.5496 12.8504 16.7254C12.6746 16.9012 12.4361 17 12.1875 17H2.8125C2.56386 17 2.3254 16.9012 2.14959 16.7254C1.97377 16.5496 1.875 16.3111 1.875 16.0625V2.9375C1.875 2.68886 1.97377 2.4504 2.14959 2.27459C2.3254 2.09877 2.56386 2 2.8125 2H7.5V4.8125C7.5 5.55842 7.79632 6.27379 8.32376 6.80124C8.85121 7.32868 9.56658 7.625 10.3125 7.625H13.125V16.0625Z"
-                        fill="#2671D9"
-                      />
-                    </svg>
-                  </div>
-                  <div class="relative w-full">
-                    <input type="file" id="fileInputDokumenLainnya" class="hidden" ref="fileInputDokumenLainnya" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
-                        <div class="overflow-hidden">
-                          <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
-                            {{ fileDetails.DokumenLainnya?.fileName || "namadokumen.pdf" }}
-                          </span>
-                        </div>
-                      </div>
-                    </button>
+                    <div class="py-2 w-[200px] flex-grow truncate pe-3">
+                      <span class="text-[#333333] text-sm font-semibold">{{ fileNamelainnya }}</span>
+                      <p class="text-[#9E9E9E] text-xs">{{ fileSizelainnya }}</p>
+                    </div>
+                  </a>
+                  <div v-else class="w-[333px] h-auto">
+                    <span class="text-[#9E9E9E] text-sm font-semibold">File belum diupload</span>
                   </div>
                 </div>
               </div>
@@ -566,7 +544,7 @@
             <div class="w-full h-[88px] bg-[#E0E0E0] border-[#E5E7E9] border-[1px] rounded-lg mt-2 flex items-start justify-start">
               <div class="flex p-4">
                 <div class="ml-4">
-                  <span class="block text-[#333333] font-sans text-[14px]">Lorem ipsum dolor sit amet consectetur. Tincidunt convallis sit quisque.</span>
+                  <span class="block text-[#333333] font-sans text-[14px]">{{ dataBerkas?.responseText }}</span>
                 </div>
               </div>
             </div>
@@ -575,10 +553,36 @@
             <div class="flex items-center">
               <h1 class="font-sans text-[#4D5E80] text-[16px] font-semibold">Catatan Approval</h1>
             </div>
-            <textarea type="text" placeholder="Masukkan catatan approval" class="w-full h-[88px] text-black font-sans text-sm focus:border-gray-400 focus:outline-none border border-gray-300 rounded-lg p-2 mt-2 bg-white"></textarea>
+            <textarea v-model="ApprovalNote" type="text" placeholder="Masukkan catatan approval" class="w-full h-[88px] text-black font-sans text-sm focus:border-gray-400 focus:outline-none border border-gray-300 rounded-lg p-2 mt-2 bg-white"></textarea>
           </div>
         </div>
-        <div class="flex flex-row w-[1046px] h-auto ml-4 py-9">
+        <div class="flex w-[1046px] h-auto ml-4 py-9 justify-end gap-6">
+          <button v-if="dataBerkas?.status == 'Pengajuan StopClock'" @click="SendRejectStopClock"
+            class="flex bg-[red] border-[#C53830] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Reject Pengajuan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="dataBerkas?.status == 'Pengajuan StopClock'" @click="SendApprovStopClock"
+            class="flex bg-[#2671D9] hover:bg-[#1E5BB7] border-[#FFFFFF] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Approve Pengajuan Stopclock</span>
+            </div>
+          </button>
+          <button v-if="dataBerkas?.status == 'Pengajuan StartClock'" @click="SendRejectStartClock"
+            class="flex bg-[red] border-[#C53830] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Reject Pengajuan Startclock</span>
+            </div>
+          </button>
+          <button v-if="dataBerkas?.status == 'Pengajuan StartClock'" @click="SendApprovStartClock"
+            class="flex bg-[#2671D9] hover:bg-[#1E5BB7] border-[#FFFFFF] rounded-lg border-[1px] text-[#FFFFFF]">
+            <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
+              <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Approve Pengajuan Startclock</span>
+            </div>
+          </button>
+        </div>
+        <!-- <div class="flex flex-row w-[1046px] h-auto ml-4 py-9">
           <button class="absolute bottom-[12px] right-[123px] mt-4 flex">
             <div class="flex items-center justify-center w-[69px] h-[40px] rounded-lg bg-[#FFFFFF] border-[#C53830] border-[1px] hover:bg-[#FEE2E2] cursor-pointer transition-all">
               <span class="text-[14px] font-sans text-[#C53830] font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Reject</span>
@@ -589,8 +593,8 @@
               <span class="text-[14px] font-sans text-[#FFFFFF] font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Approve</span>
             </div>
           </button>
-        </div>
-        <div v-if="showApprovalStopclockPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
+        </div> -->
+        <!-- <div v-if="showApprovalStopclockPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
           <div class="bg-[#FFFFFF] rounded-lg shadow-lg w-[360px] h-[476px]">
             <button @click="closeApprovalStopclockPopup" class="text-[#4B5563] absolute mt-2 ml-[330px] text-[20px]">&times;</button>
             <div class="flex flex-col justify-center items-center mt-14 ml-8 mr-8 mb-14">
@@ -841,25 +845,28 @@
               <button @click="closeDisetujuiPopup" class="bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] text-[14px] p-2 rounded-lg w-full">Selesai</button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { fetchGet, fetchPostForm } from '@/api/apiFunction';
+import { baseURL } from '@/api/apiManager';
+
 export default {
   data() {
     return {
-      fileDetails: {
-        KKB: { fileName: "", fileSize: "" },
-        KKR: { fileName: "", fileSize: "" },
-        KKF: { fileName: "", fileSize: "" },
-        KKO: { fileName: "", fileSize: "" },
-        ProposalMitra: { fileName: "", fileSize: "" },
-        DokumenSuratMenyurat: { fileName: "", fileSize: "" },
-        DokumenLainnya: { fileName: "", fileSize: "" },
-      },
+      // fileDetails: {
+      //   KKB: { fileName: "", fileSize: "" },
+      //   KKR: { fileName: "", fileSize: "" },
+      //   KKF: { fileName: "", fileSize: "" },
+      //   KKO: { fileName: "", fileSize: "" },
+      //   ProposalMitra: { fileName: "", fileSize: "" },
+      //   DokumenSuratMenyurat: { fileName: "", fileSize: "" },
+      //   DokumenLainnya: { fileName: "", fileSize: "" },
+      // },
       isDropdownArrowOpen: false,
       isDropdownArrowOpen1: false,
       isDropdownArrowOpen2: false,
@@ -867,9 +874,78 @@ export default {
       showDropdown: false,
       showApprovalStopclockPopup: false, // Untuk menampilkan popup persetujuan pengajuan
       showDisetujuiPopup: false, // Untuk menampilkan popup pengajuan disetujui
+
+      dataBerkas: null,
+      base: null,
+      id: null,
+      fileNameKKB: null,
+      fileSizeKKB: null,
+      linkDownloadKKB: "",
+      fileNameKKR: null,
+      fileSizeKKR: null,
+      linkDownloadKKR: "",
+      fileNameKKF: null,
+      fileSizeKKF: null,
+      linkDownloadKKF: "",
+      fileNameKKO: null,
+      fileSizeKKO: null,
+      linkDownloadKKO: "",
+      fileNamemitra: null,
+      fileSizemitra: null,
+      linkDownloadmitra: "",
+      fileNamesurat: null,
+      fileSizesurat: null,
+      linkDownloadsurat: "",
+      fileNamelainnya: null,
+      fileSizelainnya: null,
+      linkDownloadlainnya: "",
+
+      modalFailed: {
+        isVisible: false,
+        title: '',
+        message: ''
+      },
+      modalSuccess: {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      },
+      isLoading: false,
     };
   },
   methods: {
+    closeModalFailed() {
+      this.modalFailed = {
+        isVisible: false,
+        title: '',
+        message: ''
+      }
+    },
+    closeModalSuccess() {
+      this.modalSuccess = {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      }
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      }
+    },
     toggleDropdownArrow() {
       this.isDropdownArrowOpen = !this.isDropdownArrowOpen;
     },
@@ -895,6 +971,403 @@ export default {
     closeDisetujuiPopup() {
       this.showDisetujuiPopup = false;
     },
+    // Popup Approve StopClock
+    SendApprovStopClock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Approve Stopclock',
+        message: 'Apakan anda yakin akan menyetujui stopClock pengajuan ini',
+        okFunction: this.openApprovStopClock,
+        closeFunction: this.closeApprovStopClock
+      }
+    },
+    openApprovStopClock() {
+      this.closeModalDialog();
+      this.postApprovStopClock(this.successApprovStopClock, this.failApprovStopClock);
+    },
+    closeApprovStopClock() {
+      this.closeModalDialog()
+    },
+    successApprovStopClock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Approve StopClock',
+        message: 'Pengajuan berhasil diStopClock',
+        closeFunction: this.closeSelesaiApprovStopClock
+      }
+    },
+    failApprovStopClock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Approve StopClock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprovStopClock() {
+      this.closeModalSuccess()
+      this.$router.push('/approval/approvalstopclock')
+    },
+    // Popup Reject StopClock
+    SendRejectStopClock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Reject Stopclock',
+        message: 'Apakan anda yakin akan menolak stopClock pengajuan ini',
+        okFunction: this.openRejectStopClock,
+        closeFunction: this.closeRejectStopClock
+      }
+    },
+    openRejectStopClock() {
+      this.closeModalDialog();
+      this.postRejectStopClock(this.successRejectStopClock, this.failRejectStopClock);
+    },
+    closeRejectStopClock() {
+      this.closeModalDialog()
+    },
+    successRejectStopClock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Reject StopClock',
+        message: 'Pengajuan berhasil diStopClock',
+        closeFunction: this.closeSelesaiRejectStopClock
+      }
+    },
+    failRejectStopClock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Reject StopClock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRejectStopClock() {
+      this.closeModalSuccess()
+      this.$router.push('/approval/approvalstopclock')
+    },
+    // Popup Approve StartClock
+    SendApprovStartClock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Approve StartClock',
+        message: 'Apakan anda yakin akan menyetujui StartClock pengajuan ini',
+        okFunction: this.openApprovStartClock,
+        closeFunction: this.closeApprovStartClock
+      }
+    },
+    openApprovStartClock() {
+      this.closeModalDialog();
+      this.postApprovStartClock(this.successApprovStartClock, this.failApprovStartClock);
+    },
+    closeApprovStartClock() {
+      this.closeModalDialog()
+    },
+    successApprovStartClock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Approve StartClock',
+        message: 'Pengajuan berhasil diStartClock',
+        closeFunction: this.closeSelesaiApprovStartClock
+      }
+    },
+    failApprovStartClock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Approve StartClock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprovStartClock() {
+      this.closeModalSuccess()
+      this.$router.push('/approval/approvalstopclock')
+    },
+    // Popup Reject StartClock
+    SendRejectStartClock() {
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Reject StartClock',
+        message: 'Apakan anda yakin akan menolak StartClock pengajuan ini',
+        okFunction: this.openRejectStartClock,
+        closeFunction: this.closeRejectStartClock
+      }
+    },
+    openRejectStartClock() {
+      this.closeModalDialog();
+      this.postRejectStartClock(this.successRejectStartClock, this.failRejectStartClock);
+    },
+    closeRejectStartClock() {
+      this.closeModalDialog()
+    },
+    successRejectStartClock() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Berhasil Reject StartClock',
+        message: 'Pengajuan berhasil diStartClock',
+        closeFunction: this.closeSelesaiRejectStartClock
+      }
+    },
+    failRejectStartClock(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Gagal Reject StartClock',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiRejectStartClock() {
+      this.closeModalSuccess()
+      this.$router.push('/approval/approvalstopclock')
+    },
+    // api
+    async getDataApi(base, id) {
+      this.isLoading = true;
+      const position = localStorage.getItem('position')
+      if (position != "PartnershipManager") {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Halaman ini khusus manager mitra"
+        }
+      }
+      if (base == "PKS") {
+        let url = `mitra/manager/pks/approval/${id}`;
+        const res = await fetchGet(url, null, this.$router);
+        if (res.status == 200) {
+          this.dataBerkas = res.data;
+          res.data.attachmentsPks.forEach((item) => {
+            if (item.fileType == 'KKO') {
+              this.fileNameKKO = item.fileName;
+              this.fileSizeKKO = item.fileSize;
+              this.linkDownloadKKO = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'KKF') {
+              this.fileNameKKF = item.fileName;
+              this.fileSizeKKF = item.fileSize;
+              this.linkDownloadKKF = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'KKR') {
+              this.fileNameKKR = item.fileName;
+              this.fileSizeKKR = item.fileSize;
+              this.linkDownloadKKR = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'KKB') {
+              this.fileNameKKB = item.fileName;
+              this.fileSizeKKB = item.fileSize;
+              this.linkDownloadKKB = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'Dokumen Surat Menyurat') {
+              this.fileNamesurat = item.fileName;
+              this.fileSizesurat = item.fileSize;
+              this.linkDownloadsurat = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'Proposal Mitra') {
+              this.fileNamemitra = item.fileName;
+              this.fileSizemitra = item.fileSize;
+              this.linkDownloadmitra = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'Dokumen Lainnya') {
+              this.fileNamelainnya = item.fileName;
+              this.fileSizelainnya = item.fileSize;
+              this.linkDownloadlainnya = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+          })
+          this.isLoading = false;
+          console.log(res.data);
+        } else {
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Gagal Ambil Data',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
+        }
+      } else {
+        let url = `mitra/manager/mounda/approval/${id}`;
+        const res = await fetchGet(url, null, this.$router);
+        if (res.status == 200) {
+          this.dataBerkas = res.data;
+          res.data.attachmentsMou.forEach((item) => {
+            if (item.fileType == 'Dokumen Surat Menyurat') {
+              this.fileNamesurat = item.fileName;
+              this.fileSizesurat = item.fileSize;
+              this.linkDownloadsurat = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'Proposal Mitra') {
+              this.fileNamemitra = item.fileName;
+              this.fileSizemitra = item.fileSize;
+              this.linkDownloadmitra = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+            if (item.fileType == 'Dokumen Lainnya') {
+              this.fileNamelainnya = item.fileName;
+              this.fileSizelainnya = item.fileSize;
+              this.linkDownloadlainnya = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
+            }
+          })
+          this.isLoading = false;
+          console.log(res.data);
+        } else {
+          this.isLoading = false;
+          this.modalFailed = {
+            isVisible: true,
+            title: 'Gagal Ambil Data',
+            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+          }
+        }
+      }
+    },
+    async postApprovStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      const position = localStorage.getItem('position')
+      if (position != "PartnershipManager") {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Halaman ini khusus manager mitra"
+        }
+      }
+      if (this.base == "PKS") {
+        let url = `mitra/manager/pks/approval/${this.id}/stop-clock`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      } else {
+        let url = `mitra/manager/mounda/approval/${this.id}/stop-clock`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      }
+    },
+    async postRejectStopClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      const position = localStorage.getItem('position')
+      if (position != "PartnershipManager") {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Halaman ini khusus manager mitra"
+        }
+      }
+      if (this.base == "PKS") {
+        let url = `mitra/manager/pks/approval/${this.id}/stop-clock/reject`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      } else {
+        let url = `mitra/manager/mounda/approval/${this.id}/stop-clock/reject`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      }
+    },
+    async postApprovStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      const position = localStorage.getItem('position')
+      if (position != "PartnershipManager") {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Halaman ini khusus manager mitra"
+        }
+      }
+      if (this.base == "PKS") {
+        let url = `mitra/manager/pks/approval/${this.id}/start-clock`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      } else {
+        let url = `mitra/manager/mounda/approval/${this.id}/start-clock`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      }
+    },
+    async postRejectStartClock(successFunction, failFunction) {
+      this.isLoading = true;
+      const form = new FormData()
+      form.append('ApprovalNote', this.ApprovalNote)
+      const position = localStorage.getItem('position')
+      if (position != "PartnershipManager") {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Halaman ini khusus manager mitra"
+        }
+      }
+      if (this.base == "PKS") {
+        let url = `mitra/manager/pks/approval/${this.id}/start-clock/reject`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      } else {
+        let url = `mitra/manager/mounda/approval/${this.id}/start-clock/reject`;
+        const res = await fetchPostForm(url, null, form, this.$router);
+        if (res.status == 200) {
+          this.isLoading = false;
+          successFunction();
+          console.log(res.data)
+        } else {
+          this.isLoading = false;
+          failFunction(res.data);
+        }
+      }
+    },
+  },
+  mounted() {
+    if (this.$route.params.id && this.$route.params.base) {
+      this.getDataApi(this.$route.params.base, this.$route.params.id);
+    }
+    this.base = this.$route.params.base;
+    this.id = this.$route.params.id;
   },
 };
 </script>

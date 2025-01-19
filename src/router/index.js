@@ -21,6 +21,7 @@ import DetailPengajuanMoU from '@/pages/proses/proses-detail-pengajuan-mou.vue';
 import DetailPengajuanMoUStaff from '@/pages/proses/proses-detail-pengajuan-mou-staff.vue';
 import SelesaiStaff from '@/pages/selesai/selesai-staff.vue';
 import SelesaiDitolakStaff from '@/pages/selesai/selesai-ditolak-staff.vue';
+import UserData from '@/pages/master-data/user-data.vue';
 
 import { clearDataLogin } from '@/utils/helper';
 
@@ -37,7 +38,7 @@ const routes = [
   { name: 'ApprovalMitra', path: '/approval', component: ApprovalMitra, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] }  },
   { name: 'ApprovalStopclock', path: '/approval/approvalstopclock', component: ApprovalStopclock, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] }  },
   { name: 'DetailPengajuanApproval', path: '/approval/detailpengajuanapproval/:base/:id', component: DetailPengajuanApproval, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] }  },
-  { name: 'DetailPengajuanApprovalStopclock', path: '/approval/approvalstopclock/detailpengajuanapprovalstopclock', component: DetailPengajuanApprovalStopclock, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] }  },
+  { name: 'DetailPengajuanApprovalStopclock', path: '/approval/approvalstopclock/detailpengajuanapprovalstopclock/:base/:id', component: DetailPengajuanApprovalStopclock, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] }  },
   { name: 'ProsesMitra', path: '/proses', component: ProsesMitra, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
   { name: 'ProsesStaff', path: '/prosesstaff', component: ProsesStaff, meta: { requiresAuth: true, role: ['PartnershipStaff'] } },
   { name: 'SelesaiMitra', path: '/selesai', component: SelesaiMitra, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
@@ -48,6 +49,7 @@ const routes = [
   { name: 'DetailPengajuanPKSstaff', path: '/prosesstaff/detailpengajuanpksstaff/:id', component: DetailPengajuanPKSstaff, meta: { requiresAuth: true, role: ['PartnershipStaff'] } },
   { name: 'DetailPengajuanMoU', path: '/proses/detailpengajuanmou/:id', component: DetailPengajuanMoU, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
   { name: 'DetailPengajuanMoUStaff', path: '/prosesstaff/detailpengajuanmoustaff/:id', component: DetailPengajuanMoUStaff, meta: { requiresAuth: true, role: ['PartnershipStaff'] } },
+  { name: 'UserData', path: '/user', component: UserData, meta: { requiresAuth: true, role: ['PartnershipStaff', 'PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
 ];
 
 const router = createRouter({
