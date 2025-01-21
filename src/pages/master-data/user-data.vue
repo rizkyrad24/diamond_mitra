@@ -2,7 +2,7 @@
     <div class="">
         <div class="background">
             <div class="flex">
-                <SidebarStaff />
+                <SidebarMasterData />
                 <div class="flex-grow">
                     <MainBar />
                     <UserList />
@@ -14,12 +14,12 @@
 
 <script>
 import MainBar from "@/components/NavBar/MainBar.vue";
-import SidebarStaff from "@/components/NavBar/SidebarStaff.vue";
 import UserList from "@/components/MasterData/user-list.vue";
+import SidebarMasterData from "@/components/NavBar/SidebarMasterData.vue";
 
 export default {
     components: {
-        SidebarStaff,
+        SidebarMasterData,
         UserList,
         MainBar,
     },

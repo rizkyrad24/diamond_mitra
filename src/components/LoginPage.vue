@@ -173,6 +173,9 @@ async function submit() {
     } else if (res.data.role == "PartnershipManager" || res.data.role == "PartnershipVP" || res.data.role == "PartnershipDirector") {
       saveDataLogin(res.data);
       router.push('/dashboard')
+    } else if (res.data.role == "Admin") {
+      saveDataLogin(res.data);
+      router.push('/user')
     } else {
       alert('Role anda tidak terdaftar untuk aplikasi ini')
     }

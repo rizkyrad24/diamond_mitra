@@ -1,100 +1,30 @@
 <template>
   <div v-if="showFormPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
     <div class="w-[684.92px] rounded-lg shadow-lg bg-[#FFFFFF] border-collapse pb-12">
-      <button @click="closePopup" class="text-[#2671D9] w-[14px] h-[14px] absolute mt-[25px] ml-[650px] text-[20px]">&times;</button>
-      <h1 class="font-sans text-[30px] text-center text-[#333333] mt-6 ml-[5px] font-semibold">Form User</h1>
+      <button @click="closePopup"
+        class="text-[#2671D9] w-[14px] h-[14px] absolute mt-[25px] ml-[650px] text-[20px]">&times;</button>
+      <h1 class="font-sans text-[30px] text-center text-[#333333] mt-6 ml-[5px] font-semibold">Form Pelanggan</h1>
       <div class="w-full h-[400px] overflow-y-auto px-10 pb-5">
-        <div v-if="[1,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Username <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="username" type="text" placeholder="Username..." class="w-full outline-none">
-          </form>
-        </div>
         <div v-if="[1, 2].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">First Name <span class="text-[#FF5656]">*</span></label>
+          <label class="text-[#4D5E80] font-medium">Nama <span class="text-[#FF5656]">*</span></label>
           <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="firstName" type="text" placeholder="First Name..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[1, 2].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Last Name </label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="lastName" type="text" placeholder="Last Name..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[1, 2].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Email <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="email" type="text" placeholder="Email..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[1, 2].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Role <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <select v-model="role" class="w-full outline-none px-2">
-              <option class="text-[#bfc4cc]" value="">Pilih Role</option>
-              <option v-for="(option, index) in filterOptions[0].subOptions" :key="index" :value="option">{{ option }}</option>
-            </select>
-          </form>
-        </div>
-        <div v-if="[2,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Status <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <select v-model="isActive" class="w-full outline-none px-2">
-              <option class="text-[#bfc4cc]" value="">Pilih Role</option>
-              <option class="text-[black]" value="1">Aktif</option>
-              <option class="text-[black]" value="2">Tidak Aktif</option>
-            </select>
-          </form>
-        </div>
-        <div v-if="[1,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Password <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="password" type="password" placeholder="Password..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[1,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Ulangi Password <span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="rePassword" type="password" placeholder="Ulangi Password..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[3,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Password Baru<span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="password" type="password" placeholder="Password..." class="w-full outline-none">
-          </form>
-        </div>
-        <div v-if="[3,].includes(formType)" class="mb-4">
-          <label class="text-[#4D5E80] font-medium">Ulangi Password Baru<span class="text-[#FF5656]">*</span></label>
-          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
-            <input v-model="rePassword" type="password" placeholder="Ulangi Password..." class="w-full outline-none">
+            <input v-model="name" type="text" placeholder="Nama..." class="w-full outline-none">
           </form>
         </div>
         <div class="flex justify-center mt-8">
           <button v-if="formType == 1" :class="{
             'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isSendAvaible,
             'bg-[#cfd6df] text-[black]': !isSendAvaible
-            }" :disabled="!isSendAvaible" @click="SendCreateUser"
-            class="p-3 flex justify-center w-full rounded-lg border-[1px] text-[16px] text-center font-sans font-semibold"
-          >
-            Buat User
+          }" :disabled="!isSendAvaible" @click="SendCreatePelanggan"
+            class="p-3 flex justify-center w-full rounded-lg border-[1px] text-[16px] text-center font-sans font-semibold">
+            Buat Pelanggan
           </button>
           <button v-if="formType == 2" :class="{
             'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isSendEditAvaible,
             'bg-[#cfd6df] text-[black]': !isSendEditAvaible
-            }" :disabled="!isSendEditAvaible" @click="SendEditUser"
-            class="p-3 flex justify-center w-full rounded-lg border-[1px] text-[16px] text-center font-sans font-semibold"
-          >
-            Edit User
-          </button>
-          <button v-if="formType == 3" :class="{
-            'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isSendResetPasswordAvaible,
-            'bg-[#cfd6df] text-[black]': !isSendResetPasswordAvaible
-            }" :disabled="!isSendResetPasswordAvaible" @click="SendResetPassword"
-            class="p-3 flex justify-center w-full rounded-lg border-[1px] text-[16px] text-center font-sans font-semibold"
-          >
-            Reset Password
+          }" :disabled="!isSendEditAvaible" @click="SendEditPelanggan"
+            class="p-3 flex justify-center w-full rounded-lg border-[1px] text-[16px] text-center font-sans font-semibold">
+            Edit Pelanggan
           </button>
         </div>
       </div>
@@ -103,23 +33,14 @@
   <Loading :isVisible="isLoading" />
   <ModalFailed :isVisible="modalFailed.isVisible" :title="modalFailed.title" :message="modalFailed.message"
     @close="closeModalFailed" />
-    <ModalSuccess
-    :isVisible="modalSuccess.isVisible"
-    :title="modalSuccess.title"
-    :message="modalSuccess.message"
-    @close="modalSuccess.closeFunction"
-  />
-  <ModalDialog
-    :isVisible="modalDialog.isVisible"
-    :title="modalDialog.title"
-    :message="modalDialog.message"
-    @close="modalDialog.closeFunction"
-    @ok="modalDialog.okFunction"
-  />
+  <ModalSuccess :isVisible="modalSuccess.isVisible" :title="modalSuccess.title" :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction" />
+  <ModalDialog :isVisible="modalDialog.isVisible" :title="modalDialog.title" :message="modalDialog.message"
+    @close="modalDialog.closeFunction" @ok="modalDialog.okFunction" />
   <div class="px-4 py-3">
     <div class="h-auto w-[1086px] rounded-lg bg-[#FFFFFF] border-collapse mx-auto">
       <div class="flex">
-        <h1 class="mt-[20px] ms-8 text-[30px] font-sans text-[#4D5E80] font-bold">Master User</h1>
+        <h1 class="mt-[20px] ms-8 text-[30px] font-sans text-[#4D5E80] font-bold">Master Pelanggan</h1>
       </div>
       <div>
         <div class="flex items-start">
@@ -186,11 +107,9 @@
           </div>
         </div>
       </div>
-      <button
-        @click="showFormCreate"
-        class="bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] py-2 px-4 me-6 flex justify-center justify-self-end rounded-lg border-[1px] text-[12px] text-center font-sans font-semibold"
-      >
-        Tambah User
+      <button @click="showFormCreate"
+        class="bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] py-2 px-4 me-6 flex justify-center justify-self-end rounded-lg border-[1px] text-[12px] text-center font-sans font-semibold">
+        Tambah Pelanggan
       </button>
       <div class="flex">
         <div class="flex w-[1046px] rounded-lg bg-[#FFFFFF] border-[1px] border-[#E5E7E9] mt-4 ml-4 mr-4 overflow-auto">
@@ -212,64 +131,8 @@
                 </th>
                 <th class="p-2 border border-[#E5E7E9]">
                   <div class="flex items-center justify-between">
-                    <span>Username</span>
+                    <span>Nama Pelanggan</span>
                     <svg @click="sortTable('pic')" width="14" height="10" viewBox="0 0 14 10" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                        fill="#93B8EC" />
-                      <path
-                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                        fill="#93B8EC" />
-                    </svg>
-                  </div>
-                </th>
-                <th class="p-2 border border-[#E5E7E9]">
-                  <div class="flex items-center justify-between">
-                    <span>First Name</span>
-                    <svg @click="sortTable('jumlahPengajuan')" width="14" height="10" viewBox="0 0 14 10" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                        fill="#93B8EC" />
-                      <path
-                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                        fill="#93B8EC" />
-                    </svg>
-                  </div>
-                </th>
-                <th class="p-2 border border-[#E5E7E9]">
-                  <div class="flex items-center justify-between">
-                    <span>Last Name</span>
-                    <svg @click="sortTable('totalSelesai')" width="14" height="10" viewBox="0 0 14 10" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                        fill="#93B8EC" />
-                      <path
-                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                        fill="#93B8EC" />
-                    </svg>
-                  </div>
-                </th>
-                <th class="p-2 border border-[#E5E7E9]">
-                  <div class="flex items-center justify-between">
-                    <span>Email</span>
-                    <svg @click="sortTable('totalDiproses')" width="14" height="10" viewBox="0 0 14 10" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                        fill="#93B8EC" />
-                      <path
-                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                        fill="#93B8EC" />
-                    </svg>
-                  </div>
-                </th>
-                <th class="p-2 border border-[#E5E7E9]">
-                  <div class="flex items-center justify-between">
-                    <span>Role</span>
-                    <svg @click="sortTable('totalStopClock')" width="14" height="10" viewBox="0 0 14 10" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
@@ -283,30 +146,26 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.username}`"
+              <tr v-for="(item, index) in filteredAndPaginatedData" :key="`${index}-${item.name}`"
                 class="bg-[#FFFFFF] border border-[#E5E7E9] text-[12px] text-[#4D5E80] font-sans font-semibold">
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue +
                   index + 1 }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.username }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.first_name }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.last_name }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.email }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.role }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.name }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9] relative">
-                  <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
+                  <button @click.stop="toggleActionDropdown(index)"
+                    class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
                     <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M1 1.8125C0.91712 1.8125 0.837634 1.77958 0.779029 1.72097C0.720424 1.66237 0.6875 1.58288 0.6875 1.5C0.6875 1.41712 0.720424 1.33763 0.779029 1.27903C0.837634 1.22042 0.91712 1.1875 1 1.1875C1.08288 1.1875 1.16237 1.22042 1.22097 1.27903C1.27958 1.33763 1.3125 1.41712 1.3125 1.5C1.3125 1.58288 1.27958 1.66237 1.22097 1.72097C1.16237 1.77958 1.08288 1.8125 1 1.8125ZM1 4.3125C0.91712 4.3125 0.837634 4.27958 0.779029 4.22097C0.720424 4.16237 0.6875 4.08288 0.6875 4C0.6875 3.91712 0.720424 3.83763 0.779029 3.77903C0.837634 3.72042 0.91712 3.6875 1 3.6875C1.08288 3.6875 1.16237 3.72042 1.22097 3.77903C1.27958 3.83763 1.3125 3.91712 1.3125 4C1.3125 4.08288 1.27958 4.16237 1.22097 4.22097C1.16237 4.27958 1.08288 4.3125 1 4.3125ZM1 6.8125C0.91712 6.8125 0.837634 6.77958 0.779029 6.72097C0.720424 6.66237 0.6875 6.58288 0.6875 6.5C0.6875 6.41712 0.720424 6.33763 0.779029 6.27903C0.837634 6.22042 0.91712 6.1875 1 6.1875C1.08288 6.1875 1.16237 6.22042 1.22097 6.27903C1.27958 6.33763 1.3125 6.41712 1.3125 6.5C1.3125 6.58288 1.27958 6.66237 1.22097 6.72097C1.16237 6.77958 1.08288 6.8125 1 6.8125Z"
-                        stroke="#333333"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
+                        stroke="#333333" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                   </button>
-                  <div v-if="actionDropdownIndex === index" class="absolute right-0 mt-2 w-[160px] rounded-lg bg-[#FFFFFF] border border-[#E5E7E9] shadow-lg z-10">
-                    <button @click="showFormEdit(item)" class="block w-full flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left hover:bg-[#DBEAFE]">Edit</button>
-                    <button @click="showFormResetPassword(item)" class="block w-full flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left hover:bg-[#DBEAFE]">Reset Password</button>
-                    <button @click="SendDeleteUser(item.id)" class="block w-full flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left hover:bg-[#DBEAFE]">Hapus</button>
+                  <div v-if="actionDropdownIndex === index"
+                    class="absolute right-0 mt-2 w-[160px] rounded-lg bg-[#FFFFFF] border border-[#E5E7E9] shadow-lg z-10">
+                    <button @click="showFormEdit(item)"
+                      class="block w-full flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left hover:bg-[#DBEAFE]">Edit</button>
+                    <button @click="SendDeletePelanggan(item.id)"
+                      class="block w-full flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left hover:bg-[#DBEAFE]">Hapus</button>
                   </div>
                 </td>
               </tr>
@@ -343,7 +202,7 @@ import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
 
 export default {
-  name: "UserData",
+  name: "PelangganData",
   components: {
     Loading,
     ModalFailed,
@@ -356,10 +215,11 @@ export default {
       showDropdown: false,
       selectedOption: null,
       selectedSubOptions: [],
-      filterOptions: [
-      { name: "Role", subOptions: ["Staff", "Manager", "VP", "Admin", "PartnershipStaff", "PartnershipManager", "PartnershipVP", "PartnershipDirector"] },
-      { name: "Aktif", subOptions: ["Aktif", "Tidak Aktif"] },
-      ],
+      filterOptions: [],
+      // filterOptions: [
+      //   { name: "Role", subOptions: ["Staff", "Manager", "VP", "Admin", "PartnershipStaff", "PartnershipManager", "PartnershipVP", "PartnershipDirector"] },
+      //   { name: "Aktif", subOptions: ["Aktif", "Tidak Aktif"] },
+      // ],
 
       selectedValue: 8,
       currentPage: 1,
@@ -385,21 +245,14 @@ export default {
         okFunction: () => null,
         closeFunction: () => null
       },
-      
+
       isLoading: false,
       summaryData: null,
       totalDataPengajuan: 0,
       showFormPopup: false,
 
-      userId: null,
-      username: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      role: "",
-      password: "",
-      rePassword: "",
-      isActive: "",
+      PelangganId: null,
+      name: "",
       formType: null, // 1 = create, 2 = edit, 3 = reset password
 
       tableData: [],
@@ -433,14 +286,14 @@ export default {
           return this.selectedSubOptions.some((option) => {
             // Filter untuk role
             if (this.filterOptions[0].subOptions.includes(option)) {
-              return item.role == option;
+              return item.name == option;
             }
-            // Filter untuk aktif
-            if (option === "Aktif") {
-              return item.is_active;
-            } else if (option === "Tidak Aktif") {
-              return !item.is_active;
-            }
+            // // Filter untuk aktif
+            // if (option === "Aktif") {
+            //   return item.is_active;
+            // } else if (option === "Tidak Aktif") {
+            //   return !item.is_active;
+            // }
           });
         });
       }
@@ -449,9 +302,7 @@ export default {
         const query = this.searchQuery.toLowerCase();
         filteredData = filteredData.filter((item) => {
           return (
-            item.username.toLowerCase().includes(query) ||
-            item.first_name.toLowerCase().includes(query) ||
-            item.last_name.toLowerCase().includes(query)
+            item.name.toLowerCase().includes(query)
           );
         });
       }
@@ -461,21 +312,12 @@ export default {
     },
     isSendAvaible() {
       return (
-        this.username != "" && this.firstName != "" && 
-        this.lastName != "" && this.email != "" && this.role != "" &&
-        this.password != "" && this.rePassword != "" && this.password === this.rePassword
+        this.name != ""
       )
     },
     isSendEditAvaible() {
       return (
-        this.firstName != "" &&this.lastName != "" && 
-        this.email != "" && this.role != "" && this.userId
-      )
-    },
-    isSendResetPasswordAvaible() {
-      return (
-        this.password != "" && this.rePassword != "" && 
-        this.password === this.rePassword && this.userId
+        this.name != "" && this.PelangganId
       )
     },
   },
@@ -505,15 +347,8 @@ export default {
       }
     },
     clearFormData() {
-      this.userId = null;
-      this.username = "";
-      this.firstName = "";
-      this.lastName = "";
-      this.email = "";
-      this.role = "";
-      this.password = "";
-      this.rePassword = "";
-      this.isActive = "";
+      this.PelangganId = null;
+      this.name = "";
       this.formType = null;
     },
     closePopup() {
@@ -526,19 +361,9 @@ export default {
       this.showFormPopup = true;
     },
     showFormEdit(data) {
-      this.userId = data.id;
-      this.firstName = data.first_name;
-      this.lastName = data.last_name;
-      this.email = data.email;
-      this.role = data.role;
-      this.isActive = data.is_active? "1": "2";
+      this.PelangganId = data.id;
+      this.name = data.name;
       this.formType = 2;
-      this.showFormPopup = true;
-    },
-    showFormResetPassword(data) {
-      this.clearFormData();
-      this.userId = data.id;
-      this.formType = 3;
       this.showFormPopup = true;
     },
     sortTable(columnName) {
@@ -653,38 +478,38 @@ export default {
     },
 
     // Popup Create
-    SendCreateUser() {
+    SendCreatePelanggan() {
       this.modalDialog = {
         isVisible: true,
-        title: 'Buat User Baru',
+        title: 'Buat Pelanggan Baru',
         message: 'Apakan anda yakin dengan data yang anda masukan',
-        okFunction: this.openCreateUser,
-        closeFunction: this.closeCreateUser
+        okFunction: this.openCreatePelanggan,
+        closeFunction: this.closeCreatePelanggan
       }
     },
-    openCreateUser() {
+    openCreatePelanggan() {
       this.closeModalDialog();
-      this.postCreateUser(this.successCreateUser, this.failCreateUser);
+      this.postCreatePelanggan(this.successCreatePelanggan, this.failCreatePelanggan);
     },
-    closeCreateUser() {
+    closeCreatePelanggan() {
       this.closeModalDialog()
     },
-    successCreateUser() {
+    successCreatePelanggan() {
       this.modalSuccess = {
         isVisible: true,
         title: 'Success',
-        message: 'Berhasil membuat user baru',
-        closeFunction: this.closeSelesaiCreateUser
+        message: 'Berhasil membuat Pelanggan baru',
+        closeFunction: this.closeSelesaiCreatePelanggan
       }
     },
-    failCreateUser(data) {
+    failCreatePelanggan(data) {
       this.modalFailed = {
         isVisible: true,
         title: 'Gagal',
         message: data?.message ? data.message : "Silahkan hubungi admin"
       }
     },
-    closeSelesaiCreateUser() {
+    closeSelesaiCreatePelanggan() {
       this.showFormPopup = false;
       this.clearFormData();
       this.closeModalSuccess();
@@ -692,117 +517,78 @@ export default {
     },
 
     // Popup Edit
-    SendEditUser() {
+    SendEditPelanggan() {
       this.modalDialog = {
         isVisible: true,
-        title: 'Edit User',
+        title: 'Edit Pelanggan',
         message: 'Apakan anda yakin dengan data yang anda masukan',
-        okFunction: this.openEditUser,
-        closeFunction: this.closeEditUser
+        okFunction: this.openEditPelanggan,
+        closeFunction: this.closeEditPelanggan
       }
     },
-    openEditUser() {
+    openEditPelanggan() {
       this.closeModalDialog();
-      this.postEditUser(this.successEditUser, this.failEditUser);
+      this.postEditPelanggan(this.successEditPelanggan, this.failEditPelanggan);
     },
-    closeEditUser() {
+    closeEditPelanggan() {
       this.closeModalDialog()
     },
-    successEditUser() {
+    successEditPelanggan() {
       this.modalSuccess = {
         isVisible: true,
         title: 'Success',
-        message: 'Berhasil mengedit user',
-        closeFunction: this.closeSelesaiEditUser
+        message: 'Berhasil mengedit Pelanggan',
+        closeFunction: this.closeSelesaiEditPelanggan
       }
     },
-    failEditUser(data) {
+    failEditPelanggan(data) {
       this.modalFailed = {
         isVisible: true,
         title: 'Gagal',
         message: data?.message ? data.message : "Silahkan hubungi admin"
       }
     },
-    closeSelesaiEditUser() {
+    closeSelesaiEditPelanggan() {
       this.showFormPopup = false;
       this.clearFormData();
       this.closeModalSuccess();
       this.getDataApi()
     },
 
-    // Popup Reset Passowrd
-    SendResetPassword() {
+    // Popup Delete Pelanggan
+    SendDeletePelanggan(id) {
+      this.PelangganId = id
       this.modalDialog = {
         isVisible: true,
-        title: 'Reset Password',
-        message: 'Apakan anda yakin dengan data yang anda masukan',
-        okFunction: this.openResetPassword,
-        closeFunction: this.closeResetPassword
+        title: 'Hapus Pelanggan',
+        message: 'Apakan anda yakin menghapus Pelanggan ini',
+        okFunction: this.openDeletePelanggan,
+        closeFunction: this.closeDeletePelanggan
       }
     },
-    openResetPassword() {
+    openDeletePelanggan() {
       this.closeModalDialog();
-      this.postResetPassword(this.successResetPassword, this.failResetPassword);
+      this.postDeletePelanggan(this.successDeletePelanggan, this.failDeletePelanggan);
     },
-    closeResetPassword() {
+    closeDeletePelanggan() {
       this.closeModalDialog()
     },
-    successResetPassword() {
+    successDeletePelanggan() {
       this.modalSuccess = {
         isVisible: true,
         title: 'Success',
-        message: 'Berhasil reset password',
-        closeFunction: this.closeSelesaiResetPassword
+        message: 'Berhasil menghapus Pelanggan',
+        closeFunction: this.closeSelesaiDeletePelanggan
       }
     },
-    failResetPassword(data) {
+    failDeletePelanggan(data) {
       this.modalFailed = {
         isVisible: true,
         title: 'Gagal',
         message: data?.message ? data.message : "Silahkan hubungi admin"
       }
     },
-    closeSelesaiResetPassword() {
-      this.showFormPopup = false;
-      this.clearFormData();
-      this.closeModalSuccess();
-      this.getDataApi()
-    },
-
-    // Popup Delete User
-    SendDeleteUser(id) {
-      this.userId = id
-      this.modalDialog = {
-        isVisible: true,
-        title: 'Hapus User',
-        message: 'Apakan anda yakin menghapus user ini',
-        okFunction: this.openDeleteUser,
-        closeFunction: this.closeDeleteUser
-      }
-    },
-    openDeleteUser() {
-      this.closeModalDialog();
-      this.postDeleteUser(this.successDeleteUser, this.failDeleteUser);
-    },
-    closeDeleteUser() {
-      this.closeModalDialog()
-    },
-    successDeleteUser() {
-      this.modalSuccess = {
-        isVisible: true,
-        title: 'Success',
-        message: 'Berhasil menghapus user',
-        closeFunction: this.closeSelesaiDeleteUser
-      }
-    },
-    failDeleteUser(data) {
-      this.modalFailed = {
-        isVisible: true,
-        title: 'Gagal',
-        message: data?.message ? data.message : "Silahkan hubungi admin"
-      }
-    },
-    closeSelesaiDeleteUser() {
+    closeSelesaiDeletePelanggan() {
       this.clearFormData();
       this.closeModalSuccess();
       this.getDataApi();
@@ -811,19 +597,14 @@ export default {
     // api
     async getDataApi() {
       this.isLoading = true;
-      let url = 'account/list-user';
+      let url = 'customer';
       let params = null;
       const res = await fetchGet(url, params, this.$router);
       if (res.status == 200) {
         console.log(res.data)
         const cleanData = res.data.map((item) => ({
           id: item.id,
-          username: item.username,
-          first_name: item.firstName,
-          last_name: item.lastName,
-          email: item.email,
-          role: item.role,
-          is_active: item.isActive
+          name: item.name,
         }))
         this.tableData = cleanData;
         this.isLoading = false;
@@ -836,23 +617,17 @@ export default {
         }
       }
     },
-    async postCreateUser(successFunction, failFunction) {
+    async postCreatePelanggan(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
-      form.append('username', this.username);
-      form.append('firstName', this.firstName);
-      form.append('lastName', this.lastName);
-      form.append('email', this.email);
-      form.append('role', this.role);
-      form.append('password', this.password);
-      form.append('rePassword', this.rePassword);
+      form.append('name', this.name);
       // Display the values
       for (var pair of form.entries()) {
         console.log(pair[0] + ', ' + pair[1]);
       }
-      const res = await fetchPostForm('account/register', null, form, this.$router);
+      const res = await fetchPostForm('customer', null, form, this.$router);
       console.log(res.data)
-      if (res.status == 200) {
+      if (res.status == 201) {
         this.isLoading = false;
         successFunction();
       } else {
@@ -860,20 +635,17 @@ export default {
         failFunction();
       }
     },
-    async postEditUser(successFunction, failFunction) {
+    async postEditPelanggan(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
-      form.append('firstName', this.firstName);
-      form.append('lastName', this.lastName);
-      form.append('email', this.email);
-      form.append('role', this.role);
+      form.append('name', this.name);
       // Display the values
       for (var pair of form.entries()) {
         console.log(pair[0] + ', ' + pair[1]);
       }
-      const res = await fetchPutForm(`account/update/${this.userId}`, null, form, this.$router);
+      const res = await fetchPutForm(`customer/${this.PelangganId}`, null, form, this.$router);
       console.log(res.data)
-      if (res.status == 200) {
+      if (res.status == 201) {
         this.isLoading = false;
         successFunction();
       } else {
@@ -881,28 +653,9 @@ export default {
         failFunction();
       }
     },
-    async postResetPassword(successFunction, failFunction) {
+    async postDeletePelanggan(successFunction, failFunction) {
       this.isLoading = true;
-      const form = new FormData()
-      form.append('password', this.password);
-      form.append('rePassword', this.rePassword);
-      // Display the values
-      for (var pair of form.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-      }
-      const res = await fetchPostForm(`account/reset-password/${this.userId}`, null, form, this.$router);
-      console.log(res.data)
-      if (res.status == 200) {
-        this.isLoading = false;
-        successFunction();
-      } else {
-        this.isLoading = false;
-        failFunction();
-      }
-    },
-    async postDeleteUser(successFunction, failFunction) {
-      this.isLoading = true;
-      const res = await fetchDelete(`account/delete/${this.userId}`, null, this.$router);
+      const res = await fetchDelete(`customer/${this.PelangganId}`, null, this.$router);
       console.log(res.data)
       if (res.status == 200) {
         this.isLoading = false;

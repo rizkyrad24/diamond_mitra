@@ -22,6 +22,10 @@ import DetailPengajuanMoUStaff from '@/pages/proses/proses-detail-pengajuan-mou-
 import SelesaiStaff from '@/pages/selesai/selesai-staff.vue';
 import SelesaiDitolakStaff from '@/pages/selesai/selesai-ditolak-staff.vue';
 import UserData from '@/pages/master-data/user-data.vue';
+import PejabatData from '@/pages/master-data/pejabat-data.vue';
+import PelangganData from '@/pages/master-data/pelanggan-data.vue';
+import ProdukData from '@/pages/master-data/produk-data.vue';
+import CandidateData from '@/pages/master-data/candidate-data.vue';
 
 import { clearDataLogin } from '@/utils/helper';
 
@@ -49,7 +53,11 @@ const routes = [
   { name: 'DetailPengajuanPKSstaff', path: '/prosesstaff/detailpengajuanpksstaff/:id', component: DetailPengajuanPKSstaff, meta: { requiresAuth: true, role: ['PartnershipStaff'] } },
   { name: 'DetailPengajuanMoU', path: '/proses/detailpengajuanmou/:id', component: DetailPengajuanMoU, meta: { requiresAuth: true, role: ['PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
   { name: 'DetailPengajuanMoUStaff', path: '/prosesstaff/detailpengajuanmoustaff/:id', component: DetailPengajuanMoUStaff, meta: { requiresAuth: true, role: ['PartnershipStaff'] } },
-  { name: 'UserData', path: '/user', component: UserData, meta: { requiresAuth: true, role: ['PartnershipStaff', 'PartnershipManager', 'PartnershipVP', 'PartnershipDirector'] } },
+  { name: 'UserData', path: '/user', component: UserData, meta: { requiresAuth: true, role: ['Admin'] } },
+  { name: 'PejabatData', path: '/pejabat', component: PejabatData, meta: { requiresAuth: true, role: ['Admin'] } },
+  { name: 'PelangganData', path: '/pelanggan', component: PelangganData, meta: { requiresAuth: true, role: ['Admin'] } },
+  { name: 'ProdukData', path: '/produk', component: ProdukData, meta: { requiresAuth: true, role: ['Admin'] } },
+  { name: 'CandidateData', path: '/candidate', component: CandidateData, meta: { requiresAuth: true, role: ['Admin'] } },
 ];
 
 const router = createRouter({
@@ -79,6 +87,8 @@ router.beforeEach((to, from, next) => {
         next({ name: 'Dashboard' });
       } else if (position == 'PartnershipStaff') {
         next({ name: 'DashboardStaff' });
+      } else if (position == 'Admin') {
+        next({ name: 'UserData' });
       } else {
         clearDataLogin();
         next();

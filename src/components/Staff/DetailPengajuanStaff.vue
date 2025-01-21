@@ -3,6 +3,8 @@ import dialog from '@/assets/img/Dialog.png';
 import kirim from '@/assets/img/Dialogkirim.png';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
+import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
 </script>
 
 <template>
@@ -14,6 +16,10 @@ import ModalFailed from '../modalfailed.vue';
       :message="modalFailed.message"
       @close="closeModalFailed"
     />
+    <ModalSuccess :isVisible="modalSuccess.isVisible" :title="modalSuccess.title" :message="modalSuccess.message"
+      @close="modalSuccess.closeFunction" />
+    <ModalDialog :isVisible="modalDialog.isVisible" :title="modalDialog.title" :message="modalDialog.message"
+      @close="modalDialog.closeFunction" @ok="modalDialog.okFunction" />
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
         <h1 class="w-[51px] h-[22px] font-sans text-[#2671D9] text-[14px] font-semibold ml-6 mt-4 mb-4">Masuk</h1>
@@ -946,23 +952,36 @@ export default {
         title: '',
         message: ''
       },
+      modalSuccess: {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      },
       isLoading: false,
 
-      // Popup Acprrove
-      isSendSetuju: false,
-      isSelesaiSetuju: false,
+      // // Popup Acprrove
+      // isSendSetuju: false,
+      // isSelesaiSetuju: false,
 
-      // Popup Tolak
-      isSendTolak: false,
-      isSelesaiTolak: false,
+      // // Popup Tolak
+      // isSendTolak: false,
+      // isSelesaiTolak: false,
 
-      // Popup Revisi Minor
-      isSendRevisiMinor: false,
-      isSelesaiRevisiMinor: false,
+      // // Popup Revisi Minor
+      // isSendRevisiMinor: false,
+      // isSelesaiRevisiMinor: false,
 
-      // Popup Revisi Mayor
-      isSendRevisiMayor: false,
-      isSelesaiRevisiMayor: false,
+      // // Popup Revisi Mayor
+      // isSendRevisiMayor: false,
+      // isSelesaiRevisiMayor: false,
     };
   },
   methods: {
@@ -971,6 +990,23 @@ export default {
         isVisible: false,
         title: '',
         message: ''
+      }
+    },
+    closeModalSuccess() {
+      this.modalSuccess = {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      }
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
       }
     },
     closePopup() {
@@ -994,75 +1030,192 @@ export default {
 
     // Popup Aprrove
     SendApprov() {
-      this.isSendSetuju = true;
-      this.isSelesaiSetuju = false;
+      this.showApprovPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Terima Pengajuan',
+        message: `Apakan anda yakin akan menerima pengajuan ini`,
+        okFunction: this.openApprov,
+        closeFunction: this.closeApprov
+      }
+    },
+    openApprov() {
+      this.closeModalDialog();
+      this.postAproval(this.successApprov, this.failApprov);
     },
     closeApprov() {
-      this.isSendSetuju = false;
+      this.closeModalDialog()
+      this.showApprovPopup = true;
     },
-    openSetuju() {
-      this.postAproval();
-      // this.isSelesaiSetuju = true;
-      // this.isSendSetuju = false; 
+    successApprov() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Terima Pengajuan Berhasil',
+        message: `Pengajuan berhasil diterima`,
+        closeFunction: this.closeSelesaiApprov
+      }
     },
-    closeSelesai() {
-      this.isSelesaiSetuju = false;
+    failApprov(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Terima Pengajuan Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprov() {
+      this.closeModalSuccess();
       this.$router.push('/masukstaff')
     },
 
     // Popup Tolak
     SendTolak() {
-      this.isSendTolak = true;
-      this.isSelesaiTolak = false;
-    },
-    closeTolak() {
-      this.isSendTolak = false;
+      this.showTolakPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Tolak Pengajuan',
+        message: `Apakan anda yakin akan menolak pengajuan ini`,
+        okFunction: this.openTolak,
+        closeFunction: this.closeTolak
+      }
     },
     openTolak() {
-      this.postTolak();
-      // this.isSelesaiTolak = true;
-      // this.isSendTolak = false; 
+      this.closeModalDialog();
+      this.postTolak(this.successTolak, this.failTolak);
     },
-    closeSelesaitolak() {
-      this.isSelesaiTolak = false;
+    closeTolak() {
+      this.closeModalDialog()
+      this.showTolakPopup = true;
+    },
+    successTolak() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Tolak Pengajuan Berhasil',
+        message: `Pengajuan berhasil ditolak`,
+        closeFunction: this.closeSelesaiTolak
+      }
+    },
+    failTolak(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Tolak Pengajuan Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiTolak() {
+      this.closeModalSuccess();
       this.$router.push('/masukstaff')
     },
 
-    // Popup Revisi Minor
+    // Popup RevisiMinor
     SendRevisiMinor() {
-      this.isSendRevisiMinor = true;
-      this.isSelesaiRevisiMinor = false;
-    },
-    closeRevisiMinor() {
-      this.isSendRevisiMinor = false;
+      this.showRevisiMinorPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Revisi Minor Pengajuan',
+        message: `Apakan anda yakin akan meminta revisi minor pengajuan ini`,
+        okFunction: this.openRevisiMinor,
+        closeFunction: this.closeRevisiMinor
+      }
     },
     openRevisiMinor() {
-      this.postRevisiMinor();
-      // this.isSelesaiRevisiMinor = true;
-      // this.isSendRevisiMinor = false; 
+      this.closeModalDialog();
+      this.postRevisiMinor(this.successRevisiMinor, this.failRevisiMinor);
+    },
+    closeRevisiMinor() {
+      this.closeModalDialog()
+      this.showRevisiMinorPopup = true;
+    },
+    successRevisiMinor() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Permintaan Revisi Minor Berhasil',
+        message: `Pengajuan berhasil diminta untuk Revisi Minor`,
+        closeFunction: this.closeSelesaiRevisiMinor
+      }
+    },
+    failRevisiMinor(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Permintaan Revisi Minor Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
     },
     closeSelesaiRevisiMinor() {
-      this.isSelesaiRevisiMinor = false;
+      this.closeModalSuccess();
       this.$router.push('/masukstaff')
     },
 
-    // Popup Revisi Mayor
-    SendRevisiMayor() {
-      this.isSendRevisiMayor = true;
-      this.isSelesaiRevisiMayor = false;
-    },
-    closeRevisiMayor() {
-      this.isSendRevisiMayor = false;
-    },
-    openRevisiMayor() {
-      this.postRevisiMayor();
-      // this.isSelesaiRevisiMayor = true;
-      // this.isSendRevisiMayor = false; 
-    },
-    closeSelesaiRevisiMayor() {
-      this.isSelesaiRevisiMayor = false;
-      this.$router.push('/masukstaff')
-    },
+    // // Popup Aprrove
+    // SendApprov() {
+    //   this.isSendSetuju = true;
+    //   this.isSelesaiSetuju = false;
+    // },
+    // closeApprov() {
+    //   this.isSendSetuju = false;
+    // },
+    // openSetuju() {
+    //   this.postAproval();
+    //   // this.isSelesaiSetuju = true;
+    //   // this.isSendSetuju = false; 
+    // },
+    // closeSelesai() {
+    //   this.isSelesaiSetuju = false;
+    //   this.$router.push('/masukstaff')
+    // },
+
+    // // Popup Tolak
+    // SendTolak() {
+    //   this.isSendTolak = true;
+    //   this.isSelesaiTolak = false;
+    // },
+    // closeTolak() {
+    //   this.isSendTolak = false;
+    // },
+    // openTolak() {
+    //   this.postTolak();
+    //   // this.isSelesaiTolak = true;
+    //   // this.isSendTolak = false; 
+    // },
+    // closeSelesaitolak() {
+    //   this.isSelesaiTolak = false;
+    //   this.$router.push('/masukstaff')
+    // },
+
+    // // Popup Revisi Minor
+    // SendRevisiMinor() {
+    //   this.isSendRevisiMinor = true;
+    //   this.isSelesaiRevisiMinor = false;
+    // },
+    // closeRevisiMinor() {
+    //   this.isSendRevisiMinor = false;
+    // },
+    // openRevisiMinor() {
+    //   this.postRevisiMinor();
+    //   // this.isSelesaiRevisiMinor = true;
+    //   // this.isSendRevisiMinor = false; 
+    // },
+    // closeSelesaiRevisiMinor() {
+    //   this.isSelesaiRevisiMinor = false;
+    //   this.$router.push('/masukstaff')
+    // },
+
+    // // Popup Revisi Mayor
+    // SendRevisiMayor() {
+    //   this.isSendRevisiMayor = true;
+    //   this.isSelesaiRevisiMayor = false;
+    // },
+    // closeRevisiMayor() {
+    //   this.isSendRevisiMayor = false;
+    // },
+    // openRevisiMayor() {
+    //   this.postRevisiMayor();
+    //   // this.isSelesaiRevisiMayor = true;
+    //   // this.isSendRevisiMayor = false; 
+    // },
+    // closeSelesaiRevisiMayor() {
+    //   this.isSelesaiRevisiMayor = false;
+    //   this.$router.push('/masukstaff')
+    // },
 
     // api
     async getDataApi(base, id) {
@@ -1171,139 +1324,115 @@ export default {
         }
       }
     },
-    async postAproval() {
+    async postAproval(successFunction, failFunction) {
       this.isLoading = true;
       if (this.base == "PKS") {
         const res = await fetchPost(`mitra/staff/pks/incoming-data/${this.id}`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiSetuju = true;
-          this.isSendSetuju = false;
+          // this.isSelesaiSetuju = true;
+          // this.isSendSetuju = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Terima',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       } else {
         const res = await fetchPost(`mitra/staff/mounda/incoming-data/${this.id}`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiSetuju = true;
-          this.isSendSetuju = false;
+          // this.isSelesaiSetuju = true;
+          // this.isSendSetuju = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Terima',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       }
     },
-    async postRevisiMinor() {
+    async postRevisiMinor(successFunction, failFunction) {
       this.isLoading = true;
       if (this.base == "PKS") {
         const res = await fetchPost(`mitra/staff/pks/incoming-data/${this.id}/minor-revision`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiRevisiMinor = true;
-          this.isSendRevisiMinor = false;
+          // this.isSelesaiRevisiMinor = true;
+          // this.isSendRevisiMinor = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Revisi Minor',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       } else {
         const res = await fetchPost(`mitra/staff/mounda/incoming-data/${this.id}/minor-revision`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiRevisiMinor = true;
-          this.isSendRevisiMinor = false;
+          // this.isSelesaiRevisiMinor = true;
+          // this.isSendRevisiMinor = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Revisi Minor',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       }
     },
-    async postRevisiMayor() {
+    async postRevisiMayor(successFunction, failFunction) {
       this.isLoading = true;
       if (this.base == "PKS") {
         const res = await fetchPost(`mitra/staff/pks/incoming-data/${this.id}/mayor-revision`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiRevisiMayor = true;
-          this.isSendRevisiMayor = false;
+          // this.isSelesaiRevisiMayor = true;
+          // this.isSendRevisiMayor = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Revisi Mayor',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       } else {
         const res = await fetchPost(`mitra/staff/mounda/incoming-data/${this.id}/mayor-revision`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiRevisiMayor = true;
-          this.isSendRevisiMayor = false;
+          // this.isSelesaiRevisiMayor = true;
+          // this.isSendRevisiMayor = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Revisi Mayor',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       }
     },
-    async postTolak() {
+    async postTolak(successFunction, failFunction) {
       this.isLoading = true;
       if (this.base == "PKS") {
         const res = await fetchPost(`mitra/staff/pks/incoming-data/${this.id}/reject`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiTolak = true;
-          this.isSendTolak = false;
+          // this.isSelesaiTolak = true;
+          // this.isSendTolak = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Tolak',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       } else {
         const res = await fetchPost(`mitra/staff/mounda/incoming-data/${this.id}/reject`, null, null, this.$router);
         if (res.status == 200) {
-          this.isSelesaiTolak = true;
-          this.isSendTolak = false;
+          // this.isSelesaiTolak = true;
+          // this.isSendTolak = false;
           this.isLoading = false;
+          successFunction();
           console.log(res.data)
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Tolak',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       }
     }

@@ -6,12 +6,10 @@
     :message="modalFailed.message"
     @close="closeModalFailed"
   />
-  <ModalSuccess
-    :isVisible="modalSuccess.isVisible"
-    :title="modalSuccess.title"
-    :message="modalSuccess.message"
-    @close="closeModalSuccess"
-  />
+  <ModalSuccess :isVisible="modalSuccess.isVisible" :title="modalSuccess.title" :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction" />
+  <ModalDialog :isVisible="modalDialog.isVisible" :title="modalDialog.title" :message="modalDialog.message"
+    @close="modalDialog.closeFunction" @ok="modalDialog.okFunction" />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
@@ -77,7 +75,7 @@
             <div class="flex justify-end mr-6">
               <button @click="closePopup"
                 class="w-[50px] h-[40px] mr-3 p-2 rounded-lg bg-[#FFFFFF] hover:bg-[#FEE2E2] text-[#FF5656] font-sans text-[14px] font-semibold transition-all">Batal</button>
-              <button @click="postDataApi" :disabled="!isStaffSelected"
+              <button @click="SendDispose" :disabled="!isStaffSelected"
                 :class="isStaffSelected ? 'bg-[#2671D9] text-white hover:bg-[#1E5BB7]' : 'bg-[#E6E6E6] text-[#7F7F80]'"
                 class="p-2 rounded-lg">Pilih</button>
             </div>
@@ -624,13 +622,15 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
 
 export default {
   components: {
     SelectSearch,
     Loading,
     ModalFailed,
-    ModalSuccess
+    ModalSuccess,
+    ModalDialog
   },
   data() {
     return {
@@ -687,7 +687,15 @@ export default {
       modalSuccess: {
         isVisible: false,
         title: '',
-        message: ''
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
       },
       isLoading: false,
     };
@@ -710,13 +718,21 @@ export default {
       }
     },
     closeModalSuccess() {
-      this.disposedStaff = null;
       this.modalSuccess = {
         isVisible: false,
         title: '',
-        message: ''
+        message: '',
+        closeFunction: () => null
       }
-      this.$router.push("/masukmanager");
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      }
     },
     checkConditions() {
       if (this.dataBerkas !== null && this.optionsStaff.length > 0) {
@@ -746,12 +762,50 @@ export default {
     },
     navigateToStaff() {
       if (this.disposedStaff) {
-        this.$router.push("/masukstaff");
+        this.$router.push("/masukmanager");
       }
     },
     handleSelectionChange(option) {
       this.disposedStaff = option;
       console.log("Selected Option:", option);
+    },
+    // Popup Create
+    SendDispose() {
+      this.showDisposePopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Dispose Pengajuan',
+        message: `Apakan anda yakin akan mendispose pengajuan ke ${this.disposedStaff.label}`,
+        okFunction: this.openDispose,
+        closeFunction: this.closeDispose
+      }
+    },
+    openDispose() {
+      this.closeModalDialog();
+      this.postDispose(this.successDispose, this.failDispose);
+    },
+    closeDispose() {
+      this.closeModalDialog()
+      this.showDisposePopup = true;
+    },
+    successDispose() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Dispose Berhasil',
+        message: `Pengajuan berhasil didispose ke ${this.disposedStaff.label}`,
+        closeFunction: this.closeSelesaiDispose
+      }
+    },
+    failDispose(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Dispose Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiDispose() {
+      this.closeModalSuccess();
+      this.$router.push('/masukmanager')
     },
     // api
     async getDataApi(base, id) {
@@ -864,46 +918,35 @@ export default {
         }
       }
     },
-    async postDataApi() {
+    async postDispose(successFunction, failFunction) {
       this.isLoading = true;
-      this.showDisposePopup = false;
+      
       if (!this.disposedStaff) {
-        return alert("Silahkan pilih staff terlebih dahulu")
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Data Tidak Lengkap',
+          message: "Silahkan pilih staff terlebih dahulu"
+        }
       }
       const params = { disposedStaff: this.disposedStaff.value }
       if (this.base == "PKS") {
         const res = await fetchPost(`mitra/manager/pks/incoming-data/${this.id}`, params, null, this.$router);
         if (res.status == 200) {
           this.isLoading = false;
-          this.modalSuccess = {
-            isVisible: true,
-            title: 'Dispose Berhasil',
-            message: `PKS berhasil didispose ke ${this.disposedStaff.label}`
-          }
+          successFunction();
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Ambil Data',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       } else {
         const res = await fetchPost(`mitra/manager/mounda/incoming-data/${this.id}`, params, null, this.$router);
         if (res.status == 200) {
           this.isLoading = false;
-          this.modalSuccess = {
-            isVisible: true,
-            title: 'Dispose Berhasil',
-            message: `${this.dataBerkas.base} berhasil didispose ke ${this.disposedStaff.label}`
-          }
+          successFunction();
         } else {
           this.isLoading = false;
-          this.modalFailed = {
-            isVisible: true,
-            title: 'Gagal Ambil Data',
-            message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-          }
+          failFunction();
         }
       }
     },
