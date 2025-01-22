@@ -351,23 +351,25 @@ import ModalDialog from '../modaldialog.vue';
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Anggaran</h1>
-              <span class="w-[43px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
                 dataBerkas?.budgetType || '-' }}</span>
-              <div class="flex ml-[348px]">
+              <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
             <div class="w-[1046px] h-[1px] bg-[#E5E7E9] justify-center transform translate-x-[-2.3%] mt-6"></div>
-            <div class="flex items-center mt-6">
-              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
-              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
-                dataBerkas?.background || '-' }}</span>
-              <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Catatan
+            <div class="flex items-start mt-6">
+              <div class="flex w-1/2">
+                <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
+                <span class="w-auto min-h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                  dataBerkas?.background || '-' }}</span>
+              </div>
+              <div class="flex w-1/2">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[40px]">Catatan
                 </h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{ dataBerkas?.note
+                <span class="w-auto min-h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{ dataBerkas?.note
                   || '-' }}</span>
               </div>
             </div>
@@ -802,66 +804,6 @@ import ModalDialog from '../modaldialog.vue';
         </div>
       </div>
     </div>
-    <!-- Setujui Pengajuan -->
-    <!-- <div v-if="isSendSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[476px]">
-        <div @click="closeApprov" class="flex justify-end cursor-pointer">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M0.292893 0.292893C0.683418 -0.0976311 1.31658 -0.0976311 1.70711 0.292893L6 4.58579L10.2929 0.292894C10.6834 -0.0976307 11.3166 -0.0976307 11.7071 0.292894C12.0976 0.683418 12.0976 1.31658 11.7071 1.70711L7.41421 6L11.7071 10.2929C12.0976 10.6834 12.0976 11.3166 11.7071 11.7071C11.3166 12.0976 10.6834 12.0976 10.2929 11.7071L6 7.41421L1.70711 11.7071C1.31658 12.0976 0.683417 12.0976 0.292893 11.7071C-0.0976311 11.3166 -0.0976311 10.6834 0.292893 10.2929L4.58579 6L0.292893 1.70711C-0.0976311 1.31658 -0.0976311 0.683417 0.292893 0.292893Z"
-              fill="#CCCCCC" />
-          </svg>
-        </div>
-        <div class="flex justify-center"><img :src="dialog" alt="Dialog Image" class="pt-6"></div>
-        <div class="flex justify-center">
-          <h1 class="text-[#333333] text-xl font-semibold mt-2">Setujui Pengajuan</h1>
-        </div>
-        <div class="flex justify-center mt-3">
-          <p class="text-center">Apakah Anda yakin ingin menyetujui pengajuan ini ?</p>
-        </div>
-        <div class="flex justify-center mt-8">
-          <button @click="openSetuju"
-            class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Setujui</button>
-        </div>
-        <div class="flex justify-center mt-2">
-          <button @click="closeApprov"
-            class="w-[296px] h-[40px] border-[1px] border-[#2671D9] text-[#2671D9] text-sm font-semibold rounded-lg">Batal</button>
-        </div>
-      </div>
-    </div> -->
-    <!-- Setujui Pengajuan -->
-    <!-- <div v-if="isSelesaiSetuju" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[428px]">
-        <div class="flex justify-center"><img :src="kirim" alt="Dialog Image" class="pt-6"></div>
-        <div class="flex justify-center">
-          <h1 class="text-[#333333] text-xl font-semibold mt-2">Pengajuan Telah Disetujui</h1>
-        </div>
-        <div class="ml-8 mt-3 w-[250px]">
-          <p class="text-center">Anda telah berhasil menyetujui pengajuan ini.</p>
-        </div>
-        <div class="flex justify-center mt-8">
-          <button @click="closeSelesai"
-            class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Selesai</button>
-        </div>
-      </div>
-    </div> -->
-
-    <!-- Model 2: isFailOpen -->
-    <!-- <div v-if="isFailOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-[360px] h-[452px]">
-        <div class="flex justify-center"><img :src="gagal" alt="Dialog Image" class="pt-6"></div>
-        <div class="flex justify-center">
-          <h1 class="text-[#333333] text-xl font-semibold mt-2">Gagal Dikirim</h1>
-        </div>
-        <div class="ml-8 mt-3 w-[240px]">
-          <p>Data yang Anda masukkan gagal dikirim.</p>
-        </div>
-        <div class="flex justify-center mt-8">
-          <button @click="closeFail"
-            class="w-[296px] h-[40px] bg-[#2671D9] text-white text-sm font-semibold rounded-lg">Oke</button>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -936,11 +878,6 @@ export default {
       },
       isLoading: false,
       statusAction: 0,
-
-      // // Popup Acprrove
-      // isSendSetuju: false,
-      // isSelesaiSetuju: false,
-      // isFailOpen: false,
 
     };
   },
@@ -1127,27 +1064,6 @@ export default {
     closeDisetujuiPopup() {
       this.showDisetujuiPopup = false;
     },
-    // Popup Aprrove
-    // SendApprov() {
-    //   this.isSendSetuju = true;
-    //   this.isSelesaiSetuju = false;
-    // },
-    // closeApprov() {
-    //   this.isSendSetuju = false;
-    // },
-    // openSetuju() {
-    //   this.postMounda();
-    //   // this.isSelesaiSetuju = true;
-    //   // this.isSendSetuju = false; 
-    // },
-    // closeSelesai() {
-    //   this.isSelesaiSetuju = false;
-    //   this.$router.push('/prosesstaff')
-    // },
-    // closeFail() {
-    //   this.isFailOpen = false;
-    // },
-
     // Popup Selesai
     SendApprov() {
       this.modalDialog = {

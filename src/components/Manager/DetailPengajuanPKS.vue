@@ -1,6 +1,8 @@
 <script setup>
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
+import ModalSuccess from '../modalsuccess.vue';
+import ModalDialog from '../modaldialog.vue';
 import SelectSearch from '../SelectSearch/SelectSearch.vue';
 </script>
 
@@ -12,6 +14,10 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
     :message="modalFailed.message"
     @close="closeModalFailed"
   />
+  <ModalSuccess :isVisible="modalSuccess.isVisible" :title="modalSuccess.title" :message="modalSuccess.message"
+    @close="modalSuccess.closeFunction" />
+  <ModalDialog :isVisible="modalDialog.isVisible" :title="modalDialog.title" :message="modalDialog.message"
+    @close="modalDialog.closeFunction" @ok="modalDialog.okFunction" />
   <div>
     <div class="flex w-auto h-[54px] rounded-lg bg-[#FFFFFF] border-collapse">
       <button @click="navigateToDetail">
@@ -34,11 +40,11 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
             <rect width="6" height="28" fill="#1F5AAD" />
           </svg>
           <h1 class="w-[825px] h-[56px] font-sans text-[20px] text-[#333333] mt-4 ml-[5px] font-semibold">Detail Pengajuan {{
-              dataBerkas?.base || 'MOU' }}</h1>
+              dataBerkas?.base || 'PKS' }}</h1>
           <div class="relative mt-4 mb-4 items-start w-[209px] h-[72px] border-[1px] border-[#E5E7E9] rounded-md">
             <div class="w-[209px] h-[29px] border-[1px] border-[#E5E7E9] rounded-tl-md rounded-tr-md bg-[#FFB200]">
               <h1 class="mt-[7px] ml-4 w-[177px] h-[15px] font-sans text-[10px] text-[#333333] font-medium">Progress Kemitraan {{
-              dataBerkas?.base || 'MOU' }}</h1>
+              dataBerkas?.base || 'PKS' }}</h1>
             </div>
             <div class="flex items-center">
               <h1 class="w-[79px] h-[27px] font-sans text-[18px] font-bold text-[#FFB200] ml-4 mb-2">Proposal</h1>
@@ -361,23 +367,25 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Anggaran</h1>
-              <span class="w-[43px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
                 dataBerkas?.budgetType || '-' }}</span>
-              <div class="flex ml-[348px]">
+              <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
             <div class="w-[1046px] h-[1px] bg-[#E5E7E9] justify-center transform translate-x-[-2.3%] mt-6"></div>
-            <div class="flex items-center mt-6">
-              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
-              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
-                dataBerkas?.background || '-' }}</span>
-              <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Catatan
+            <div class="flex items-start mt-6">
+              <div class="flex w-1/2">
+                <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
+                <span class="w-auto min-h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                  dataBerkas?.background || '-' }}</span>
+              </div>
+              <div class="flex w-1/2">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[40px]">Catatan
                 </h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{ dataBerkas?.note
+                <span class="w-auto min-h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{ dataBerkas?.note
                   || '-' }}</span>
               </div>
             </div>
@@ -942,11 +950,6 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
         </div>
         <div class="w-[1046px] h-[1px] bg-[#E5E7E9] items-center transform ml-4 mt-6"></div>
         <div v-if="isManager" class="flex flex-row w-[1046px] h-auto ml-4 py-9">
-          <!-- <button class="absolute bottom-[12px] right-[123px] mt-4 flex">
-            <div class="flex items-center justify-center w-[101px] h-[40px] rounded-lg bg-[#FFFFFF] border-[#2671D9] border-[1px] hover:bg-[#DBEAFE] cursor-pointer transition-all">
-              <span class="text-[14px] font-sans font-semibold text-[#2671D9] ml-3 mt-[9px] mr-3 mb-[9px]">Stop Clock</span>
-            </div>
-          </button> -->
           <button @click="showPenyelesaianPKSPopup = true" class="absolute bottom-[12px] right-[24px] flex">
             <div class="flex items-center justify-center w-[83px] h-[40px] bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
               <span class="text-[14px] font-sans font-semibold text-[white] ml-3 mt-[9px] mr-3 mb-[9px]">Selesai</span>
@@ -985,26 +988,6 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   @change="updateDateSelesai"
                   @blur="hideDatePickerSelesai"
                 />
-                <!-- <input v-model="selectedDateSelesai" type="text" placeholder="mm/dd/yyyy" class="border rounded mt-2 p-2 pl-3 w-full cursor-pointer" @focus="toggleDatePickerSelesai" readonly />
-                <span ref="datePickerSelesaiButton" class="absolute right-3 top-[45px] cursor-pointer" @click="toggleDatePickerSelesai">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M3.50016 0.333496C3.86835 0.333496 4.16683 0.631973 4.16683 1.00016V1.8335H9.8335V1.00016C9.8335 0.631973 10.132 0.333496 10.5002 0.333496C10.8684 0.333496 11.1668 0.631973 11.1668 1.00016V1.8335H11.5002C12.6968 1.8335 13.6668 2.80355 13.6668 4.00016V11.5002C13.6668 12.6968 12.6968 13.6668 11.5002 13.6668H2.50016C1.30355 13.6668 0.333496 12.6968 0.333496 11.5002V4.00016C0.333496 2.80355 1.30355 1.8335 2.50016 1.8335H2.8335V1.00016C2.8335 0.631973 3.13197 0.333496 3.50016 0.333496ZM2.50016 3.16683C2.03993 3.16683 1.66683 3.53993 1.66683 4.00016V4.49955C1.92336 4.39257 2.20486 4.3335 2.50016 4.3335H11.5002C11.7955 4.3335 12.077 4.39257 12.3335 4.49955V4.00016C12.3335 3.53993 11.9604 3.16683 11.5002 3.16683H2.50016ZM12.3335 6.50016C12.3335 6.03993 11.9604 5.66683 11.5002 5.66683H2.50016C2.03993 5.66683 1.66683 6.03993 1.66683 6.50016V11.5002C1.66683 11.9604 2.03993 12.3335 2.50016 12.3335H11.5002C11.9604 12.3335 12.3335 11.9604 12.3335 11.5002V6.50016Z"
-                      fill="#2671D9"
-                    />
-                  </svg>
-                </span>
-                <input
-                  v-if="showDatePickerSelesai"
-                  ref="datePickerSelesaiInput"
-                  type="date"
-                  class="custom-date-picker absolute border border-[#E5E7E9] font-sans text-[10px] text-[#9C9C9C] rounded-lg p-2 w-[120px] z-10 hover:bg-[#DBEAFE] cursor-pointer transition-all"
-                  style="top: 105%; right: 0"
-                  @change="updateDateSelesai"
-                  @blur="hideDatePickerSelesai"
-                /> -->
               </div>
               <div class="relative flex flex-col w-[454.5px] h-[72px] mt-4">
                 <div ref="datePickerPerjanjianContainer" class="flex items-center">
@@ -1018,26 +1001,6 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   @change="updateDatePerjanjian"
                   @blur="hideDatePickerPerjanjian"
                 />
-                <!-- <input v-model="jangkaWaktuPerjanjian" type="text" placeholder="mm/dd/yyyy" class="border rounded mt-2 p-2 pl-3 w-full cursor-pointer" @focus="toggleDatePickerPerjanjian" readonly />
-                <span ref="datePickerPerjanjianButton" class="absolute right-3 top-[45px] cursor-pointer" @click="toggleDatePickerPerjanjian">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M3.50016 0.333496C3.86835 0.333496 4.16683 0.631973 4.16683 1.00016V1.8335H9.8335V1.00016C9.8335 0.631973 10.132 0.333496 10.5002 0.333496C10.8684 0.333496 11.1668 0.631973 11.1668 1.00016V1.8335H11.5002C12.6968 1.8335 13.6668 2.80355 13.6668 4.00016V11.5002C13.6668 12.6968 12.6968 13.6668 11.5002 13.6668H2.50016C1.30355 13.6668 0.333496 12.6968 0.333496 11.5002V4.00016C0.333496 2.80355 1.30355 1.8335 2.50016 1.8335H2.8335V1.00016C2.8335 0.631973 3.13197 0.333496 3.50016 0.333496ZM2.50016 3.16683C2.03993 3.16683 1.66683 3.53993 1.66683 4.00016V4.49955C1.92336 4.39257 2.20486 4.3335 2.50016 4.3335H11.5002C11.7955 4.3335 12.077 4.39257 12.3335 4.49955V4.00016C12.3335 3.53993 11.9604 3.16683 11.5002 3.16683H2.50016ZM12.3335 6.50016C12.3335 6.03993 11.9604 5.66683 11.5002 5.66683H2.50016C2.03993 5.66683 1.66683 6.03993 1.66683 6.50016V11.5002C1.66683 11.9604 2.03993 12.3335 2.50016 12.3335H11.5002C11.9604 12.3335 12.3335 11.9604 12.3335 11.5002V6.50016Z"
-                      fill="#2671D9"
-                    />
-                  </svg>
-                </span>
-                <input
-                  v-if="showDatePickerPerjanjian"
-                  ref="datePickerPerjanjianInput"
-                  type="date"
-                  class="custom-date-picker absolute border border-[#E5E7E9] font-sans text-[10px] text-[#9C9C9C] rounded-lg p-2 w-[120px] z-10 hover:bg-[#DBEAFE] cursor-pointer transition-all"
-                  style="top: 105%; right: 0"
-                  @change="updateDatePerjanjian"
-                  @blur="hideDatePickerPerjanjian"
-                /> -->
               </div>
               <div class="flex flex-col w-[454.5px] h-[72px] mt-4">
                 <div class="flex items-center">
@@ -1062,22 +1025,12 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                 </span>
               </div>
               <!-- Tombol Kirim -->
-              <button @click="Progress" :disabled="!isFormComplete" class="absolute mt-[450px] ml-[378px] flex">
+              <button @click="SendApprove" :disabled="!isFormComplete" class="absolute mt-[450px] ml-[378px] flex">
                 <div :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isFormComplete, 'bg-[#E6E6E6] text-[#7F7F80]': !isFormComplete }" class="flex items-center justify-center w-[78px] h-[40px] rounded-lg border-[1px]">
                   <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Kirim</span>
                 </div>
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showDisetujuiPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
-        <div class="bg-[#FFFFFF] rounded-lg shadow-lg w-[360px] h-[415px]">
-          <div class="flex flex-col items-center mt-14 ml-8 mr-8 mb-14">
-            <img src="@/assets/image/pengajuanditerima.png" class="w-[200px] h-[160px] mb-4" />
-            <h2 class="text-[20px] font-sans font-semibold text-[#333333] mb-2">Progress Kemitraan Selesai</h2>
-            <p class="text-[16px] font-sans text-[#333333] font-normal mb-6 text-center">Progress kemitraan PKS telah selesai.</p>
-            <button @click="closeDisetujuiPopup" class="bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF] text-[14px] p-2 rounded-lg w-full">Selesai</button>
           </div>
         </div>
       </div>
@@ -1164,6 +1117,19 @@ export default {
         title: '',
         message: ''
       },
+      modalSuccess: {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      },
+      modalDialog: {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      },
       isLoading: false,
     };
   },
@@ -1222,6 +1188,23 @@ export default {
         message: ''
       }
     },
+    closeModalSuccess() {
+      this.modalSuccess = {
+        isVisible: false,
+        title: '',
+        message: '',
+        closeFunction: () => null
+      }
+    },
+    closeModalDialog() {
+      this.modalDialog = {
+        isVisible: false,
+        title: '',
+        message: '',
+        okFunction: () => null,
+        closeFunction: () => null
+      }
+    },
     closePopup() {
       this.showProgressPKSPopup = false;
     },
@@ -1275,16 +1258,17 @@ export default {
     updateDateSelesai(event) {
       const formattedDate = this.formatDateToDDMMYYYY(event.target.value);
       this.selectedDateSelesai = formattedDate;
-      if (this.jangkaWaktuPerjanjian) {
-        const endDate = this.jangkaWaktuPerjanjian.split(" s.d ")[1];
-        this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
-      }
+      // if (this.jangkaWaktuPerjanjian) {
+      //   const endDate = this.jangkaWaktuPerjanjian.split(" s.d ")[1];
+      //   this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
+      // }
 
       // this.showDatePickerSelesai = false;
     },
     updateDatePerjanjian(event) {
       const endDate = this.formatDateToDDMMYYYY(event.target.value);
-      this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
+      // this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
+      this.jangkaWaktuPerjanjian = endDate;
       // this.showDatePickerPerjanjian = false;
     },
     handleClickOutside(event) {
@@ -1314,15 +1298,45 @@ export default {
     closePenyelesaianPKSPopup() {
       this.showPenyelesaianPKSPopup = false;
     },
-    Progress() {
-      this.postPks();
-      // this.showDisetujuiPopup = true;
-      // this.showPenyelesaianPKSPopup = false;
+    // Popup Approv
+    SendApprove() {
+      this.showPenyelesaianPKSPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Selesaikan Pengajuan',
+        message: `Apakan anda yakin akan menyelesaikan pengajuan ini`,
+        okFunction: this.openApprove,
+        closeFunction: this.closeApprove
+      }
     },
-    closeDisetujuiPopup() {
-      this.showDisetujuiPopup = false;
+    openApprove() {
+      this.closeModalDialog();
+      this.postPks(this.successApprove, this.failApprove);
+    },
+    closeApprove() {
+      this.closeModalDialog()
+      this.showPenyelesaianPKSPopup = true;
+    },
+    successApprove() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Selesaikan Berhasil',
+        message: `Pengajuan berhasil diselesaikan`,
+        closeFunction: this.closeSelesaiApprove
+      }
+    },
+    failApprove(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Selesaikan Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiApprove() {
+      this.closeModalSuccess();
       this.$router.push('/proses')
     },
+
     handleSelectionChange(option) {
       this.namaPejabat = option;
     },
@@ -1456,13 +1470,14 @@ export default {
         }
       }
     },
-    async postPks() {
+    async postPks(successFunction, failFunction) {
       this.isLoading = true;
       const form = new FormData()
       form.append('approvalNote', this.ApprovalNote)
       form.append('pksNumber', this.nomorPKS)
       form.append('officialUndersign', this.namaPejabat.value)
       form.append('approvalCompletionDate', this.selectedDateSelesai)
+      form.append('endContractDate', this.jangkaWaktuPerjanjian)
       
       // Display the values
       for (var pair of form.entries()) {
@@ -1471,16 +1486,11 @@ export default {
       const res = await fetchPostForm(`mitra/manager/pks/proses/${this.id}`, null, form, this.$router);
       console.log(res.data)
       if (res.status == 200) {
-        this.showDisetujuiPopup = true;
-        this.showPenyelesaianPKSPopup = false;
         this.isLoading = false;
+        successFunction();
       } else {
         this.isLoading = false;
-        this.modalFailed = {
-          isVisible: true,
-          title: 'Gagal Kirim Data',
-          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
-        }
+        failFunction();
       }
     },
   },

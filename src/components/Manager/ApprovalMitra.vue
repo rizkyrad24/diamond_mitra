@@ -26,7 +26,7 @@
         Approval Selesai
         <img src="@/assets/image/LineBlue.png" class="w-[129px] h-[4px] mt-2" />
       </button>
-      <button class="flex-grow w-[158px] h-[24px] font-sans text-[16px] font-semibold mt-7 ml-8 mr-4"
+      <button v-if="role == 'PartnershipManager'" class="flex-grow w-[158px] h-[24px] font-sans text-[16px] font-semibold mt-7 ml-8 mr-4"
         @click="navigateToApprovalStopclock">Approval Stop Clock</button>
       <div class="flex items-start">
         <div
@@ -303,6 +303,7 @@ export default {
       //   { judul: "Lorem ipsum dolor", nomor: 90224, tipe: "PKS", pelaksana: "Pusat", status: "Approval Selesai" },
       // ],
       sortOrder: "asc",
+      role: null,
     };
   },
   computed: {
@@ -547,6 +548,7 @@ export default {
   },
   mounted() {
     this.getDataApi();
+    this.role = localStorage.getItem('position');
   }
 };
 </script>

@@ -129,16 +129,16 @@
             </div>
             <div class="flex mt-6 items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Anggaran</h1>
-              <span class="w-[43px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
                 dataBerkas?.budgetType || '-' }}</span>
-              <div class="flex ml-[348px]">
+              <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
             <div class="w-[1046px] h-[1px] bg-[#E5E7E9] justify-center transform translate-x-[-2.3%] mt-6"></div>
-            <div class="flex items-center mt-6">
+            <div class="flex items-start mt-6">
               <div class="flex w-1/2">
                 <h1 class="w-[130px] min-h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Latar Belakang</h1>
                 <span class=" text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
@@ -634,15 +634,6 @@ export default {
   },
   data() {
     return {
-      // fileDetails: {
-      //   KKB: { fileName: "", fileSize: "" },
-      //   KKR: { fileName: "", fileSize: "" },
-      //   KKF: { fileName: "", fileSize: "" },
-      //   KKO: { fileName: "", fileSize: "" },
-      //   ProposalMitra: { fileName: "", fileSize: "" },
-      //   DokumenSuratMenyurat: { fileName: "", fileSize: "" },
-      //   DokumenLainnya: { fileName: "", fileSize: "" },
-      // },
       showDisposePopup: false,
       isDropdownArrowOpen: false,
       isDropdownArrowOpen1: false,
