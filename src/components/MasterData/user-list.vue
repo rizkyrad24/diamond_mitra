@@ -37,11 +37,21 @@
             </select>
           </form>
         </div>
+        <div v-if="[1,2].includes(formType)" class="mb-4">
+          <label class="text-[#4D5E80] font-medium">Tipe Bisnis <span class="text-[#FF5656]">*</span></label>
+          <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
+            <select v-model="bisnisType" class="w-full outline-none px-2">
+              <option class="text-[#bfc4cc]" value="">Pilih Tipe Bisnis</option>
+              <option class="text-[black]" value="Infrastruktur">Infrastruktur</option>
+              <option class="text-[black]" value="Digital">Digital</option>
+            </select>
+          </form>
+        </div>
         <div v-if="[2,].includes(formType)" class="mb-4">
           <label class="text-[#4D5E80] font-medium">Status <span class="text-[#FF5656]">*</span></label>
           <form action="" class="w-full py-[10px] px-4 mt-2 border-[1px] rounded-lg text-sm flex justify-between">
             <select v-model="isActive" class="w-full outline-none px-2">
-              <option class="text-[#bfc4cc]" value="">Pilih Role</option>
+              <option class="text-[#bfc4cc]" value="">Pilih Status</option>
               <option class="text-[black]" value="1">Aktif</option>
               <option class="text-[black]" value="2">Tidak Aktif</option>
             </select>
@@ -280,6 +290,20 @@
                     </svg>
                   </div>
                 </th>
+                <th class="p-2 border border-[#E5E7E9]">
+                  <div class="flex items-center justify-between">
+                    <span>Tipe Bisnis</span>
+                    <svg @click="sortTable('totalStopClock')" width="14" height="10" viewBox="0 0 14 10" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                        fill="#93B8EC" />
+                      <path
+                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                        fill="#93B8EC" />
+                    </svg>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -292,6 +316,7 @@
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.last_name }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.email }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.role }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.bisnis_type }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9] relative">
                   <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
                     <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -357,7 +382,7 @@ export default {
       selectedOption: null,
       selectedSubOptions: [],
       filterOptions: [
-      { name: "Role", subOptions: ["Staff", "Manager", "VP", "Admin", "PartnershipStaff", "PartnershipManager", "PartnershipVP", "PartnershipDirector"] },
+      { name: "Role", subOptions: ["Staff", "Manager", "VP", "Direksi", "Admin", "PartnershipStaff", "PartnershipManager", "PartnershipVP", "PartnershipDirector"] },
       { name: "Aktif", subOptions: ["Aktif", "Tidak Aktif"] },
       ],
 
@@ -400,6 +425,7 @@ export default {
       password: "",
       rePassword: "",
       isActive: "",
+      bisnisType: "",
       formType: null, // 1 = create, 2 = edit, 3 = reset password
 
       tableData: [],
@@ -461,14 +487,14 @@ export default {
     },
     isSendAvaible() {
       return (
-        this.username != "" && this.firstName != "" && 
+        this.username != "" && this.firstName != "" &&
         this.lastName != "" && this.email != "" && this.role != "" &&
         this.password != "" && this.rePassword != "" && this.password === this.rePassword
       )
     },
     isSendEditAvaible() {
       return (
-        this.firstName != "" &&this.lastName != "" && 
+        this.firstName != "" &&this.lastName != "" &&
         this.email != "" && this.role != "" && this.userId
       )
     },
@@ -514,6 +540,7 @@ export default {
       this.password = "";
       this.rePassword = "";
       this.isActive = "";
+      this.bisnisType = "";
       this.formType = null;
     },
     closePopup() {
@@ -532,6 +559,7 @@ export default {
       this.email = data.email;
       this.role = data.role;
       this.isActive = data.is_active? "1": "2";
+      this.bisnisType = data.bisnis_type;
       this.formType = 2;
       this.showFormPopup = true;
     },
@@ -823,6 +851,7 @@ export default {
           last_name: item.lastName,
           email: item.email,
           role: item.role,
+          bisnis_type: item.bisnisType || "",
           is_active: item.isActive
         }))
         this.tableData = cleanData;
@@ -844,6 +873,9 @@ export default {
       form.append('lastName', this.lastName);
       form.append('email', this.email);
       form.append('role', this.role);
+      if (this.bisnisType != "") {
+        form.append('bisnisType', this.bisnisType);
+      }
       form.append('password', this.password);
       form.append('rePassword', this.rePassword);
       // Display the values
@@ -867,6 +899,9 @@ export default {
       form.append('lastName', this.lastName);
       form.append('email', this.email);
       form.append('role', this.role);
+      if (this.bisnisType != "") {
+        form.append('bisnisType', this.bisnisType);
+      }
       // Display the values
       for (var pair of form.entries()) {
         console.log(pair[0] + ', ' + pair[1]);

@@ -35,7 +35,7 @@
             dataBerkas?.base || 'PKS' }}</h1>
         </div>
         <h1 class="items-start justify-center px-2 ml-2 text-[#9C9C9C]">{{ dataBerkas?.submissionNumber }}</h1>
-        <button @click="showDisposePopup = true" class="absolute top-[12px] right-[24px]">
+        <button v-if="position == 'PartnershipManager'" @click="showDisposePopup = true" class="absolute top-[12px] right-[24px]">
           <div
             class="flex items-center justify-center w-[81px] h-[40px] rounded-lg bg-[#2671D9] hover:bg-[#1E5BB7] border-[1px] border-[#E5E7E9]">
             <span
@@ -610,6 +610,21 @@
             </div>
           </div>
         </div>
+
+        <div v-if="position == 'PartnershipVP'" class="flex flex-row w-[1046px] h-auto ml-4 py-7">
+          <button @click="SendReject" class="absolute bottom-[12px] right-[115px] flex">
+            <div
+              class="flex items-center justify-center w-[72px] h-[40px] rounded-lg bg-[#FFFFFF] border-[#C53830] border-[1px] hover:bg-[#FEE2E2] cursor-pointer transition-all">
+              <span class="text-[14px] font-sans font-medium text-[#C53830] ml-3 mt-[9px] mr-3 mb-[9px]">Tolak</span>
+            </div>
+          </button>
+          <button @click="SendDisposeManager" class="absolute bottom-[12px] right-[25px] flex">
+            <div
+              class="flex items-center justify-center w-[72px] h-[40px] rounded-lg bg-[#2671D9] hover:bg-[#1E5BB7] border-[#FFFFFF] border-[1px]">
+              <span class="text-[14px] font-sans font-medium text-[#FFFFFF] ml-3 mt-[9px] mr-3 mb-[9px]">Terima</span>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -689,6 +704,7 @@ export default {
         closeFunction: () => null
       },
       isLoading: false,
+      position: null,
     };
   },
   computed: {
@@ -795,6 +811,84 @@ export default {
       }
     },
     closeSelesaiDispose() {
+      this.closeModalSuccess();
+      this.$router.push('/masukmanager')
+    },
+
+    // Popup dispose manager
+    SendDisposeManager() {
+      this.showDisposeManagerPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Dispose Pengajuan Ke Manager',
+        message: `Apakan anda yakin akan mendispose pengajuan ke manager`,
+        okFunction: this.openDisposeManager,
+        closeFunction: this.closeDisposeManager
+      }
+    },
+    openDisposeManager() {
+      this.closeModalDialog();
+      this.postDisposeManager(this.successDisposeManager, this.failDisposeManager);
+    },
+    closeDisposeManager() {
+      this.closeModalDialog()
+      this.showDisposeManagerPopup = true;
+    },
+    successDisposeManager() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Dispose Ke Manager Berhasil',
+        message: `Pengajuan berhasil di dispose ke manager`,
+        closeFunction: this.closeSelesaiDisposeManager
+      }
+    },
+    failDisposeManager(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Dispose Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiDisposeManager() {
+      this.closeModalSuccess();
+      this.$router.push('/masukmanager')
+    },
+
+    // Popup reject
+    SendReject() {
+      this.showRejectPopup = false;
+      this.modalDialog = {
+        isVisible: true,
+        title: 'Tolak Pengajuan',
+        message: `Apakan anda yakin akan menolak pengajuan ini`,
+        okFunction: this.openReject,
+        closeFunction: this.closeReject
+      }
+    },
+    openReject() {
+      this.closeModalDialog();
+      this.postReject(this.successReject, this.failReject);
+    },
+    closeReject() {
+      this.closeModalDialog()
+      this.showRejectPopup = true;
+    },
+    successReject() {
+      this.modalSuccess = {
+        isVisible: true,
+        title: 'Tolak Pengajuan Berhasil',
+        message: `Pengajuan berhasil di tolak`,
+        closeFunction: this.closeSelesaiReject
+      }
+    },
+    failReject(data) {
+      this.modalFailed = {
+        isVisible: true,
+        title: 'Tolak Gagal',
+        message: data?.message ? data.message : "Silahkan hubungi admin"
+      }
+    },
+    closeSelesaiReject() {
       this.closeModalSuccess();
       this.$router.push('/masukmanager')
     },
@@ -941,6 +1035,60 @@ export default {
         }
       }
     },
+    async postDisposeManager(successFunction, failFunction) {
+      this.isLoading = true;
+      let url = null;
+      if (this.position == "PartnershipVP") {
+        if (this.base == 'PKS') {
+          url = `mitra/vp/pks/incoming-data/${this.id}`;
+        } else {
+          url = `mitra/vp/mounda/incoming-data/${this.id}`;
+        }
+      }
+      if (!url) {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
+      }
+      const res = await fetchPost(url, null, null, this.$router);
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
+    async postReject(successFunction, failFunction) {
+      this.isLoading = true;
+      let url = null;
+      if (this.position == "PartnershipVP") {
+        if (this.base == 'PKS') {
+          url = `mitra/vp/pks/incoming-data/${this.id}/reject`;
+        } else {
+          url = `mitra/vp/mounda/incoming-data/${this.id}/reject`;
+        }
+      }
+      if (!url) {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
+      }
+      const res = await fetchPost(url, null, null, this.$router);
+      if (res.status == 200) {
+        this.isLoading = false;
+        successFunction();
+      } else {
+        this.isLoading = false;
+        failFunction();
+      }
+    },
   },
   mounted() {
     if (this.$route.params.id && this.$route.params.base) {
@@ -949,6 +1097,7 @@ export default {
     this.getDataUserApi();
     this.base = this.$route.params.base;
     this.id = this.$route.params.id;
+    this.position = localStorage.getItem("position")
   },
 };
 </script>

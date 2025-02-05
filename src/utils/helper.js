@@ -21,25 +21,28 @@ export function parseStatusAproval(positionLevel, status) {
       return "Approval Manager"
     }
     if (positionLevel == 3) {
-      return "Masuk"
-    }
-    if (positionLevel == 4) {
-      return "Dispose Ke Staff"
-    }
-    if (positionLevel == 5) {
-      return "Diterima Staff"
-    }
-    if (positionLevel == 6) {
-      return "Pengajuan Manager"
-    }
-    if (positionLevel == 7) {
-      return "Approval Manager"
-    }
-    if (positionLevel == 8) {
       return "Approval VP"
     }
+    if (positionLevel == 4) {
+      return "Approval Direksi"
+    }
+    if (positionLevel == 5) {
+      return "Dispose Ke manager mitra"
+    }
+    if (positionLevel == 6) {
+      return "Dispose Ke staff mitra"
+    }
+    if (positionLevel == 7) {
+      return "Diterima Staff Mitra"
+    }
+    if (positionLevel == 8) {
+      return "Pengajuan Manager Mitra"
+    }
     if (positionLevel == 9) {
-      return "Approval Direktur"
+      return "Approval Manager Mitra"
+    }
+    if (positionLevel == 10) {
+      return "Approval VP Mitra"
     }
     return status
 }
@@ -93,17 +96,8 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
       fileKemitraan['file7'] = item.fileName
     }
   })
-  if (status == 'Pengajuan StopClock') {
-    return ['Pengajuan StopClock', 'bg-[#FFE5E6] text-[#FF8000] border-[#FFD6AD]']
-  }
-  if (status == 'Pengajuan StartClock') {
-    return ['Pengajuan StartClock', 'bg-[#FFE5E6] text-[#FF8000] border-[#FFD6AD]']
-  }
   if (isStopClock) {
-    return ['StopClock', 'bg-[#FFE5E6] text-[#FF8000] border-[#FFD6AD]']
-  }
-  if (status == 'Approved' && positionLevel >= 8) {
-    return ['Selesai', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Stopclock', 'bg-[#FFE5E6] text-[#FF8000] border-[#FFD6AD]']
   }
   if (status == 'Ditolak') {
     return ['Ditolak', 'bg-[#FFE5E6] text-[#FF5656] border-[#FD8A8A]']
@@ -115,55 +109,55 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
     return ['Draft', 'bg-[#FFF3E6] text-[#FF8000] border-[#FFD6AD]']
   }
   if (positionLevel == 1) {
-    return ['Waiting Approval Manager', 'bg-[#FFF6E1] text-[#FFB200] border-[#FFD064]']
+    return ['Waiting Apv Manager', 'bg-[#FFF6E1] text-[#FFB200] border-[#FFD064]']
   }
   if (positionLevel == 2) {
-    return ['Waiting Approval VP', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Waiting Apv VP', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 3) {
-    return ['Masuk Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Waiting Apv Direksi', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 4) {
-    return ['Masuk Ke Staff Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file7) {
-    return ['PKS', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file6) {
-    return ['Surat Pesanan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file5) {
-    return ['BAK Pemilihan Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file4) {
-    return ['Negosiasi', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file3) {
-    return ['Evaluasi', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file2) {
-    return ['Proposal', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
-  }
-  if (positionLevel == 5 && fileKemitraan.file1) {
-    return ['Surat Penawaran', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
+    return ['Masuk Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 5) {
-    return ['DiProses Staff Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Masuk Ke Manager Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 6) {
-    return ['Waiting Approval Manager Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Masuk Ke Staff Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file7) {
+    return ['PKS', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file6) {
+    return ['Surat Pesanan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file5) {
+    return ['BAK Pemilihan Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file4) {
+    return ['Negosiasi', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file3) {
+    return ['Evaluasi', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file2) {
+    return ['Proposal', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file1) {
+    return ['Surat Penawaran', 'bg-[#E7F1FD] text-[#4791F2] border-[#91BEF7]']
   }
   if (positionLevel == 7) {
-    return ['Pembuatan Kontrak', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['DiProses Staff Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 8) {
-    return ['Waiting Approval VP Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Waiting Apv Manager Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 9) {
-    return ['Waiting Approval Direktur Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+    return ['Waiting Apv VP Mitra', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
-  if (positionLevel == 10) {
-    return ['Disetujui Direktur Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  if (status == 'Approved' && positionLevel == 10) {
+    return ['Selesai', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
 }
 

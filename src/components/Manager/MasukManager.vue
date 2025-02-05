@@ -467,7 +467,23 @@ export default {
 		async getDataApi() {
       this.isLoading = true;
 			let boxResult = new Array;
-			const res = await fetchGet("mitra/manager/mounda/incoming-data/", null, this.$router);
+      const positionLevel = localStorage.getItem("position");
+      let url = null;
+      if (positionLevel == "PartnershipManager") {
+        url = "mitra/manager/mounda/incoming-data/";
+      }
+      if (positionLevel == "PartnershipVP") {
+        url = "mitra/vp/mounda/incoming-data/";
+      }
+      if (!url) {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
+      }
+			const res = await fetchGet(url, null, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
 					judul: item.partnershipTitle,
@@ -487,7 +503,22 @@ export default {
           message: res.data.message ? res.data.message : "Silahkan hubungi admin"
         }
 			}
-			const res2 = await fetchGet("mitra/manager/pks/incoming-data", null, this.$router);
+      let url2 = null;
+      if (positionLevel == "PartnershipManager") {
+        url2 = "mitra/manager/pks/incoming-data";
+      }
+      if (positionLevel == "PartnershipVP") {
+        url2 = "mitra/vp/pks/incoming-data";
+      }
+      if (!url2) {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
+      }
+			const res2 = await fetchGet(url2, null, this.$router);
 			if (res2.status == 200) {
 				const cleanData2 = res2.data.map((item) => ({
 					judul: item.partnershipTitle,

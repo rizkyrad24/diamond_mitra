@@ -3,7 +3,7 @@ import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
-import SelectSearch from '../SelectSearch/SelectSearch.vue';
+// import SelectSearch from '../SelectSearch/SelectSearch.vue';
 </script>
 
 <template>
@@ -949,14 +949,14 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
           </div>
         </div>
         <div class="w-[1046px] h-[1px] bg-[#E5E7E9] items-center transform ml-4 mt-6"></div>
-        <div v-if="isManager" class="flex flex-row w-[1046px] h-auto ml-4 py-9">
+        <!-- <div v-if="isManager" class="flex flex-row w-[1046px] h-auto ml-4 py-9">
           <button @click="showPenyelesaianPKSPopup = true" class="absolute bottom-[12px] right-[24px] flex">
             <div class="flex items-center justify-center w-[83px] h-[40px] bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
               <span class="text-[14px] font-sans font-semibold text-[white] ml-3 mt-[9px] mr-3 mb-[9px]">Selesai</span>
             </div>
           </button>
-        </div>
-        <div v-if="showPenyelesaianPKSPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
+        </div> -->
+        <!-- <div v-if="showPenyelesaianPKSPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
           <div class="bg-[#FFFFFF] rounded-lg shadow-lg w-[502px] h-[596px]">
             <div class="flex w-[502px] h-[76px] bg-[#E9F1FB] border-[#DEDEDE] rounded-tl-lg rounded-tr-lg">
               <h1 class="w-[325px] h-[28px] ml-6 mt-6 font-sans font-bold text-[20px] text-[#000000]">Progress Kemitraan (PKS) Selesai</h1>
@@ -1024,7 +1024,6 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   </svg>
                 </span>
               </div>
-              <!-- Tombol Kirim -->
               <button @click="SendApprove" :disabled="!isFormComplete" class="absolute mt-[450px] ml-[378px] flex">
                 <div :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isFormComplete, 'bg-[#E6E6E6] text-[#7F7F80]': !isFormComplete }" class="flex items-center justify-center w-[78px] h-[40px] rounded-lg border-[1px]">
                   <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Kirim</span>
@@ -1032,7 +1031,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

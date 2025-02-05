@@ -37,7 +37,6 @@
       </button>
       <!-- Masuk -->
       <button
-        v-if="position == 'PartnershipManager'"
         :class="['flex text-[14px] font-sans font-semibold items-center justify p-2 rounded-lg transition-colors', isActive('MasukManager') ? 'bg-[#2671D9] text-[#FFFFFF]' : 'text-[#333333] hover:bg-[#DBEAFE]']"
         @click="navigateTo('MasukManager')"
       >

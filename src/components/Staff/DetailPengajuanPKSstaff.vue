@@ -3,6 +3,7 @@ import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
+import SelectSearch from '../SelectSearch/SelectSearch.vue';
 </script>
 
 <template>
@@ -767,9 +768,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputKKB" class="hidden" @change="handleFileChange('KKB', $event)" ref="fileInputKKB" />
+                    <!-- <input type="file" id="fileInputKKB" class="hidden" @change="handleFileChange('KKB', $event)" ref="fileInputKKB" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('KKB')">
+                    <!-- @click="openFileDialog('KKB')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -804,9 +806,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputKKR" class="hidden" @change="handleFileChange('KKR', $event)" ref="fileInputKKR" />
+                    <!-- <input type="file" id="fileInputKKR" class="hidden" @change="handleFileChange('KKR', $event)" ref="fileInputKKR" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('KKR')">
+                    <!-- @click="openFileDialog('KKR')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -841,9 +844,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputKKF" class="hidden" @change="handleFileChange('KKF', $event)" ref="fileInputKKF" />
+                    <!-- <input type="file" id="fileInputKKF" class="hidden" @change="handleFileChange('KKF', $event)" ref="fileInputKKF" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('KKF')">
+                    <!-- @click="openFileDialog('KKF')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -878,9 +882,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputKKO" class="hidden" @change="handleFileChange('KKO', $event)" ref="fileInputKKO" />
+                    <!-- <input type="file" id="fileInputKKO" class="hidden" @change="handleFileChange('KKO', $event)" ref="fileInputKKO" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('KKO')">
+                    <!-- @click="openFileDialog('KKO')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -915,9 +920,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputProposalMitra" class="hidden" @change="handleFileChange('ProposalMitra', $event)" ref="fileInputProposalMitra" />
+                    <!-- <input type="file" id="fileInputProposalMitra" class="hidden" @change="handleFileChange('ProposalMitra', $event)" ref="fileInputProposalMitra" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('ProposalMitra')">
+                    <!-- @click="openFileDialog('ProposalMitra')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -952,9 +958,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputDokumenSuratMenyurat" class="hidden" @change="handleFileChange('DokumenSuratMenyurat', $event)" ref="fileInputDokumenSuratMenyurat" />
+                    <!-- <input type="file" id="fileInputDokumenSuratMenyurat" class="hidden" @change="handleFileChange('DokumenSuratMenyurat', $event)" ref="fileInputDokumenSuratMenyurat" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('DokumenSuratMenyurat')">
+                    <!-- @click="openFileDialog('DokumenSuratMenyurat')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -989,9 +996,10 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <!-- Input file yang tersembunyi -->
-                    <input type="file" id="fileInputDokumenLainnya" class="hidden" @change="handleFileChange('DokumenLainnya', $event)" ref="fileInputDokumenLainnya" />
+                    <!-- <input type="file" id="fileInputDokumenLainnya" class="hidden" @change="handleFileChange('DokumenLainnya', $event)" ref="fileInputDokumenLainnya" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('DokumenLainnya')">
+                    <!-- @click="openFileDialog('DokumenLainnya')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1040,7 +1048,8 @@ import ModalDialog from '../modaldialog.vue';
                     <!-- Input file yang tersembunyi -->
                     <input type="file" id="fileInputSuratPenawaran" class="hidden" @change="handleFileUpload1($event)" ref="fileInputSuratPenawaran" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('SuratPenawaran')">
+                    <!-- @click="openFileDialog('SuratPenawaran')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1076,7 +1085,8 @@ import ModalDialog from '../modaldialog.vue';
                     <!-- Input file yang tersembunyi -->
                     <input type="file" id="fileInputProposal" class="hidden" @change="handleFileUpload2($event)" ref="fileInputProposal" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('Proposal')">
+                    <!-- @click="openFileDialog('Proposal')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1112,7 +1122,8 @@ import ModalDialog from '../modaldialog.vue';
                     <!-- Input file yang tersembunyi -->
                     <input type="file" id="fileInputEvaluasi" class="hidden" @change="handleFileUpload3($event)" ref="fileInputEvaluasi" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('Evaluasi')">
+                    <!-- @click="openFileDialog('Evaluasi')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1146,7 +1157,8 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <input type="file" id="fileInputNegosiasi" @change="handleFileUpload4($event)" class="hidden" ref="fileInputNegosiasi" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('Negosiasi')">
+                    <!-- @click="openFileDialog('Negosiasi')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1180,7 +1192,8 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <input type="file" id="fileInputBAKPemilihanMitra" @change="handleFileUpload5($event)" class="hidden" ref="fileInputBAKPemilihanMitra" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('BAK Pemilihan Mitra')">
+                    <!-- @click="openFileDialog('BAK Pemilihan Mitra')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1214,7 +1227,8 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <input type="file" id="fileInputSuratPesanan" @change="handleFileUpload6($event)" class="hidden" ref="fileInputSuratPesanan" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('Surat Pesanan')">
+                    <!-- @click="openFileDialog('Surat Pesanan')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1248,7 +1262,8 @@ import ModalDialog from '../modaldialog.vue';
                   </div>
                   <div class="relative w-full">
                     <input type="file" id="fileInputPKS" @change="handleFileUpload7($event)" class="hidden" ref="fileInputPKS" />
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full" @click="openFileDialog('Surat Pesanan')">
+                    <!-- @click="openFileDialog('Surat Pesanan')" -->
+                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
                       <div class="flex justify-between items-center">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
@@ -1325,7 +1340,7 @@ import ModalDialog from '../modaldialog.vue';
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Upload File</span>
             </div>
           </button>
-          <button v-if="statusAction == 1" @click="SendApprov"
+          <button v-if="statusAction == 1" @click="showPenyelesaianPKSPopup = true"
             :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]': kirimClicked, 'bg-[#E6E6E6] rounded-lg border-[1px] text-[#7F7F80]': !kirimClicked }"
             :disabled="!kirimClicked" class="flex">
             <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
@@ -1333,6 +1348,85 @@ import ModalDialog from '../modaldialog.vue';
             </div>
           </button>
         </div>
+
+        <div v-if="showPenyelesaianPKSPopup" class="fixed inset-0 flex items-center justify-center bg-[#1F2937] bg-opacity-50">
+          <div class="bg-[#FFFFFF] rounded-lg shadow-lg w-[502px] h-[596px]">
+            <div class="flex w-[502px] h-[76px] bg-[#E9F1FB] border-[#DEDEDE] rounded-tl-lg rounded-tr-lg">
+              <h1 class="w-[325px] h-[28px] ml-6 mt-6 font-sans font-bold text-[20px] text-[#000000]">Progress Kemitraan (PKS) Selesai</h1>
+              <button @click="closePenyelesaianPKSPopup" class="text-[#CCCCCC] absolute mt-5 ml-[472px] text-[20px]">&times;</button>
+            </div>
+            <div class="flex flex-col justify-start items-start mt-4 ml-6 mr-8">
+              <h1 class="w-[454px] h-[56px] items-start text-[16px] font-sans font-normal text-[#333333] mb-2">Silahkan mengisi form berikut untuk penyelesaian dokumen PKS.</h1>
+              <div class="flex flex-col w-[454.5px] h-[72px]">
+                <div class="flex items-center">
+                  <h1 class="w-[88px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Nomor PKS</h1>
+                  <span class="text-[#FF5656] font-bold ml-1">*</span>
+                </div>
+                <input
+                  v-model="nomorPKS"
+                  type="text"
+                  placeholder="Masukkan Nomor PKS"
+                  class="w-[454.5px] h-[40px] rounded-md bg-[#FFFFFF] border border-[#E5E7E9] mt-2 pl-4 font-sans text-[14px] text-[#7F7F80] font-extralight outline-none"
+                />
+              </div>
+              <div class="relative flex flex-col w-[454.5px] h-[72px] mt-4">
+                <div ref="datePickerSelesaiContainer" class="flex items-center">
+                  <h1 class="w-[122px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Tanggal Selesai</h1>
+                  <span class="text-[#FF5656] font-bold">*</span>
+                </div>
+                <input
+                  ref="datePickerSelesaiInput"
+                  type="date"
+                  class="custom-date-picker border border-[#E5E7E9] font-sans text-[15px] text-[#9C9C9C] rounded-lg p-[7px] mt-2 hover:bg-[#DBEAFE] cursor-pointer transition-all"
+                  @change="updateDateSelesai"
+                  @blur="hideDatePickerSelesai"
+                />
+              </div>
+              <div class="relative flex flex-col w-[454.5px] h-[72px] mt-4">
+                <div ref="datePickerPerjanjianContainer" class="flex items-center">
+                  <h1 class="w-[190px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Jangka Waktu Perjanjian</h1>
+                  <span class="text-[#FF5656] font-bold">*</span>
+                </div>
+                <input
+                  ref="datePickerPerjanjianInput"
+                  type="date"
+                  class="custom-date-picker border border-[#E5E7E9] font-sans text-[15px] text-[#9C9C9C] rounded-lg p-[7px] mt-2 hover:bg-[#DBEAFE] cursor-pointer transition-all"
+                  @change="updateDatePerjanjian"
+                  @blur="hideDatePickerPerjanjian"
+                />
+              </div>
+              <div class="flex flex-col w-[454.5px] h-[72px] mt-4">
+                <div class="flex items-center">
+                  <h1 class="w-[286px] h-[24px] font-sans text-[16px] font-bold text-[#4D5E80]">Nama Pejabat yang Bertanda Tangan</h1>
+                  <span class="text-[#FF5656] font-bold">*</span>
+                </div>
+                <SelectSearch
+                  :options="optionsPejabat"
+                  placeholder="Pilih staff..."
+                  :initialValue="namaPejabat"
+                  @change="handleSelectionChange"
+                />
+                <span class="absolute mt-[45px] ml-[428px] cursor-pointer">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M5.99967 1.66634C3.60644 1.66634 1.66634 3.60644 1.66634 5.99967C1.66634 8.39291 3.60644 10.333 5.99967 10.333C7.19648 10.333 8.27889 9.84871 9.0638 9.0638C9.84871 8.27889 10.333 7.19648 10.333 5.99967C10.333 3.60644 8.39291 1.66634 5.99967 1.66634ZM0.333008 5.99967C0.333008 2.87006 2.87006 0.333008 5.99967 0.333008C9.12929 0.333008 11.6663 2.87006 11.6663 5.99967C11.6663 7.32398 11.2114 8.54294 10.4503 9.50751L13.4711 12.5283C13.7314 12.7886 13.7314 13.2107 13.4711 13.4711C13.2107 13.7314 12.7886 13.7314 12.5283 13.4711L9.50751 10.4503C8.54294 11.2114 7.32398 11.6663 5.99967 11.6663C2.87006 11.6663 0.333008 9.12929 0.333008 5.99967Z"
+                      fill="#2671D9"
+                    />
+                  </svg>
+                </span>
+              </div>
+              <!-- Tombol Kirim -->
+              <button @click="SendApprov" :disabled="!isFormComplete" class="absolute mt-[450px] ml-[378px] flex">
+                <div :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] text-[#FFFFFF]': isFormComplete, 'bg-[#E6E6E6] text-[#7F7F80]': !isFormComplete }" class="flex items-center justify-center w-[78px] h-[40px] rounded-lg border-[1px]">
+                  <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Kirim</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1408,12 +1502,15 @@ export default {
       showDisetujuiPopup: false,
       fileName: "", // Nama file yang dipilih
       fileSize: "", // Ukuran file yang dipilih
+
       selectedDateSelesai: "", // Untuk menyimpan tanggal selesai
       jangkaWaktuPerjanjian: "",
       showDatePickerSelesai: false,
       showDatePickerPerjanjian: false,
       nomorPKS: "",
-      namaPejabat: "",
+      namaPejabat: null,
+      optionsPejabat: [],
+      showPenyelesaianPKSPopup: false,
 
       dataBerkas: null,
       id: null,
@@ -1679,22 +1776,23 @@ export default {
       const day = ("0" + d.getDate()).slice(-2);
       const month = ("0" + (d.getMonth() + 1)).slice(-2);
       const year = d.getFullYear();
-      return `${day}/${month}/${year}`;
+      return `${day}-${month}-${year}`;
     },
     updateDateSelesai(event) {
       const formattedDate = this.formatDateToDDMMYYYY(event.target.value);
       this.selectedDateSelesai = formattedDate;
-      if (this.jangkaWaktuPerjanjian) {
-        const endDate = this.jangkaWaktuPerjanjian.split(" s.d ")[1];
-        this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
-      }
+      // if (this.jangkaWaktuPerjanjian) {
+      //   const endDate = this.jangkaWaktuPerjanjian.split(" s.d ")[1];
+      //   this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
+      // }
 
-      this.showDatePickerSelesai = false;
+      // this.showDatePickerSelesai = false;
     },
     updateDatePerjanjian(event) {
       const endDate = this.formatDateToDDMMYYYY(event.target.value);
-      this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
-      this.showDatePickerPerjanjian = false;
+      // this.jangkaWaktuPerjanjian = `${this.selectedDateSelesai} s.d ${endDate}`;
+      this.jangkaWaktuPerjanjian = endDate;
+      // this.showDatePickerPerjanjian = false;
     },
     handleClickOutside(event) {
       const datePickerSelesaiContainer = this.$refs.datePickerSelesaiContainer;
@@ -1720,6 +1818,10 @@ export default {
         this.hideDatePicker();
       }
     },
+    handleSelectionChange(option) {
+      this.namaPejabat = option;
+    },
+
     closePenyelesaianPKSPopup() {
       this.showPenyelesaianPKSPopup = false;
     },
@@ -1733,6 +1835,7 @@ export default {
 
     // Popup Selesai
     SendApprov() {
+      this.showPenyelesaianPKSPopup = false;
       this.modalDialog = {
         isVisible: true,
         title: 'Kirim Pengajuan',
@@ -1747,6 +1850,7 @@ export default {
     },
     closeApprov() {
       this.closeModalDialog()
+      this.showPenyelesaianPKSPopup = true;
     },
     successApprov() {
       this.modalSuccess = {
@@ -1996,6 +2100,21 @@ export default {
     // api
     async getDataApi(id) {
       this.isLoading = true;
+      const res1 = await fetchGet('functionary', null, this.$router);
+      if (res1.status == 200) {
+        this.optionsPejabat = res1.data.map(item => ({
+          value: item.fullName,
+          label: item.title
+        }))
+        console.log(res1.data, 'functionary');
+      } else {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Gagal Ambil Data',
+          message: res.data.message ? res.data.message : "Silahkan hubungi admin"
+        }
+      }
       const res = await fetchGet(
         `mitra/staff/pks/proses/${id}`,
         null,
@@ -2110,6 +2229,12 @@ export default {
             this.linkDownloadFile7 = `${baseURL.replace('/api',"")}/download/file/${item.id}`;
           }
         })
+        if (res.data.officialUndersign) {
+          const choosenStaff = res1.data.find(item => item.fullName == res.data.officialUndersign);
+          if (choosenStaff) {
+            this.namaPejabat = { label: choosenStaff.title, value: choosenStaff.fullName };
+          }
+        }
         if (!res.data.isStopClock && res.data.status == "Pengajuan") {
           this.statusAction = 1;
         }
@@ -2137,6 +2262,10 @@ export default {
       this.isLoading = true;
       const form = new FormData()
       form.append('ApprovalNote', this.ApprovalNote)
+      form.append('pksNumber', this.nomorPKS)
+      form.append('officialUndersign', this.namaPejabat.value)
+      form.append('approvalCompletionDate', this.selectedDateSelesai)
+      form.append('endContractDate', this.jangkaWaktuPerjanjian)
       // Display the values
       for (var pair of form.entries()) {
         console.log(pair[0] + ', ' + pair[1]);
