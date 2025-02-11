@@ -1,3 +1,7 @@
+<script setup>
+import { dateParsing } from '@/utils/helper';
+</script>
+
 <template>
   <Loading :isVisible="isLoading" />
   <ModalFailed
@@ -133,7 +137,17 @@
                 dataBerkas?.budgetType || '-' }}</span>
               <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                  dataBerkas?.disposedStaff || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex mt-6 items-center">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Bisnis</h1>
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.bisnisType || '-' }}</span>
+              <div class="flex ml-[288px]">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Kandidat</h1>
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
@@ -156,10 +170,21 @@
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dataBerkas?.user ||
                 '-' }}</span>
               <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Buat
                 </h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
-                  dataBerkas?.submissionDate || '-' }}</span>
+                  dateParsing(dataBerkas?.submissionDate) || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex items-center mt-6">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Due Date</h1>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dateParsing(dataBerkas?.dueDateStaff) ||
+                '-' }}</span>
+              <div class="flex">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Diharapkan Selesai
+                </h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dateParsing(dataBerkas?.expectedDate) || '-' }}</span>
               </div>
             </div>
           </div>
@@ -895,8 +920,33 @@ export default {
     // api
     async getDataApi(base, id) {
       this.isLoading = true;
+      const positionLevel = localStorage.getItem("position");
+      let url = null;
       if (base == "PKS") {
-        const res = await fetchGet(`mitra/manager/pks/incoming-data/${id}`, null, this.$router);
+        if (positionLevel == "PartnershipManager") {
+          url = `mitra/manager/pks/incoming-data/${id}`;
+        }
+        if (positionLevel == "PartnershipVP") {
+          url = `mitra/vp/pks/incoming-data/${id}`;
+        }
+      } else {
+        if (positionLevel == "PartnershipManager") {
+          url = `mitra/manager/mounda/incoming-data/${id}`;
+        }
+        if (positionLevel == "PartnershipVP") {
+          url = `mitra/vp/mounda/incoming-data/${id}`;
+        }
+      }
+      if (!url) {
+        this.isLoading = false;
+        return this.modalFailed = {
+          isVisible: true,
+          title: 'Role Tidak Terdaftar',
+          message: "Posisi anda tidak dapat mengakses halaman ini"
+        }
+      }
+      if (base == "PKS") {
+        const res = await fetchGet(url, null, this.$router);
         if (res.status == 200) {
           this.dataBerkas = res.data;
           res.data.attachmentsPks.forEach((item) => {
@@ -948,7 +998,7 @@ export default {
         }
       } else {
         const res = await fetchGet(
-          `mitra/manager/mounda/incoming-data/${id}`,
+          url,
           null,
           this.$router
         );

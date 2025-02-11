@@ -159,8 +159,42 @@
                   </th>
                   <th class="p-2 border border-[#E5E7E9]">
                     <div class="flex items-center justify-between">
+                      <span>Tipe Bisnis</span>
+                      <svg @click="sortTable('bisnis_type')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                          fill="#93B8EC"
+                        />
+                        <path
+                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                          fill="#93B8EC"
+                        />
+                      </svg>
+                    </div>
+                  </th>
+                  <th class="p-2 border border-[#E5E7E9]">
+                    <div class="flex items-center justify-between">
                       <span>User</span>
                       <svg @click="sortTable('user')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                          fill="#93B8EC"
+                        />
+                        <path
+                          d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                          fill="#93B8EC"
+                        />
+                      </svg>
+                    </div>
+                  </th>
+                  <th class="p-2 border border-[#E5E7E9]">
+                    <div class="flex items-center justify-between">
+                      <span>Tanggal Diharapkan Selesai</span>
+                      <svg @click="sortTable('expected_date')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           fill-rule="evenodd"
                           clip-rule="evenodd"
@@ -200,7 +234,9 @@
                   <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.judul }}</td>
                   <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.nomor }}</td>
                   <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.tipe }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.bisnis_type }}</td>
                   <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.user }}</td>
+                  <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.expected_date }}</td>
                   <td class="p-2 py-4 border border-[#E5E7E9]">
                     <span
                       :class="[
@@ -217,18 +253,8 @@
                     </span>
                   </td>
                   <td class="p-2 py-4 border border-[#E5E7E9] relative">
-                    <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center w-[24px] h-[24px] rounded-lg bg-[#E5E7E9]">
-                      <svg width="2" height="8" viewBox="0 0 2 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M1 1.8125C0.91712 1.8125 0.837634 1.77958 0.779029 1.72097C0.720424 1.66237 0.6875 1.58288 0.6875 1.5C0.6875 1.41712 0.720424 1.33763 0.779029 1.27903C0.837634 1.22042 0.91712 1.1875 1 1.1875C1.08288 1.1875 1.16237 1.22042 1.22097 1.27903C1.27958 1.33763 1.3125 1.41712 1.3125 1.5C1.3125 1.58288 1.27958 1.66237 1.22097 1.72097C1.16237 1.77958 1.08288 1.8125 1 1.8125ZM1 4.3125C0.91712 4.3125 0.837634 4.27958 0.779029 4.22097C0.720424 4.16237 0.6875 4.08288 0.6875 4C0.6875 3.91712 0.720424 3.83763 0.779029 3.77903C0.837634 3.72042 0.91712 3.6875 1 3.6875C1.08288 3.6875 1.16237 3.72042 1.22097 3.77903C1.27958 3.83763 1.3125 3.91712 1.3125 4C1.3125 4.08288 1.27958 4.16237 1.22097 4.22097C1.16237 4.27958 1.08288 4.3125 1 4.3125ZM1 6.8125C0.91712 6.8125 0.837634 6.77958 0.779029 6.72097C0.720424 6.66237 0.6875 6.58288 0.6875 6.5C0.6875 6.41712 0.720424 6.33763 0.779029 6.27903C0.837634 6.22042 0.91712 6.1875 1 6.1875C1.08288 6.1875 1.16237 6.22042 1.22097 6.27903C1.27958 6.33763 1.3125 6.41712 1.3125 6.5C1.3125 6.58288 1.27958 6.66237 1.22097 6.72097C1.16237 6.77958 1.08288 6.8125 1 6.8125Z"
-                          stroke="#333333"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    <div v-if="actionDropdownIndex === index" class="absolute right-0 mt-2 w-[160px] h-[40px] flex items-center rounded-lg bg-[#FFFFFF] border border-[#E5E7E9] hover:bg-[#DBEAFE] shadow-lg z-10">
-                      <svg width="16" height="12" class="ml-4" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <button @click.stop="toggleActionDropdown(index)" class="flex items-center justify-center h-[24px] rounded-lg bg-[#E5E7E9]">
+                      <svg width="16" height="12" class="m-2" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           fill-rule="evenodd"
                           clip-rule="evenodd"
@@ -236,6 +262,16 @@
                           fill="#2671D9"
                         />
                       </svg>
+                    </button>
+                    <div v-if="actionDropdownIndex === index" class="absolute right-[60px] bottom-[10px] h-[40px] flex items-center rounded-lg bg-[#FFFFFF] border border-[#E5E7E9] hover:bg-[#DBEAFE] shadow-lg z-10">
+                      <!-- <svg width="16" height="12" class="ml-4" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M8.00051 1.66667C5.20279 1.66667 2.82714 3.48116 1.98946 5.99938C1.98897 6.00085 1.98897 6.00266 1.98946 6.00413C2.82818 8.52053 5.20293 10.3333 7.99934 10.3333C10.7971 10.3333 13.1727 8.51884 14.0104 6.00062C14.0109 5.99915 14.0109 5.99734 14.0104 5.99587C13.1717 3.47947 10.7969 1.66667 8.00051 1.66667ZM0.72429 5.57853C1.73777 2.53181 4.61153 0.333334 8.00051 0.333334C11.3879 0.333334 14.2606 2.52976 15.2753 5.57427C15.3669 5.84915 15.367 6.14654 15.2756 6.42148C14.2621 9.4682 11.3883 11.6667 7.99934 11.6667C4.61194 11.6667 1.73927 9.47024 0.72454 6.42573C0.632921 6.15085 0.632834 5.85346 0.72429 5.57853ZM7.99997 4.66667C7.26359 4.66667 6.66663 5.26362 6.66663 6C6.66663 6.73638 7.26359 7.33333 7.99997 7.33333C8.73635 7.33333 9.3333 6.73638 9.3333 6C9.3333 5.26362 8.73635 4.66667 7.99997 4.66667ZM5.3333 6C5.3333 4.52724 6.52721 3.33333 7.99997 3.33333C9.47273 3.33333 10.6666 4.52724 10.6666 6C10.6666 7.47276 9.47273 8.66667 7.99997 8.66667C6.52721 8.66667 5.3333 7.47276 5.3333 6Z"
+                          fill="#2671D9"
+                        />
+                      </svg> -->
                       <button @click="() => navigateToDetail(item.tipe, item.did)" class="block flex-grow px-4 py-2 text-[14px] font-sans font-normal text-[#333333] text-left">View</button>
                     </div>
                   </td>
@@ -270,7 +306,7 @@
 
 <script>
 import { fetchGet } from '@/api/apiFunction';
-import { parseStatusAproval } from '@/utils/helper';
+import { parseStatusAproval, dateParsing } from '@/utils/helper';
 import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 
@@ -480,7 +516,7 @@ export default {
 		async getDataApi() {
       this.isLoading = true;
 			let boxResult = new Array;
-      const params = { staffName: localStorage.getItem('username'), status: 'P' }
+      const params = { status: 'P' }
 			const res = await fetchGet("mitra/staff/mounda/incoming-data", params, this.$router);
 			if (res.status == 200) {
 				const cleanData = res.data.map((item) => ({
@@ -488,6 +524,8 @@ export default {
 					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
 					user: item.user,
+          expected_date: dateParsing(item.expectedDate),
+          bisnis_type: item.bisnisType,
 					status: parseStatusAproval(item.positionLevel, item.status),
           did: item.id
 				}))
@@ -508,6 +546,8 @@ export default {
 					nomor: item.submissionNumber,
 					tipe: "PKS",
 					user: item.user,
+          expected_date: dateParsing(item.expectedDate),
+          bisnis_type: item.bisnisType,
 					status: parseStatusAproval(item.positionLevel, item.status),
           did: item.id
 				}))
@@ -523,6 +563,7 @@ export default {
         }
 			}
 			this.tableData = boxResult;
+      this.filterOptions[1].subOptions = [...new Set(boxResult.map(item => item.status))];
       this.isLoading = false;
 		}
   },

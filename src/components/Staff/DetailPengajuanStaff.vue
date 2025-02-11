@@ -3,6 +3,7 @@ import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
+import { dateParsing } from '@/utils/helper';
 </script>
 
 <template>
@@ -57,7 +58,7 @@ import ModalDialog from '../modaldialog.vue';
         </div>
         <transition name="fade">
           <div v-if="isDropdownArrowOpen"
-            class="flex flex-col w-[1046px] h-[320px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
+            class="flex flex-col w-[1046px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
@@ -95,7 +96,17 @@ import ModalDialog from '../modaldialog.vue';
                 dataBerkas?.budgetType || '-' }}</span>
               <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                  dataBerkas?.disposedStaff || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex mt-6 items-center">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Bisnis</h1>
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.bisnisType || '-' }}</span>
+              <div class="flex ml-[288px]">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Kandidat</h1>
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
@@ -118,10 +129,21 @@ import ModalDialog from '../modaldialog.vue';
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dataBerkas?.user ||
                 '-' }}</span>
               <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Buat
                 </h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
-                  dataBerkas?.submissionDate || '-' }}</span>
+                  dateParsing(dataBerkas?.submissionDate) || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex items-center mt-6">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Due Date</h1>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dateParsing(dataBerkas?.dueDateStaff) ||
+                '-' }}</span>
+              <div class="flex">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Diharapkan Selesai
+                </h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dateParsing(dataBerkas?.expectedDate) || '-' }}</span>
               </div>
             </div>
           </div>
@@ -597,7 +619,7 @@ import ModalDialog from '../modaldialog.vue';
           <button @click="SendApprov" class="absolute bottom-[12px] right-[25px] flex">
             <div
               class="flex items-center justify-center w-[72px] h-[40px] rounded-lg bg-[#2671D9] hover:bg-[#1E5BB7] border-[#FFFFFF] border-[1px]">
-              <span class="text-[14px] font-sans font-medium text-[#FFFFFF] ml-3 mt-[9px] mr-3 mb-[9px]">Terima</span>
+              <span class="text-[14px] font-sans font-medium text-[#FFFFFF] ml-3 mt-[9px] mr-3 mb-[9px]">Proses</span>
             </div>
           </button>
         </div>
@@ -717,8 +739,8 @@ export default {
       this.showApprovPopup = false;
       this.modalDialog = {
         isVisible: true,
-        title: 'Terima Pengajuan',
-        message: `Apakan anda yakin akan menerima pengajuan ini`,
+        title: 'Proses Pengajuan',
+        message: `Apakan anda yakin akan memproses pengajuan ini`,
         okFunction: this.openApprov,
         closeFunction: this.closeApprov
       }
@@ -734,15 +756,15 @@ export default {
     successApprov() {
       this.modalSuccess = {
         isVisible: true,
-        title: 'Terima Pengajuan Berhasil',
-        message: `Pengajuan berhasil diterima`,
+        title: 'Proses Pengajuan Berhasil',
+        message: `Pengajuan berhasil diproses`,
         closeFunction: this.closeSelesaiApprov
       }
     },
     failApprov(data) {
       this.modalFailed = {
         isVisible: true,
-        title: 'Terima Pengajuan Gagal',
+        title: 'Proses Pengajuan Gagal',
         message: data?.message ? data.message : "Silahkan hubungi admin"
       }
     },
@@ -872,7 +894,7 @@ export default {
     async getDataApi(base, id) {
       this.isLoading = true;
       if (base == "PKS") {
-        const res = await fetchGet(`mitra/manager/pks/incoming-data/${id}`, null, this.$router);
+        const res = await fetchGet(`mitra/staff/pks/incoming-data/${id}`, null, this.$router);
         if (res.status == 200) {
           this.dataBerkas = res.data;
           res.data.attachmentsPks.forEach((item) => {

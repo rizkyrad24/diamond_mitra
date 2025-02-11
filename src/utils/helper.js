@@ -50,17 +50,19 @@ export function parseStatusAproval(positionLevel, status) {
 export function saveDataLogin(dataUser) {
   localStorage.setItem('access', dataUser.token);
   localStorage.setItem('username', dataUser.username);
-  localStorage.setItem('firsName', dataUser.firsName);
+  localStorage.setItem('firstName', dataUser.firstName);
   localStorage.setItem('lastName', dataUser.lastName);
   localStorage.setItem('position', dataUser.role);
+  localStorage.setItem('bisnisType', dataUser.bisnisType);
 }
 
 export function clearDataLogin() {
   localStorage.removeItem('access');
   localStorage.removeItem('username');
-  localStorage.removeItem('firsName');
+  localStorage.removeItem('firstName');
   localStorage.removeItem('lastName');
   localStorage.removeItem('position');
+  localStorage.removeItem('bisnisType');
 }
 
 export function mapperStatus(positionLevel, status, attachments, isStopClock) {
@@ -68,6 +70,7 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
     file1: null,
     file2: null,
     file3: null,
+    file3A: null,
     file4: null,
     file5: null,
     file6: null,
@@ -82,6 +85,9 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
     }
     if (item.fileType == 'Evaluasi') {
       fileKemitraan['file3'] = item.fileName
+    }
+    if (item.fileType == 'MoU/NDA') {
+      fileKemitraan['file3A'] = item.fileName
     }
     if (item.fileType == 'Negosiasi') {
       fileKemitraan['file4'] = item.fileName
@@ -102,6 +108,12 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
   if (status == 'Ditolak') {
     return ['Ditolak', 'bg-[#FFE5E6] text-[#FF5656] border-[#FD8A8A]']
   }
+  if (status == 'Pengajuan StopClock') {
+    return ['Pengajuan StopClock', 'bg-[#FFE5E6] text-[#FF5656] border-[#FD8A8A]']
+  }
+  if (status == 'Pengajuan StartClock') {
+    return ['Pengajuan StartClock', 'bg-[#FFE5E6] text-[#FF5656] border-[#FD8A8A]']
+  }
   if ('Revisi'.includes(status)) {
     return ['Revisi', 'bg-[#FFE5E6] text-[#FF8000] border-[#FFD6AD]']
   }
@@ -116,6 +128,9 @@ export function mapperStatus(positionLevel, status, attachments, isStopClock) {
   }
   if (positionLevel == 3) {
     return ['Waiting Apv Direksi', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
+  }
+  if (positionLevel == 7 && fileKemitraan.file3A) {
+    return ['MoU/NDA', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
   }
   if (positionLevel == 4) {
     return ['Masuk Kemitraan', 'bg-[#E2FCF3] text-[#0EA976] border-[#8ADFC3]']
@@ -183,7 +198,7 @@ export function mapperKeterangan(positionLevel, status) {
 }
 
 export const dateParsing = (input) => {
-  if (input.includes("-")) {
+  if (input && input.includes("-")) {
     const [year, month, date] = input.split("-")
     return `${date}-${month}-${year}`
   }
@@ -191,12 +206,25 @@ export const dateParsing = (input) => {
 }
 
 export const dueDateParsing = (input) => {
-  if (input.includes("-")) {
-    const targetDate = new Date('2025-01-20');
+  if (input && input.includes("-")) {
+    const targetDate = new Date(input);
     const today = new Date();
     const differenceInMillis = targetDate - today;
     const differenceInDays = Math.ceil(differenceInMillis / (1000 * 60 * 60 * 24));
     return differenceInDays
   }
   return input
+}
+
+export const mapperStatusPerjanjian = (endContract) => {
+  if (endContract) {
+    const targetDate = new Date(endContract);
+    const today = new Date();
+    if (targetDate > today) {
+      return "Aktif"
+    } else {
+      return "Tidak Aktif"
+    }
+  }
+  return ""
 }

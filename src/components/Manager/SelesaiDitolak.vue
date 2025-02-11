@@ -123,7 +123,7 @@
                   </th>
                   <th class="p-2 border border-[#E5E7E9]">
                     <div class="flex items-center justify-between">
-                      <span>No</span>
+                      <span>No Pengajuan</span>
                       <svg @click="sortTable('nomor')" width="14" height="10" viewBox="0 0 14 10" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -431,7 +431,7 @@ export default {
 					judul: item.partnershipTitle,
 					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
-					pelaksana: 'Pusat',
+					pelaksana: item.disposedStaff,
 					status: item.status,
           statusapp: parseStatusAproval(item.positionLevel, item.status),
           did: item.id
@@ -470,7 +470,7 @@ export default {
 					judul: item.partnershipTitle,
 					nomor: item.submissionNumber,
 					tipe: "PKS",
-					pelaksana: 'Pusat',
+					pelaksana: item.disposedStaff,
 					status: item.status,
           statusapp: parseStatusAproval(item.positionLevel, item.status),
           did: item.id

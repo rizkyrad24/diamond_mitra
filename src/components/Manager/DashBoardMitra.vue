@@ -44,7 +44,7 @@
       <div class="flex flex-row">
         <div class="w-[338px] h-[88px] border-[1px] rounded-lg border-[#0EA976] bg-[#0EA976] mt-6 ml-4 flex items-center justify-between px-4">
           <div>
-            <h1 class="text-[16px] font-sans font-normal text-[#FFFFFF]">Pengajuan H+7 Due Date</h1>
+            <h1 class="text-[16px] font-sans font-normal text-[#FFFFFF]">Pengajuan Dalam Proses</h1>
             <span class="text-[24px] font-sans font-bold text-[#FFFFFF]">{{ summaryData?.totalHplus7 }}</span>
           </div>
           <svg width="39" height="40" viewBox="0 0 39 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -290,23 +290,6 @@
                 </th>
                 <th class="p-2 border border-[#E5E7E9]">
                   <div class="flex items-center justify-between">
-                    <span>Total Selesai</span>
-                    <svg @click="sortTable('totalSelesai')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
-                        fill="#93B8EC"
-                      />
-                      <path
-                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
-                        fill="#93B8EC"
-                      />
-                    </svg>
-                  </div>
-                </th>
-                <th class="p-2 border border-[#E5E7E9]">
-                  <div class="flex items-center justify-between">
                     <span>Total Diproses</span>
                     <svg @click="sortTable('totalDiproses')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -322,6 +305,58 @@
                     </svg>
                   </div>
                 </th>
+                <th class="p-2 border border-[#E5E7E9]">
+                  <div class="flex items-center justify-between">
+                    <span>Total Direvisi</span>
+                    <svg @click="sortTable('totalRevisi')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                        fill="#93B8EC"
+                      />
+                      <path
+                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                        fill="#93B8EC"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th class="p-2 border border-[#E5E7E9]">
+                  <div class="flex items-center justify-between">
+                    <span>Total Ditolak</span>
+                    <svg @click="sortTable('totalDitolak')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                        fill="#93B8EC"
+                      />
+                      <path
+                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                        fill="#93B8EC"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                <th class="p-2 border border-[#E5E7E9]">
+                  <div class="flex items-center justify-between">
+                    <span>Total Selesai</span>
+                    <svg @click="sortTable('totalSelesai')" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.4252 0.144043C10.7073 0.144043 10.9359 0.364674 10.9359 0.636836L10.9359 8.3174L13.1282 6.20189C13.3276 6.00944 13.651 6.00944 13.8504 6.20189C14.0499 6.39434 14.0499 6.70636 13.8504 6.89881L10.7863 9.85556C10.6906 9.94798 10.5607 9.9999 10.4252 9.9999C10.2898 9.9999 10.1599 9.94798 10.0641 9.85556L7.00001 6.89881C6.80057 6.70636 6.80057 6.39434 7.00001 6.20189C7.19944 6.00944 7.52279 6.00944 7.72223 6.20189L9.91454 8.3174L9.91454 0.636836C9.91454 0.364674 10.1432 0.144043 10.4252 0.144043Z"
+                        fill="#93B8EC"
+                      />
+                      <path
+                        d="M3.21369 0.144824C3.41312 -0.0476236 3.73647 -0.0476236 3.9359 0.144824L7.00001 3.10158C7.19945 3.29403 7.19945 3.60605 7.00001 3.79849C6.80058 3.99094 6.47723 3.99094 6.27779 3.79849L4.08548 1.68299V9.36355C4.08548 9.63571 3.85684 9.85634 3.57479 9.85634C3.29275 9.85634 3.06411 9.63571 3.06411 9.36355V1.68299L0.871794 3.79849C0.672359 3.99094 0.349011 3.99094 0.149576 3.79849C-0.0498587 3.60605 -0.0498587 3.29403 0.149576 3.10158L3.21369 0.144824Z"
+                        fill="#93B8EC"
+                      />
+                    </svg>
+                  </div>
+                </th>
+                
                 <th class="p-2 border border-[#E5E7E9]">
                   <div class="flex items-center justify-between">
                     <span>Total Stop Clock</span>
@@ -346,8 +381,10 @@
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ (currentPage - 1) * selectedValue + index + 1 }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.pic }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.jumlahPengajuan }}</td>
-                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalSelesai }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalDiproses }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalRevisi }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalDitolak }}</td>
+                <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalSelesai }}</td>
                 <td class="p-2 py-4 border border-[#E5E7E9]">{{ item.totalStopClock }}</td>
               </tr>
             </tbody>
@@ -811,30 +848,36 @@ export default {
 				const cleanData1 = res.data.listMounda.map((item) => ({
 					pic: item.disposedStaff,
 					jumlahPengajuan: item.jmlPengajuan,
-					totalSelesai: item.proses,
-					totalDiproses: item.selesai,
-					totalStopClock: item.stopclock
+					totalSelesai: item.selesai,
+					totalDiproses: item.proses,
+					totalStopClock: item.stopclock,
+          totalRevisi: item.revisi,
+          totalDitolak: item.tolak
 				}))
 				boxResult = boxResult.concat(cleanData1)
         const cleanData2 = res.data.listPks.map((item) => ({
 					pic: item.disposedStaff,
 					jumlahPengajuan: item.jmlPengajuan,
-					totalSelesai: item.proses,
-					totalDiproses: item.selesai,
-					totalStopClock: item.stopclock
+					totalSelesai: item.selesai,
+					totalDiproses: item.proses,
+					totalStopClock: item.stopclock,
+          totalRevisi: item.revisi,
+          totalDitolak: item.tolak
 				}))
 				boxResult = boxResult.concat(cleanData2)
         const aggregated = Object.values(
           boxResult.reduce((acc, curr) => {
             // Jika kategori belum ada, inisialisasi dengan nilai awal
             if (!acc[curr.pic]) {
-              acc[curr.pic] = { pic: curr.pic, jumlahPengajuan: 0, totalSelesai: 0, totalDiproses: 0, totalStopClock: 0, };
+              acc[curr.pic] = { pic: curr.pic, jumlahPengajuan: 0, totalSelesai: 0, totalDiproses: 0, totalStopClock: 0, totalRevisi: 0, totalDitolak: 0 };
             }
             // Tambahkan nilai jumlahPengajuan dan totalSelesai ke kategori yang sesuai
             acc[curr.pic].jumlahPengajuan += curr.jumlahPengajuan;
             acc[curr.pic].totalSelesai += curr.totalSelesai;
             acc[curr.pic].totalDiproses += curr.totalDiproses;
             acc[curr.pic].totalStopClock += curr.totalStopClock;
+            acc[curr.pic].totalRevisi += curr.totalRevisi;
+            acc[curr.pic].totalDitolak += curr.totalDitolak;
             return acc;
           }, {})
         );

@@ -3,6 +3,7 @@ import Loading from '../loading.vue';
 import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
+import { dateParsing } from '@/utils/helper';
 // import SelectSearch from '../SelectSearch/SelectSearch.vue';
 </script>
 
@@ -105,7 +106,7 @@ import ModalDialog from '../modaldialog.vue';
                       <div>
                         <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Surat Penawaran</div>
                         <div class="mt-[12px] ml-[38px]">
-                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName1 }}</p>
+                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName1 }}</p>
                           <p class="w-[30px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize1 }}</p>
                         </div>
                       </div>
@@ -137,7 +138,7 @@ import ModalDialog from '../modaldialog.vue';
                       <div>
                         <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Proposal</div>
                         <div class="mt-[12px] ml-[38px]">
-                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName2 }}</p>
+                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName2 }}</p>
                           <p class="w-[30px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize2 }}</p>
                         </div>
                       </div>
@@ -169,7 +170,7 @@ import ModalDialog from '../modaldialog.vue';
                       <div>
                         <div class="font-sans text-[#333333] text-[12px] font-normal">MoU/NDA</div>
                         <div class="mt-[12px] ml-[38px]">
-                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName3 }}</p>
+                          <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName3 }}</p>
                           <p class="w-[30px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize3 }}</p>
                         </div>
                       </div>
@@ -203,7 +204,7 @@ import ModalDialog from '../modaldialog.vue';
         </div>
         <transition name="fade">
           <div v-if="isDropdownArrowOpen"
-            class="flex flex-col w-[1046px] h-[320px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
+            class="flex flex-col w-[1046px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
@@ -241,7 +242,17 @@ import ModalDialog from '../modaldialog.vue';
                 dataBerkas?.budgetType || '-' }}</span>
               <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                  dataBerkas?.disposedStaff || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex mt-6 items-center">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Bisnis</h1>
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.bisnisType || '-' }}</span>
+              <div class="flex ml-[288px]">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Kandidat</h1>
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
@@ -264,10 +275,21 @@ import ModalDialog from '../modaldialog.vue';
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dataBerkas?.user ||
                 '-' }}</span>
               <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Buat
                 </h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
-                  dataBerkas?.submissionDate || '-' }}</span>
+                  dateParsing(dataBerkas?.submissionDate) || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex items-center mt-6">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Due Date</h1>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dateParsing(dataBerkas?.dueDateStaff) ||
+                '-' }}</span>
+              <div class="flex">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Diharapkan Selesai
+                </h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dateParsing(dataBerkas?.expectedDate) || '-' }}</span>
               </div>
             </div>
           </div>

@@ -229,7 +229,7 @@ import navaction from './navaction.vue';
       <div @click="actionDrop" class="flex items-center space-x-2 cursor-pointer">
         <!-- User Avatar -->
         <div class="w-[24px] h-[24px] bg-[#C7E5D7] text-[10px] font-sans rounded-full font-bold text-[#333333] flex items-center justify-center">J</div>
-        <div class="text-[16px] text-[#666666] font-semibold font-sans">John Doe</div>
+        <div class="text-[16px] text-[#666666] font-semibold font-sans">{{ fullName }}</div>
       </div>
       <navaction v-show="isAction" />
     </div>
@@ -244,6 +244,7 @@ export default {
       showHistoryPopup: false,
       selected: null,
       isAction: false,
+      fullName: ''
     };
   },
   methods: {
@@ -257,6 +258,9 @@ export default {
       this.isAction = !this.isAction
     },
   },
+  mounted() {
+    this.fullName = `${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`;
+  }
 };
 </script>
 

@@ -4,6 +4,7 @@ import ModalFailed from '../modalfailed.vue';
 import ModalSuccess from '../modalsuccess.vue';
 import ModalDialog from '../modaldialog.vue';
 import SelectSearch from '../SelectSearch/SelectSearch.vue';
+import { dateParsing } from '@/utils/helper';
 </script>
 
 <template>
@@ -49,14 +50,14 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
             <rect width="6" height="28" fill="#1F5AAD" />
           </svg>
           <h1 class="w-[825px] h-[56px] font-sans text-[20px] text-[#333333] mt-4 ml-[5px] font-semibold">Detail Pengajuan</h1>
-          <div class="relative mt-4 mb-4 items-start w-[209px] h-[72px] border-[1px] border-[#E5E7E9] rounded-md">
-            <div class="w-[209px] h-[29px] border-[1px] border-[#E5E7E9] rounded-tl-md rounded-tr-md bg-[#FFB200]">
+          <div class="relative mt-4 mb-4 items-start w-[209px] min-h-[72px] border-[1px] border-[#E5E7E9] rounded-md">
+            <div :class="{'bg-[#FFB200]': !isProgressFinish, 'bg-[#0ea976]': isProgressFinish}" class="w-[209px] h-[29px] border-[1px] border-[#E5E7E9] rounded-tl-md rounded-tr-md">
               <h1 class="mt-[7px] ml-4 w-[177px] h-[15px] font-sans text-[10px] text-[#333333] font-medium">Progress Kemitraan</h1>
             </div>
             <div class="flex items-center">
-              <h1 class="w-[79px] h-[27px] font-sans text-[18px] font-bold text-[#FFB200] ml-4 mb-2">Proposal</h1>
-              <button @click="showProgressPKSPopupStaff = true" class="ml-[80px]">
-                <svg width="46" height="45" viewBox="0 0 46 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <h1 :class="{'text-[#FFB200]': !isProgressFinish, 'text-[#0ea976]': isProgressFinish}" class="w-[150px] h-auto font-sans text-[18px] font-bold ml-4 my-2">{{ progress }}</h1>
+              <button @click="showProgressPKSPopupStaff = true" class="ml-[9px]">
+                <svg v-if="!isProgressFinish" width="46" height="45" viewBox="0 0 46 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g filter="url(#filter0_d_1290_16355)">
                     <g opacity="0.4" filter="url(#filter1_d_1290_16355)">
                       <path d="M19 26C23.1421 26 26.5 22.6421 26.5 18.5C26.5 14.3579 23.1421 11 19 11C14.8579 11 11.5 14.3579 11.5 18.5C11.5 22.6421 14.8579 26 19 26Z" fill="#FFB200" />
@@ -90,6 +91,13 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                       <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1290_16355" result="shape" />
                     </filter>
                   </defs>
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg"
+                  class="text-[#0EA976] bg-[#E2FCF3] rounded-full w-[15px] h-[15px] absolute top-[42px] ml-[5px]"
+                  viewBox="0 0 21 19" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M16.707 4.293a1 1 0 00-1.414 0L8 11.586 4.707 8.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+                    clip-rule="evenodd" />
                 </svg>
               </button>
             </div>
@@ -130,7 +138,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Surat Penawaran</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName1 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName1 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize1 }} MB</p>
                           </div>
                         </div>
@@ -182,7 +190,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Proposal</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName2 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName2 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize2 }} MB</p>
                           </div>
                         </div>
@@ -234,7 +242,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Evaluasi</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName3 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName3 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize3 }} MB</p>
                           </div>
                         </div>
@@ -286,7 +294,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Negosiasi</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName4 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName4 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize4 }} MB</p>
                           </div>
                         </div>
@@ -338,7 +346,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen BAK Pemilihan Mitra</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName5 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName5 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize5 }} MB</p>
                           </div>
                         </div>
@@ -390,7 +398,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen Surat Pesanan</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName6 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName6 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize6 }} MB</p>
                           </div>
                         </div>
@@ -442,7 +450,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                         <div>
                           <div class="font-sans text-[#333333] text-[12px] font-normal">Dokumen PKS</div>
                           <div class="mt-[12px] ml-[38px]">
-                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px]">{{ fileName7 }}</p>
+                            <p class="w-[200px] h[-12px] text-[#333333] text-[9.06px] truncate">{{ fileName7 }}</p>
                             <p class="w-[200px] h-[11px] text-[#9E9E9E] text-[7.77px]">{{ fileSize7 }} MB</p>
                           </div>
                         </div>
@@ -484,7 +492,7 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
         </div>
         <transition name="fade">
           <div v-if="isDropdownArrowOpen"
-            class="flex flex-col w-[1046px] h-[320px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
+            class="flex flex-col w-[1046px] bg-[#FFFFFF] border-collapse rounded-bl-md rounded-br-md border-[#E5E7E9] border-[1px] ml-4 px-6 py-6">
             <div class="flex items-center">
               <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">No. Permintaan</h1>
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
@@ -522,7 +530,17 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                 dataBerkas?.budgetType || '-' }}</span>
               <div class="flex ml-[288px]">
                 <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Pelaksana</h1>
-                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
+                  dataBerkas?.disposedStaff || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex mt-6 items-center">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Tipe Bisnis</h1>
+              <span class="w-[103px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{
+                dataBerkas?.bisnisType || '-' }}</span>
+              <div class="flex ml-[288px]">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold">Kandidat</h1>
+                <span class="w-[300px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-[18px]">{{
                   dataBerkas?.partnershipCandidate || '-' }}</span>
               </div>
             </div>
@@ -545,10 +563,21 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
               <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dataBerkas?.user ||
                 '-' }}</span>
               <div class="flex">
-                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Buat
                 </h1>
                 <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
-                  dataBerkas?.submissionDate || '-' }}</span>
+                  dateParsing(dataBerkas?.submissionDate) || '-' }}</span>
+              </div>
+            </div>
+            <div class="flex items-center mt-6">
+              <h1 class="w-[130px] h-[17px] font-sans text-[#333333] text-[14px] font-semibold">Due Date</h1>
+              <span class="w-[92px] h-[17px] text-[#7F7F80] font-sans font-thin text-[14px] ml-4">{{ dateParsing(dataBerkas?.dueDateStaff) ||
+                '-' }}</span>
+              <div class="flex">
+                <h1 class="w-[130px] h-[17px] font-sans text-[14px] text-[#333333] font-semibold ml-[300px]">Tanggal Diharapkan Selesai
+                </h1>
+                <span class="w-[112px] h-[17px] font-sans font-thin text-[#7F7F80] text-[14px] ml-4">{{
+                  dateParsing(dataBerkas?.expectedDate) || '-' }}</span>
               </div>
             </div>
           </div>
@@ -771,8 +800,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputKKB" class="hidden" @change="handleFileChange('KKB', $event)" ref="fileInputKKB" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('KKB')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-5">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.KKB?.fileName || "Belum diupload" }}
@@ -809,8 +838,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputKKR" class="hidden" @change="handleFileChange('KKR', $event)" ref="fileInputKKR" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('KKR')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.KKR?.fileName || "Belum diupload" }}
@@ -847,8 +876,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputKKF" class="hidden" @change="handleFileChange('KKF', $event)" ref="fileInputKKF" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('KKF')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.KKF?.fileName || "Belum diupload" }}
@@ -885,8 +914,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputKKO" class="hidden" @change="handleFileChange('KKO', $event)" ref="fileInputKKO" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('KKO')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.KKO?.fileName || "Belum diupload" }}
@@ -923,8 +952,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputProposalMitra" class="hidden" @change="handleFileChange('ProposalMitra', $event)" ref="fileInputProposalMitra" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('ProposalMitra')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.ProposalMitra?.fileName || "Belum diupload" }}
@@ -961,8 +990,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputDokumenSuratMenyurat" class="hidden" @change="handleFileChange('DokumenSuratMenyurat', $event)" ref="fileInputDokumenSuratMenyurat" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('DokumenSuratMenyurat')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.DokumenSuratMenyurat?.fileName || "Belum diupload" }}
@@ -999,8 +1028,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <!-- <input type="file" id="fileInputDokumenLainnya" class="hidden" @change="handleFileChange('DokumenLainnya', $event)" ref="fileInputDokumenLainnya" /> -->
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('DokumenLainnya')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileDetails.DokumenLainnya?.fileName || "Belum diupload" }}
@@ -1049,8 +1078,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <input type="file" id="fileInputSuratPenawaran" class="hidden" @change="handleFileUpload1($event)" ref="fileInputSuratPenawaran" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('SuratPenawaran')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName1 || "Belum diupload" }}
@@ -1086,8 +1115,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <input type="file" id="fileInputProposal" class="hidden" @change="handleFileUpload2($event)" ref="fileInputProposal" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('Proposal')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName2 || "Belum diupload" }}
@@ -1123,8 +1152,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                     <input type="file" id="fileInputEvaluasi" class="hidden" @change="handleFileUpload3($event)" ref="fileInputEvaluasi" />
                     <!-- Tombol yang menampilkan nama file dan ukuran -->
                     <!-- @click="openFileDialog('Evaluasi')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName3 || "Belum diupload" }}
@@ -1158,8 +1187,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   <div class="relative w-full">
                     <input type="file" id="fileInputNegosiasi" @change="handleFileUpload4($event)" class="hidden" ref="fileInputNegosiasi" />
                     <!-- @click="openFileDialog('Negosiasi')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName4 || "Belum diupload" }}
@@ -1193,8 +1222,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   <div class="relative w-full">
                     <input type="file" id="fileInputBAKPemilihanMitra" @change="handleFileUpload5($event)" class="hidden" ref="fileInputBAKPemilihanMitra" />
                     <!-- @click="openFileDialog('BAK Pemilihan Mitra')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName5 || "Belum diupload" }}
@@ -1228,8 +1257,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   <div class="relative w-full">
                     <input type="file" id="fileInputSuratPesanan" @change="handleFileUpload6($event)" class="hidden" ref="fileInputSuratPesanan" />
                     <!-- @click="openFileDialog('Surat Pesanan')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName6 || "Belum diupload" }}
@@ -1263,8 +1292,8 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                   <div class="relative w-full">
                     <input type="file" id="fileInputPKS" @change="handleFileUpload7($event)" class="hidden" ref="fileInputPKS" />
                     <!-- @click="openFileDialog('Surat Pesanan')" -->
-                    <button class="ml-4 block text-left p-2 bg-[#FFFFFF] w-full">
-                      <div class="flex justify-between items-center">
+                    <button class="ml-4 block text-left p-2 w-full">
+                      <div class="flex justify-between items-center pe-4">
                         <div class="overflow-hidden">
                           <span class="block text-sm font-semibold text-[#333333] font-sans text-[14px] truncate">
                             {{ fileName7 || "belum diupload" }}
@@ -1334,12 +1363,12 @@ import SelectSearch from '../SelectSearch/SelectSearch.vue';
                 Minor</span>
             </div>
           </button>
-          <button v-if="statusAction == 1" @click="SendFile"
+          <!-- <button v-if="statusAction == 1" @click="SendFile"
             class="flex bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]">
             <div class="flex items-center justify-center rounded-lg border-[#FFFFFF] border-[1px] px-2">
               <span class="text-[14px] font-sans font-semibold ml-3 mt-[9px] mr-3 mb-[9px]">Upload File</span>
             </div>
-          </button>
+          </button> -->
           <button v-if="statusAction == 1" @click="showPenyelesaianPKSPopup = true"
             :class="{ 'bg-[#2671D9] hover:bg-[#1E5BB7] rounded-lg border-[1px] text-[#FFFFFF]': kirimClicked, 'bg-[#E6E6E6] rounded-lg border-[1px] text-[#7F7F80]': !kirimClicked }"
             :disabled="!kirimClicked" class="flex">
@@ -1593,6 +1622,30 @@ export default {
     headerClass7() {
       return this.fileUploaded7 ? "bg-[#0EA976]" : "bg-[#FFC107]";
     },
+    progress() {
+      if (this.fileId7 || this.fileId6) {
+        return "PKS"
+      } else if(this.fileId5) {
+        return "Surat Pesanan"
+      } else if(this.fileId4) {
+        return "BAK Pemilihan Mitra"
+      } else if(this.fileId3) {
+        return "Negosiasi"
+      } else if(this.fileId2) {
+        return "Evaluasi"
+      } else if(this.fileId1) {
+        return "Proposal"
+      } else {
+        return "Surat Penawaran"
+      }
+    },
+    isProgressFinish() {
+      if (this.fileId7) {
+        return true
+      }else {
+        return false
+      }
+    }
   },
   watch: {
     fileId1: 'checkConditions',

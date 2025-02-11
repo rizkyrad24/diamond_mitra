@@ -427,7 +427,7 @@ export default {
 					judul: item.partnershipTitle,
 					nomor: item.submissionNumber,
 					tipe: item.base == "MOU" ? "MoU" : item.base,
-					pelaksana: 'Pusat',
+					pelaksana: item.disposedStaff,
 					status: item.status,
           statusapp: parseStatusAproval(item.positionLevel, item.status),
           did: item.id
@@ -449,7 +449,7 @@ export default {
 					judul: item.partnershipTitle,
 					nomor: item.submissionNumber,
 					tipe: "PKS",
-					pelaksana: 'Pusat',
+					pelaksana: item.disposedStaff,
 					status: item.status,
           statusapp: parseStatusAproval(item.positionLevel, item.status),
           did: item.id

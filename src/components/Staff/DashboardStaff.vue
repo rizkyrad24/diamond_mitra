@@ -32,7 +32,7 @@
               </svg>
               <h1 class="ml-[6px] mb-1 text-white text-[15px] font-sans font-semibold">OFFICER KEMITRAAN BISNIS</h1>
             </div>
-            <span class="flex text-white font-sans font-normal text-[20px] px-5"> Staff Sub Bidang Kemitraan Bisnis Konektivitas dan Infrastruktur </span>
+            <span class="flex text-white font-sans font-normal text-[20px] px-5"> Staff Sub Bidang Kemitraan Bisnis {{ bisnisType || "Konektivitas dan Infrastruktur"}} </span>
           </div>
           <svg class="absolute right-0 top-0 w-auto h-[100px] rounded-md" width="246" height="100" viewBox="0 0 246 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="247.935" height="123.968" rx="50" transform="matrix(0.82137 0.570396 -0.82137 0.570396 130.625 0)" fill="#91BEF7" />
@@ -425,6 +425,7 @@ export default {
       //   { pic: "Putri Andini", jumlahPengajuan: 7, totalSelesai: 3, totalDiproses: 2, totalStopClock: 3 },
       // ],
       sortOrder: "asc",
+      bisnisType: ""
     };
   },
   computed: {
@@ -847,6 +848,7 @@ export default {
   },
   mounted() {
     this.getDataApi();
+    this.bisnisType = localStorage.getItem("bisnisType");
   }
 };
 </script>
