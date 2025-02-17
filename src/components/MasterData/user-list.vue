@@ -889,7 +889,7 @@ export default {
         successFunction();
       } else {
         this.isLoading = false;
-        failFunction();
+        failFunction(res.data);
       }
     },
     async postEditUser(successFunction, failFunction) {
